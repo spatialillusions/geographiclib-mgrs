@@ -1,0 +1,26 @@
+{
+  "name": "geographiclib-mgrs",
+  "version": "1.0.0",
+  "description": "Javascript conversion of GeographicLib GeoCoords",
+  "homepage": "https://github.com/spatialillusions/geographiclib-mgrs#readme",
+  "bugs": {
+    "url": "https://github.com/spatialillusions/geographiclib-mgrs/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spatialillusions/geographiclib-mgrs.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "tead --coverage"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "rollup": "^4.35.0",
+    "tead": "^0.7.1"
+  }
+}
