@@ -129,16 +129,16 @@ class DMS {
 
     let v = -0.0; // So "-0" returns -0.0
     let i = 0;
-    let ind1 = "NONE";
+    let ind1 = this.NONE;
     for (let p = beg, pb; p < end; p = pb, ++i) {
       let pa = p;
       if (i === 0 && this.hemispheres_.includes(dmsa[pa])) ++pa;
       if (i > 0 || (pa < end && this.signs_.includes(dmsa[pa]))) ++pa;
       pb = Math.min(dmsa.indexOf(this.signs_, pa), end);
-      let ind2 = "NONE";
+      let ind2 = this.NONE;
       v += this.InternalDecode(dmsa.substring(p, pb), ind2);
-      if (ind1 === "NONE") ind1 = ind2;
-      else if (!(ind2 === "NONE" || ind1 === ind2))
+      if (ind1 === this.NONE) ind1 = ind2;
+      else if (!(ind2 === this.NONE || ind1 === ind2))
         throw new Error(
           "Incompatible hemisphere specifier in " + dmsa.substring(beg, pb),
         );
@@ -157,16 +157,16 @@ class DMS {
       let sign = 1;
       let beg = 0;
       let end = dmsa.length;
-      let ind1 = "NONE";
+      let ind1 = this.NONE;
       let k = -1;
       if (end > beg && (k = this.hemispheres_.indexOf(dmsa[beg])) >= 0) {
-        ind1 = k / 2 ? "LONGITUDE" : "LATITUDE";
+        ind1 = k / 2 ? this.LONGITUDE : this.LATITUDE;
         sign = k % 2 ? 1 : -1;
         ++beg;
       }
       if (end > beg && (k = this.hemispheres_.indexOf(dmsa[end - 1])) >= 0) {
         if (k >= 0) {
-          if (ind1 !== "NONE") {
+          if (ind1 !== this.NONE) {
             if (dmsa[beg - 1].toUpperCase() === dmsa[end - 1].toUpperCase())
               errormsg =
                 "Repeated hemisphere indicators " +
@@ -183,7 +183,7 @@ class DMS {
                 dmsa.substring(beg - 1, end - beg + 1);
             break;
           }
-          ind1 = k / 2 ? "LONGITUDE" : "LATITUDE";
+          ind1 = k / 2 ? this.LONGITUDE : this.LATITUDE;
           sign = k % 2 ? 1 : -1;
           --end;
         }
@@ -332,7 +332,7 @@ class DMS {
     } while (false);
     let val = parseFloat(dmsa);
     if (val === 0) throw new Error(errormsg);
-    else ind = "NONE";
+    else ind = this.NONE;
     return val;
   }
 
@@ -341,11 +341,13 @@ class DMS {
     let ia, ib;
     a = this.Decode(stra, ia);
     b = this.Decode(strb, ib);
-    if (ia === "NONE" && ib === "NONE") {
-      ia = longfirst ? "LONGITUDE" : "LATITUDE";
-      ib = longfirst ? "LATITUDE" : "LONGITUDE";
-    } else if (ia === "NONE") ia = ia === "LATITUDE" ? "LONGITUDE" : "LATITUDE";
-    else if (ib === "NONE") ib = ia === "LATITUDE" ? "LONGITUDE" : "LATITUDE";
+    if (ia === this.NONE && ib === this.NONE) {
+      ia = longfirst ? this.LONGITUDE : this.LATITUDE;
+      ib = longfirst ? this.LATITUDE : this.LONGITUDE;
+    } else if (ia === this.NONE)
+      ia = ia === this.LATITUDE ? this.LONGITUDE : this.LATITUDE;
+    else if (ib === this.NONE)
+      ib = ia === this.LATITUDE ? this.LONGITUDE : this.LATITUDE;
     if (ia === ib)
       throw new Error(
         "Both " +
@@ -353,10 +355,10 @@ class DMS {
           " and " +
           strb +
           " interpreted as " +
-          (ia === "LATITUDE" ? "latitudes" : "longitudes"),
+          (ia === this.LATITUDE ? "latitudes" : "longitudes"),
       );
-    let lat1 = ia === "LATITUDE" ? a : b;
-    let lon1 = ia === "LATITUDE" ? b : a;
+    let lat1 = ia === this.LATITUDE ? a : b;
+    let lon1 = ia === this.LATITUDE ? b : a;
     if (Math.abs(lat1) > 90)
       throw new Error("Latitude " + lat1 + "d not in [-90d, 90d]");
     lat = lat1;
@@ -366,7 +368,7 @@ class DMS {
   static DecodeAngle(angstr) {
     let ind;
     let ang = this.Decode(angstr, ind);
-    if (ind !== "NONE")
+    if (ind !== this.NONE)
       throw new Error(
         "Arc angle " + angstr + " includes a hemisphere, N/E/W/S",
       );
@@ -376,13 +378,13 @@ class DMS {
   static DecodeAzimuth(azistr) {
     let ind;
     let azi = this.Decode(azistr, ind);
-    if (ind === "LATITUDE")
+    if (ind === this.LATITUDE)
       throw new Error("Azimuth " + azistr + " has a latitude hemisphere, N/S");
     return this.AngNormalize(azi);
   }
 
   static Encode(angle, trailing, prec, ind, dmssep) {
-    if (ind === undefined) ind = "NONE";
+    if (ind === undefined) ind = this.NONE;
     if (dmssep === undefined) dmssep = "";
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
@@ -392,9 +394,10 @@ class DMS {
 
     // 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).
     // This suffices to give full real precision for numbers in [-90,90]
-    prec = Math.min(15 + MATH.extra_digits() - 2 * this[trailing], prec);
-    let scale = trailing === "MINUTE" ? 60 : trailing === "SECOND" ? 3600 : 1;
-    if (ind === "AZIMUTH") {
+    prec = Math.min(15 + MATH.extra_digits() - 2 * trailing, prec);
+    let scale =
+      trailing === this.MINUTE ? 60 : trailing === this.SECOND ? 3600 : 1;
+    if (ind === this.AZIMUTH) {
       angle = MATH.AngNormalize(angle);
       // Only angles strictly less than 0 can become 360; since +/-180 are
       // folded together, we convert -0 to +0 (instead of 360).
@@ -409,12 +412,12 @@ class DMS {
 
     // Break off integer part to preserve precision and avoid overflow in
     // manipulation of fractional part for MINUTE and SECOND
-    let idegree = trailing === "DEGREE" ? 0 : Math.floor(angle);
+    let idegree = trailing === this.DEGREE ? 0 : Math.floor(angle);
     let fdegree = (angle - idegree) * scale;
     let s = fdegree.toFixed(prec);
     let degree, minute, second;
     switch (trailing) {
-      case "DEGREE":
+      case this.DEGREE:
         degree = s;
         break;
       default:
@@ -432,7 +435,7 @@ class DMS {
         }
         // Now i in [0,60] or [0,3600] for MINUTE/SECOND
         switch (trailing) {
-          case "MINUTE":
+          case this.MINUTE:
             minute = (i % 60) + s;
             i = Math.floor(i / 60);
             degree = (i + idegree).toString();
@@ -452,15 +455,19 @@ class DMS {
     // sign + zero-fill + delimiters + hemisphere
     let str = "";
     if (prec) ++prec; // Extra width for decimal point
-    if (ind === "NONE" && sign < 0) {
+    if (ind === this.NONE && sign < 0) {
       str += "-";
     }
-    str += degree.padStart(1 + Math.min(this[ind], 2) + prec, "0");
+    if (trailing === this.DEGREE) {
+      str += degree.padStart(1 + Math.min(ind, 2) + prec, "0");
+    } else {
+      str += degree.padStart(1 + Math.min(ind, 2), "0");
+    }
     switch (trailing) {
-      case "DEGREE":
+      case this.DEGREE:
         // Don't include degree designator (d) if it is the trailing component.
         break;
-      case "MINUTE":
+      case this.MINUTE:
         str +=
           (dmssep ? dmssep : this.dmsindicators_[0].toLowerCase()) +
           minute.padStart(2 + prec, "0");
@@ -479,9 +486,9 @@ class DMS {
         }
         break;
     }
-    if (ind !== "NONE" && ind !== "AZIMUTH") {
+    if (ind !== this.NONE && ind !== this.AZIMUTH) {
       str +=
-        this.hemispheres_[(ind === "LATITUDE" ? 0 : 2) + (sign < 0 ? 0 : 1)];
+        this.hemispheres_[(ind === this.LATITUDE ? 0 : 2) + (sign < 0 ? 0 : 1)];
     }
     //console.log(str);
     return str;
