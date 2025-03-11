@@ -132,6 +132,7 @@ let i = 0;
 let northp, zone, x, y, mgrs;
 for (let k = 0; k < 2; ++k) {
   ({ zone, northp, x, y } = UTMUPS.Forward(C[k][0], T(3)));
+  console.log(zone, northp, x, y);
   if (equiv(y, C[k][1]) + (northp === C[k][2] > 0 ? 0 : 1)) ++i;
   mgrs = MGRS.Forward(zone, northp, x, y, 2);
   if (!(mgrs === (k === 0 ? "31NEA0000" : "31MEV0099"))) ++i;
@@ -140,15 +141,20 @@ for (let k = 0; k < 2; ++k) {
   mgrs = MGRS.Forward(zone, northp, x, y, -T(0), 2);
   if (!(mgrs === (k === 0 ? "31NEA0000" : "31MEV0099"))) ++i;
 }
-/*
+
 if (i) {
-  console.log(`Line ${i}: UTMUPS/MGRS::Forward lat = +/-0, fail`);
+  //console.log(`Line ${i}: UTMUPS/MGRS::Forward lat = +/-0, fail`);
   ++n;
 }
-*/
+
+const mgrsForward = { Fails: [i, 0] };
 if (n) {
   console.log(`${n} failure${n > 1 ? "s" : ""}`);
   //return 1;
 }
 
-export default { "DMS Encode:": dmsEncode, "DMS Decode:": dmsDecode };
+export default {
+  "DMS Encode:": dmsEncode,
+  "DMS Decode:": dmsDecode,
+  "MGRS Forward": mgrsForward,
+};
