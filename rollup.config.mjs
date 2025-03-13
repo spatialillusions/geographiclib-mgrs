@@ -2,11 +2,9 @@
 //import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default {
-  input: "GeographicLib/GeoCoords.mjs",
+  input: "mgrs.mjs",
   output: {
-    file: "dist/geocoords.mjs",
+    file: "dist/geographic-lib-mgrs.mjs",
     format: "module",
-    //name: "SpotMap",
   },
-  //plugins: [nodeResolve()],
 };
