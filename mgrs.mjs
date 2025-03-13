@@ -1,3 +1,9 @@
+/********************************************************
+ * This is a replacement for proj4js mgrs that uses a
+ * port of C++ GeographicLib. The added functionality
+ * makes it support MGRS in UPS zones around the poles.
+ ********************************************************/
+
 import MGRS from "./geographic-lib/mgrs.mjs";
 import UTMUPS from "./geographic-lib/utmups.mjs";
 
@@ -19,8 +25,9 @@ GeographicLibMGRS.forward = function (lonlat, accuracy) {
 //inverse, takes an mgrs string and returns a bbox.
 // TODO this is not working as expected
 GeographicLibMGRS.inverse = function (mgrs) {
+  /*
   // MGRS, centerPoint
-  const mgrsReverse = MGRS.Reverse(mgrs, true);
+  const mgrsReverse = MGRS.Reverse(mgrs, false);
   //zone, northp, x, y, mgrslimits
   const utmupsReverse = UTMUPS.Reverse(
     mgrsReverse.zone,
@@ -35,6 +42,8 @@ GeographicLibMGRS.inverse = function (mgrs) {
     east: utmupsReverse.lon,
     west: utmupsReverse.lon,
   };
+  */
+  throw new Error("inverse function not implemented");
 };
 //toPoint, takes an mgrs string, returns an array of '[lon,lat]'
 GeographicLibMGRS.toPoint = function (mgrs, centerp) {
