@@ -1,24 +1,33 @@
-import MGRS_lib from "./geographic-lib/mgrs.mjs";
-import UTMUPS_lib from "./geographic-lib/utmups.mjs";
+import MGRS from "./geographic-lib/mgrs.mjs";
+import UTMUPS from "./geographic-lib/utmups.mjs";
 
-const MGRS = {};
+const GeographicLibMGRS = {};
 
-//forward, takes an array of [lon,lat] and optional accuracy and returns an mgrs string
-MGRS.forward = function (lonlat, accuracy) {
-  return MGRS_lib.Forward(lonlat[1], lonlat[0], accuracy);
+//forward, takes an array of [lon,lat] and optional accuracy and returns an GeographicLibMGRS string
+GeographicLibMGRS.forward = function (lonlat, accuracy) {
+  // lat, lon, zone, mgrslimits
+  const utmupsForward = UTMUPS.Forward(lonlat[1], lonlat[0], false, false);
+  // zone, northp, x, y, prec
+  return MGRS.Forward(
+    utmupsForward.zone,
+    utmupsForward.northp,
+    utmupsForward.x,
+    utmupsForward.y,
+    accuracy,
+  );
 };
 //inverse, takes an mgrs string and returns a bbox.
-MGRS.inverse = function (mgrs) {
-  const mgrsReverse = MGRS_lib.Reverse(mgrs, true);
-  const utmupsReverse = UTMUPS_lib.Reverse(
+// TODO this is not working as expected
+GeographicLibMGRS.inverse = function (mgrs) {
+  // MGRS, centerPoint
+  const mgrsReverse = MGRS.Reverse(mgrs, true);
+  //zone, northp, x, y, mgrslimits
+  const utmupsReverse = UTMUPS.Reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
     mgrsReverse.x,
     mgrsReverse.y,
-    0,
-    0,
-    0,
-    0,
+    false,
   );
   return {
     north: utmupsReverse.lat,
@@ -28,10 +37,12 @@ MGRS.inverse = function (mgrs) {
   };
 };
 //toPoint, takes an mgrs string, returns an array of '[lon,lat]'
-MGRS.toPoint = function (mgrs, centerp) {
-  const mgrsReverse = MGRS_lib.Reverse(mgrs, centerp || true);
+GeographicLibMGRS.toPoint = function (mgrs, centerp) {
+  // MGRS, centerPoint
+  const mgrsReverse = MGRS.Reverse(mgrs, centerp || true);
   const mgrsLimits = false;
-  const utmupsReverse = UTMUPS_lib.Reverse(
+  //zone, northp, x, y, mgrslimits
+  const utmupsReverse = UTMUPS.Reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
     mgrsReverse.x,
@@ -41,4 +52,4 @@ MGRS.toPoint = function (mgrs, centerp) {
   return [utmupsReverse.lon, utmupsReverse.lat];
 };
 
-export default MGRS;
+export default GeographicLibMGRS;

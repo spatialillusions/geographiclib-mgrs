@@ -15,6 +15,7 @@
   "type": "module",
   "main": "mgrs.mjs",
   "scripts": {
+    "prebuild": "npm test",
     "build": "rollup -c",
     "test": "tead --coverage"
   },

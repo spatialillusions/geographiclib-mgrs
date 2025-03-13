@@ -1,4 +1,4 @@
-import MGRS from "../mgrs.js";
+import MGRS from "../mgrs.mjs";
 //*
 // https://geographiclib.sourceforge.io/cgi-bin/GeoConvert
 const toPoint = {
