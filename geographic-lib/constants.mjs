@@ -1,4 +1,4 @@
-import MATH from "../GeographicLib/math.mjs";
+import MATH from "./math.mjs";
 
 const CONSTANTS = {
   // Constants defining the WGS84 ellipsoid, the UTM and UPS projections, and various unit conversions.

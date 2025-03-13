@@ -1,4 +1,4 @@
-import CONSTANTS from "../includes/constants.mjs";
+import CONSTANTS from "./constants.mjs";
 import MATH from "./math.mjs";
 
 const PolarStereographic = {

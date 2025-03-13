@@ -1,7 +1,7 @@
-import CONSTANTS from "../includes/constants.mjs";
+import CONSTANTS from "./constants.mjs";
 import MATH from "./math.mjs";
-import TransverseMercatorExact from "./TransverseMercatorExact.mjs";
-import Complex from "./Complex.mjs";
+import TransverseMercatorExact from "./transverse-mercator-exact.mjs";
+import Complex from "./complex.mjs";
 
 /**
  * \file TransverseMercator.cpp

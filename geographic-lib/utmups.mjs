@@ -1,5 +1,5 @@
 import MGRS from "./mgrs.mjs";
-import CONSTANTS from "../includes/constants.mjs";
+import CONSTANTS from "./constants.mjs";
 import TransverseMercator from "./transverse-mercator.mjs";
 import PolarStereographic from "./polar-stereographic.mjs";
 import MATH from "./math.mjs";
