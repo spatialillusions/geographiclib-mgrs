@@ -1,14 +1,14 @@
 import MGRS from "../geographic-lib/mgrs.mjs";
 
 const mgrsDecode = {
-  "MGRS Decode Zone gridzone": [MGRS.Decode("33VVE7220287839").gridzone, "33V"],
-  "MGRS Decode Zone block": [MGRS.Decode("33VVE7220287839").block, "VE"],
-  "MGRS Decode Zone easting": [MGRS.Decode("33VVE7220287839").easting, "72202"],
-  "MGRS Decode Zone northing": [
-    MGRS.Decode("33VVE7220287839").northing,
-    "87839",
+  "MGRS Decode UTM": [
+    MGRS.Decode("33VVE7220287839"),
+    { gridzone: "33V", block: "VE", easting: "72202", northing: "87839" },
   ],
-  "MGRS UPS Zone": [MGRS.Decode("ZAG5206546829").zone, ""],
+  "MGRS Decode UPS": [
+    MGRS.Decode("ZAG5206546829"),
+    { gridzone: "Z", block: "AG", easting: "52065", northing: "46829" },
+  ],
 };
 const mgrsForward = {
   "MGRS Forward precision 5": [
