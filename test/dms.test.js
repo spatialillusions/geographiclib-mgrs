@@ -1,6 +1,6 @@
-import DMS from "../geographic-lib/dms.mjs";
-import UTMUPS from "../geographic-lib/utmups.mjs";
-import MGRS from "../geographic-lib/mgrs.mjs";
+import DMS from "../src/dms.mjs";
+import UTMUPS from "../src/utmups.mjs";
+import MGRS from "../src/mgrs.mjs";
 
 const BUGGY_ROUNDING = false;
 function ROUNDING_CHECK([a, b]) {

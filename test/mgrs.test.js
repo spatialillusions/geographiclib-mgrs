@@ -1,4 +1,4 @@
-import MGRS from "../geographic-lib/mgrs.mjs";
+import MGRS from "../src/mgrs.mjs";
 
 const mgrsDecode = {
   "MGRS Decode UTM": [

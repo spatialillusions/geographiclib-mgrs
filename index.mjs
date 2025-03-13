@@ -4,8 +4,8 @@
  * makes it support MGRS in UPS zones around the poles.
  ********************************************************/
 
-import MGRS from "./geographic-lib/mgrs.mjs";
-import UTMUPS from "./geographic-lib/utmups.mjs";
+import MGRS from "./src/mgrs.mjs";
+import UTMUPS from "./src/utmups.mjs";
 
 const GeographicLibMGRS = {};
 
@@ -47,10 +47,38 @@ GeographicLibMGRS.inverse = function (mgrs) {
 };
 //toPoint, takes an mgrs string, returns an array of '[lon,lat]'
 GeographicLibMGRS.toPoint = function (mgrs, centerp) {
-  // MGRS, centerPoint
-  const mgrsReverse = MGRS.Reverse(mgrs, centerp || true);
+  /*
+   * @param[in] mgrs MGRS string.
+   * @param[in] centerp if true (default), return center of the MGRS square,
+   *   else return SW (lower left) corner.
+   * @exception GeographicErr if \e mgrs is illegal.
+   *
+   * @param[out] zone UTM zone (zero means UPS).
+   * @param[out] northp hemisphere (true means north, false means south).
+   * @param[out] x easting of point (meters).
+   * @param[out] y northing of point (meters).
+   * @param[out] prec precision relative to 100 km.
+   * */
+  const mgrsReverse = MGRS.Reverse(mgrs, centerp);
+  console.log(mgrs);
+  console.log("32n 300000.5 1000000.5");
+  console.log(mgrsReverse);
   const mgrsLimits = false;
-  //zone, northp, x, y, mgrslimits
+  /*
+   * @param[in] zone the UTM zone (zero means UPS).
+   * @param[in] northp hemisphere (true means north, false means south).
+   * @param[in] x easting of point (meters).
+   * @param[in] y northing of point (meters).
+   * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
+   *   coordinates (default = false).
+   * @exception GeographicErr if \e zone, \e x, or \e y is out of allowed
+   *   range; this this case the arguments are unchanged.
+   *
+   * @param[out] lat latitude of point (degrees).
+   * @param[out] lon longitude of point (degrees).
+   * @param[out] gamma meridian convergence at point (degrees).
+   * @param[out] k scale of projection at point.
+   * */
   const utmupsReverse = UTMUPS.Reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,

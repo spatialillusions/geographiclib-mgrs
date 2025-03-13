@@ -13,7 +13,7 @@
   "license": "MIT",
   "author": "",
   "type": "module",
-  "main": "mgrs.mjs",
+  "main": "index.mjs",
   "scripts": {
     "prebuild": "npm test",
     "build": "rollup -c",

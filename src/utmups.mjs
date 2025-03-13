@@ -320,6 +320,8 @@ UTMUPS.Reverse = function (zone, northp, x, y, mgrslimits) {
   x -= this.falseeasting_[ind];
   y -= this.falsenorthing_[ind];
   if (utmp) {
+    console.log("UTMUPS Reverse ", this.CentralMeridian(zone), x, y);
+
     ({ lat, lon, gamma, k } = TransverseMercator.UTM().Reverse(
       this.CentralMeridian(zone),
       x,

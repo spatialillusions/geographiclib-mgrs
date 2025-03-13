@@ -2,7 +2,7 @@
 //import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 export default {
-  input: "mgrs.mjs",
+  input: "index.mjs",
   output: {
     file: "dist/geographic-lib-mgrs.mjs",
     format: "module",

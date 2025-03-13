@@ -44,6 +44,8 @@ const GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER = 6;
 
 const TransverseMercator = {
   init(a, f, k0, exact = false, extendp = false) {
+    console.log("transverse init");
+    console.log(a, ",", f, ",", k0);
     this._a = a;
     this._f = f;
     this._k0 = k0;
@@ -55,7 +57,7 @@ const TransverseMercator = {
     this._n = this._f / (2 - this._f);
     this._tmexact = this._exact
       ? TransverseMercatorExact.init(a, f, k0, extendp)
-      : {}; //TransverseMercatorExact.init();
+      : {}; //if not exact we don't need to initiate this TransverseMercatorExact.init();
 
     if (this._exact) return;
     if (!(isFinite(this._a) && this._a > 0))
@@ -361,6 +363,8 @@ const TransverseMercator = {
   },
 
   Reverse(lon0, x, y) {
+    console.log("Transverse Mercator Reverse Reverse Reverse");
+    console.log(lon0, ",", x, ",", y);
     let gamma, k, lat, lon;
     if (this._exact) return this._tmexact.Reverse(lon0, x, y);
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
@@ -418,12 +422,14 @@ const TransverseMercator = {
     const c = Math.max(0, Math.cos(xip)); // cos(pi/2) might be negative
     const r = Math.hypot(s, c);
     if (r !== 0) {
+      console.log("r", r);
       lon = MATH.atan2d(s, c); // Krueger p 17 (25)
       // Use Newton's method to solve for tau
       const sxip = Math.sin(xip);
       const tau = MATH.tauf(sxip / r, this._es);
       gamma += MATH.atan2d(sxip * Math.tanh(etap), c);
       lat = MATH.atand(tau);
+      console.log("r !=== 0 " + lat);
       // Note cos(phi') * cosh(eta') = r
       k *=
         Math.sqrt(this._e2m + this._e2 / (1 + MATH.sq(tau))) *
@@ -431,10 +437,13 @@ const TransverseMercator = {
         r;
     } else {
       lat = MATH.qd;
+      console.log("r == 0 " + lat);
       lon = 0;
       k *= this._c;
     }
+    console.log("xisign ", xisign);
     lat *= xisign;
+    console.log(lat);
     if (backside) lon = MATH.hd - lon;
     lon *= etasign;
     lon = MATH.AngNormalize(lon + lon0);
@@ -442,6 +451,7 @@ const TransverseMercator = {
     gamma *= xisign * etasign;
     gamma = MATH.AngNormalize(gamma);
     k *= this._k0;
+    console.log(`js lat: ${lat}, lon: ${lon}, gamma: ${gamma}, k: ${k}`);
     return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 };
