@@ -258,8 +258,8 @@ const TransverseMercatorExact = {
   },
 
   Reverse(lon0, x, y, lat, lon, gamma, k) {
-    const xi = y / (this._a * this._k0);
-    const eta = x / (this._a * this._k0);
+    let xi = y / (this._a * this._k0);
+    let eta = x / (this._a * this._k0);
     const xisign = !this._extendp && Math.sign(xi) ? -1 : 1;
     const etasign = !this._extendp && Math.sign(eta) ? -1 : 1;
     xi *= xisign;
