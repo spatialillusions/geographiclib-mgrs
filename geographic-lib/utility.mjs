@@ -1,4 +1,4 @@
-import MATH from "../includes/math.mjs";
+import MATH from "./math.mjs";
 
 const UTILITY = {
   day(y, m, d) {
@@ -19,8 +19,7 @@ const UTILITY = {
   dayWithCheck(y, m, d, check) {
     const s = this.day(y, m, d);
     if (!check) return s;
-    let y1, m1, d1;
-    this.date(s, (y1 = {}), (m1 = {}), (d1 = {}));
+    let { y1, m1, d1 } = this.date(s);
     if (!(s > 0 && y === y1 && m === m1 && d === d1))
       throw new Error(
         "Invalid date " +
@@ -36,7 +35,7 @@ const UTILITY = {
     return s;
   },
 
-  date(s, y, m, d) {
+  date(s) {
     let c = 0;
     const greg = this.gregorian(s);
     s += 305; // s = 0 on March 1, 1BC
@@ -53,6 +52,8 @@ const UTILITY = {
     d.value = s + 1; // Determine day of month
     y.value += Math.floor((m.value + 2) / 12); // Move Jan and Feb back to original year
     m.value = ((m.value + 2) % 12) + 1; // Renumber the months so January = 1
+
+    return { y: y.value, m: m.value, d: d.value };
   },
 
   dateFromString(s, y, m, d) {
@@ -136,10 +137,26 @@ const UTILITY = {
     return y > 1582 || (y === 1582 && (m > 10 || (m === 10 && d >= 15)));
   },
 
-  str(x) {
-    console.log(x);
+  /**
+   * Convert a number to a string.
+   *
+   * @param {number} x - The value to be converted.
+   * @param {number} [p=-1] - The precision used.
+   * @returns {string} The string representation.
+   */
+  str(x, p = -1) {
+    if (!isFinite(x)) {
+      return x < 0 ? "-inf" : x > 0 ? "inf" : "nan";
+    }
+    if (p >= 0) {
+      return x.toFixed(p);
+    }
     return x.toString();
   },
+  /*
+  str(x) {
+    return x.toString();
+  },*/
 };
 
 export default UTILITY;

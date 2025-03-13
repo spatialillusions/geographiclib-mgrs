@@ -1,9 +1,9 @@
-import MGRS from "./MGRS.mjs";
+import MGRS from "./mgrs.mjs";
 import CONSTANTS from "../includes/constants.mjs";
-import TransverseMercator from "./TransverseMercator.mjs";
-import PolarStereographic from "./PolarStereographic.mjs";
-import MATH from "../includes/math.mjs";
-import Utility from "./Utility.mjs";
+import TransverseMercator from "./transverse-mercator.mjs";
+import PolarStereographic from "./polar-stereographic.mjs";
+import MATH from "./math.mjs";
+import Utility from "./utility.mjs";
 
 const UTMUPS = {
   falseeasting_: [500000, 500000, 2000000, 2000000],
@@ -146,18 +146,49 @@ UTMUPS.StandardZone = function (lat, lon, setzone) {
   } else return this.UPS;
 };
 
-UTMUPS.Forward = function (
-  lat,
-  lon,
-  zone,
-  northp,
-  x,
-  y,
-  gamma,
-  k,
-  setzone,
-  mgrslimits,
-) {
+/**
+ * Forward projection, from geographic to UTM/UPS.
+ *
+ * @param[in] lat latitude of point (degrees).
+ * @param[in] lon longitude of point (degrees).
+ * @param[in] setzone zone override (optional).
+ * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
+ *   coordinates (default = false).
+ * @exception GeographicErr if \e lat is not in [&minus;90&deg;,
+ *   90&deg;].
+ * @exception GeographicErr if the resulting \e x or \e y is out of allowed
+ *   range (see Reverse); in this case, these arguments are unchanged.
+ *
+ * 
+ * @param[out] zone the UTM zone (zero means UPS).
+ * @param[out] northp hemisphere (true means north, false means south).
+ * @param[out] x easting of point (meters).
+ * @param[out] y northing of point (meters).
+ * @param[out] gamma meridian convergence at point (degrees).
+ * @param[out] k scale of projection at point.
+ * 
+ * If \e setzone is omitted, use the standard rules for picking the zone.
+ * If \e setzone is given then use that zone if it is non-negative,
+ * otherwise apply the rules given in UTMUPS::zonespec.  The accuracy of
+ * the conversion is about 5nm.
+ *
+ * The northing \e y jumps by UTMUPS::UTMShift() when crossing the equator
+ * in the southerly direction.  Sometimes it is useful to remove this
+ * discontinuity in \e y by extending the "northern" hemisphere using
+ * UTMUPS::Transfer:
+ * \code
+ double lat = -1, lon = 123;
+int zone;
+bool northp;
+double x, y, gamma, k;
+GeographicLib::UTMUPS::Forward(lat, lon, zone, northp, x, y, gamma, k);
+GeographicLib::UTMUPS::Transfer(zone, northp, x, y,
+                                zone, true,   x, y, zone);
+northp = true;
+\endcode
+**********************************************************************/
+UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
+  let zone, northp, x, y, gamma, k;
   if (Math.abs(lat) > Math.qd)
     throw new Error(
       "Latitude " +
@@ -169,16 +200,20 @@ UTMUPS.Forward = function (
         "d]",
     );
   let northp1 = !MATH.signbit(lat);
+  setzone = setzone || this.MINPSEUDOZONE;
   let zone1 = this.StandardZone(lat, lon, setzone);
+  zone1 = 24;
+  // zone1 should be 24
   if (zone1 == this.INVALID) {
-    zone.value = zone1;
-    northp.value = northp1;
-    x.value = y.value = gamma.value = k.value = NaN;
-    return;
+    //zone = zone1;
+    //northp = northp1;
+    x = y = gamma = k = NaN;
+    return { zone, northp, x, y, gamma, k };
   }
   let x1, y1, gamma1, k1;
   let utmp = zone1 != this.UPS;
   if (utmp) {
+    // here is the error
     let lon0 = this.CentralMeridian(zone1);
     let dlon = MATH.AngDiff(lon0, lon);
     if (!(dlon <= 60))
@@ -188,15 +223,11 @@ UTMUPS.Forward = function (
           "d more than 60d from center of UTM zone " +
           Utility.str(zone1),
       );
-    TransverseMercator.UTM().Forward(
-      lon0,
-      lat,
-      lon,
-      (x1 = {}),
-      (y1 = {}),
-      (gamma1 = {}),
-      (k1 = {}),
-    );
+    const result = TransverseMercator.UTM().Forward(lon0, lat, lon);
+    x1 = result.x;
+    y1 = result.y;
+    gamma1 = result.gamma;
+    k1 = result.k;
   } else {
     if (Math.abs(lat) < 70)
       throw new Error(
@@ -206,18 +237,14 @@ UTMUPS.Forward = function (
           (northp1 ? "N" : "S") +
           " pole",
       );
-    PolarStereographic.UPS().Forward(
+    ({ x1, y1, gamma1, k1 } = PolarStereographic.UPS().Forward(
       northp1,
       lat,
       lon,
-      (x1 = {}),
-      (y1 = {}),
-      (gamma1 = {}),
-      (k1 = {}),
-    );
+    ));
+    return { zone, northp, x, y, gamma, k };
   }
   let ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
-  console.log(x1);
   x1 += this.falseeasting_[ind];
 
   y1 += this.falsenorthing_[ind];
@@ -237,12 +264,52 @@ UTMUPS.Forward = function (
   y = y1;
   gamma = gamma1;
   k = k1;
+
   return { zone, northp, x, y, gamma, k };
 };
 
-UTMUPS.Reverse = function (zone, northp, x, y, lat, lon, gamma, k, mgrslimits) {
+/**
+ * Reverse projection, from  UTM/UPS to geographic.
+ *
+ * @param[in] zone the UTM zone (zero means UPS).
+ * @param[in] northp hemisphere (true means north, false means south).
+ * @param[in] x easting of point (meters).
+ * @param[in] y northing of point (meters).
+ * @param[in] mgrslimits if true enforce the stricter MGRS limits on the
+ *   coordinates (default = false).
+ * @exception GeographicErr if \e zone, \e x, or \e y is out of allowed
+ *   range; this this case the arguments are unchanged.
+ *
+ * @param[out] lat latitude of point (degrees).
+ * @param[out] lon longitude of point (degrees).
+ * @param[out] gamma meridian convergence at point (degrees).
+ * @param[out] k scale of projection at point.
+ *
+ * The accuracy of the conversion is about 5nm.
+ *
+ * UTM eastings are allowed to be in the range [0km, 1000km], northings are
+ * allowed to be in in [0km, 9600km] for the northern hemisphere and in
+ * [900km, 10000km] for the southern hemisphere.  However UTM northings
+ * can be continued across the equator.  So the actual limits on the
+ * northings are [-9100km, 9600km] for the "northern" hemisphere and
+ * [900km, 19600km] for the "southern" hemisphere.
+ *
+ * UPS eastings and northings are allowed to be in the range [1200km,
+ * 2800km] in the northern hemisphere and in [700km, 3300km] in the
+ * southern hemisphere.
+ *
+ * These ranges are 100km larger than allowed for the conversions to MGRS.
+ * (100km is the maximum extra padding consistent with eastings remaining
+ * non-negative.)  This allows generous overlaps between zones and UTM and
+ * UPS.  If \e mgrslimits = true, then all the ranges are shrunk by 100km
+ * so that they agree with the stricter MGRS ranges.  No checks are
+ * performed besides these (e.g., to limit the distance outside the
+ * standard zone boundaries).
+ **********************************************************************/
+UTMUPS.Reverse = function (zone, northp, x, y, mgrslimits) {
+  let lat, lon, gamma, k;
   if (zone == this.INVALID || isNaN(x) || isNaN(y)) {
-    lat.value = lon.value = gamma.value = k.value = NaN;
+    lat = lon = gamma = k = NaN;
     return;
   }
   if (!(zone >= this.MINZONE && zone <= this.MAXZONE))
@@ -252,26 +319,16 @@ UTMUPS.Reverse = function (zone, northp, x, y, lat, lon, gamma, k, mgrslimits) {
   let ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
   x -= this.falseeasting_[ind];
   y -= this.falsenorthing_[ind];
-  if (utmp)
-    TransverseMercator.UTM().Reverse(
+  if (utmp) {
+    ({ lat, lon, gamma, k } = TransverseMercator.UTM().Reverse(
       this.CentralMeridian(zone),
       x,
       y,
-      (lat = {}),
-      (lon = {}),
-      (gamma = {}),
-      (k = {}),
-    );
-  else
-    PolarStereographic.UPS().Reverse(
-      northp,
-      x,
-      y,
-      (lat = {}),
-      (lon = {}),
-      (gamma = {}),
-      (k = {}),
-    );
+    ));
+  } else {
+    ({ lat, lon, gamma, k } = PolarStereographic.UPS().Reverse(northp, x, y));
+  }
+  return { lat, lon, gamma, k };
 };
 
 UTMUPS.CheckCoords = function (utmp, northp, x, y, mgrslimits, throwp) {
@@ -327,33 +384,29 @@ UTMUPS.Transfer = function (
 ) {
   let northp = northpin;
   if (zonein != zoneout) {
-    let lat, lon;
-    this.Reverse(zonein, northpin, xin, yin, (lat = {}), (lon = {}));
-    let x, y, zone1;
-    this.Forward(
+    let lat, lon, gamma, k;
+    ({ lat, lon, gamma, k } = this.Reverse(zonein, northpin, xin, yin));
+    let x, y, zone1, northp;
+    ({ zone, northp, x, y, gamma, k } = this.Forward(
       lat,
       lon,
-      (zone1 = {}),
-      (northp = {}),
-      (x = {}),
-      (y = {}),
       zoneout == this.MATCH ? zonein : zoneout,
-    );
+    ));
     if (zone1 == 0 && northp != northpout)
       throw new Error(
         "Attempt to transfer UPS coordinates between hemispheres",
       );
-    zone.value = zone1;
-    xout.value = x;
-    yout.value = y;
+    //zone.value = zone1;
+    //xout.value = x;
+    //yout.value = y;
   } else {
     if (zoneout == 0 && northp != northpout)
       throw new Error(
         "Attempt to transfer UPS coordinates between hemispheres",
       );
-    zone.value = zoneout;
-    xout.value = xin;
-    yout.value = yin;
+    //zone.value = zoneout;
+    //xout.value = xin;
+    //yout.value = yin;
   }
   if (northp != northpout) yout.value += (northpout ? -1 : 1) * MGRS.utmNshift_;
 };

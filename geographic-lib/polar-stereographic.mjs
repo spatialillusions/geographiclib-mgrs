@@ -1,5 +1,5 @@
 import CONSTANTS from "../includes/constants.mjs";
-import MATH from "../includes/math.mjs";
+import MATH from "./math.mjs";
 
 const PolarStereographic = {
   init(a, f, k0) {
@@ -25,7 +25,7 @@ const PolarStereographic = {
     return ups;
   },
 
-  Forward(northp, lat, lon, x, y, gamma, k) {
+  Forward(northp, lat, lon) {
     lat = MATH.LatFix(lat);
     lat *= northp ? 1 : -1;
     const tau = MATH.tand(lat);
@@ -44,9 +44,10 @@ const PolarStereographic = {
     x *= rho;
     y *= northp ? -rho : rho;
     gamma = MATH.AngNormalize(northp ? lon : -lon);
+    return { x, y, gamma, k };
   },
 
-  Reverse(northp, x, y, lat, lon, gamma, k) {
+  Reverse(northp, x, y) {
     const rho = Math.hypot(x, y);
     const t =
       rho !== 0
@@ -64,6 +65,7 @@ const PolarStereographic = {
     lat = (northp ? 1 : -1) * MATH.atand(tau);
     lon = MATH.atan2d(x, northp ? -y : y);
     gamma = MATH.AngNormalize(northp ? lon : -lon);
+    return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 
   SetScale(lat, k) {

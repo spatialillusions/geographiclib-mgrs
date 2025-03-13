@@ -1,5 +1,5 @@
-import UTMUPS from "./UTMUPS.mjs";
-import MATH from "../includes/math.mjs";
+import UTMUPS from "./utmups.mjs";
+import MATH from "./math.mjs";
 
 const MGRS = {
   hemispheres_: "SN",
@@ -101,7 +101,86 @@ MGRS.ApproxLatitudeBand = function (y) {
   return y >= 0 ? b : -(b + 1);
 };
 
-MGRS.Forward = function (zone, northp, x, y, lat, prec) {
+/**
+ * Convert UTM or UPS coordinate to an MGRS coordinate.
+ * @param[in] zone UTM zone (zero means UPS).
+ * @param[in] northp hemisphere (true means north, false means south).
+ * @param[in] x easting of point (meters).
+ * @param[in] y northing of point (meters).
+ * @param[in] prec precision relative to 100 km.
+ * @exception GeographicErr if \e zone, \e x, or \e y is outside its
+ *   allowed range.
+ * @exception GeographicErr if the memory for the MGRS string can't be
+ *   allocated.
+ * @param[out] mgrs MGRS string.
+ * \e prec specifies the precision of the MGRS string as follows:
+ * - \e prec = &minus;1 (min), only the grid zone is returned
+ * - \e prec = 0, 100 km
+ * - \e prec = 1, 10 km
+ * - \e prec = 2, 1 km
+ * - \e prec = 3, 100 m
+ * - \e prec = 4, 10 m
+ * - \e prec = 5, 1 m
+ * - \e prec = 6, 0.1 m
+ * - &hellip;
+ * - \e prec = 11 (max), 1 &mu;m
+ *
+ * UTM eastings are allowed to be in the range [100 km, 900 km], northings
+ * are allowed to be in in [0 km, 9500 km] for the northern hemisphere and
+ * in [1000 km, 10000 km] for the southern hemisphere.  (However UTM
+ * northings can be continued across the equator.  So the actual limits on
+ * the northings are [&minus;9000 km, 9500 km] for the "northern"
+ * hemisphere and [1000 km, 19500 km] for the "southern" hemisphere.)
+ *
+ * UPS eastings/northings are allowed to be in the range [1300 km, 2700 km]
+ * in the northern hemisphere and in [800 km, 3200 km] in the southern
+ * hemisphere.
+ *
+ * The ranges are 100 km more restrictive than for the conversion between
+ * geographic coordinates and UTM and UPS given by UTMUPS.  These
+ * restrictions are dictated by the allowed letters in MGRS coordinates.
+ * The choice of 9500 km for the maximum northing for northern hemisphere
+ * and of 1000 km as the minimum northing for southern hemisphere provide
+ * at least 0.5 degree extension into standard UPS zones.  The upper ends
+ * of the ranges for the UPS coordinates is dictated by requiring symmetry
+ * about the meridians 0E and 90E.
+ *
+ * All allowed UTM and UPS coordinates may now be converted to legal MGRS
+ * coordinates with the proviso that eastings and northings on the upper
+ * boundaries are silently reduced by about 4 nm (4 nanometers) to place
+ * them \e within the allowed range.  (This includes reducing a southern
+ * hemisphere northing of 10000 km by 4 nm so that it is placed in latitude
+ * band M.)  The UTM or UPS coordinates are truncated to requested
+ * precision to determine the MGRS coordinate.  Thus in UTM zone 38n, the
+ * square area with easting in [444 km, 445 km) and northing in [3688 km,
+ * 3689 km) maps to MGRS coordinate 38SMB4488 (at \e prec = 2, 1 km),
+ * Khulani Sq., Baghdad.
+ *
+ * The UTM/UPS selection and the UTM zone is preserved in the conversion to
+ * MGRS coordinate.  Thus for \e zone > 0, the MGRS coordinate begins with
+ * the zone number followed by one of [C--M] for the southern
+ * hemisphere and [N--X] for the northern hemisphere.  For \e zone =
+ * 0, the MGRS coordinates begins with one of [AB] for the southern
+ * hemisphere and [XY] for the northern hemisphere.
+ *
+ * The conversion to the MGRS is exact for prec in [0, 5] except that a
+ * neighboring latitude band letter may be given if the point is within 5nm
+ * of a band boundary.  For prec in [6, 11], the conversion is accurate to
+ * roundoff.
+ *
+ * If \e prec = &minus;1, then the "grid zone designation", e.g., 18T, is
+ * returned.  This consists of the UTM zone number (absent for UPS) and the
+ * first letter of the MGRS string which labels the latitude band for UTM
+ * and the hemisphere for UPS.
+ *
+ * If \e x or \e y is NaN or if \e zone is UTMUPS::INVALID, the returned
+ * MGRS string is "INVALID".
+ *
+ * Return the result via a reference argument to avoid the overhead of
+ * allocating a potentially large number of small strings.  If an error is
+ * thrown, then \e mgrs is unchanged.
+ **********************************************************************/
+MGRS.ForwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
   const angeps = Math.pow(2, -(MATH.digits() - 7));
   if (zone === UTMUPS.INVALID || isNaN(x) || isNaN(y) || isNaN(lat)) {
     return "INVALID";
@@ -124,8 +203,8 @@ MGRS.Forward = function (zone, northp, x, y, lat, prec) {
   }
   const xx = x * this.mult_;
   const yy = y * this.mult_;
-  const ix = Math.floor(xx);
-  const iy = Math.floor(yy);
+  let ix = Math.floor(xx);
+  let iy = Math.floor(yy);
   const m = this.mult_ * this.tile_;
   const xh = Math.floor(ix / m);
   const yh = Math.floor(iy / m);
@@ -168,17 +247,17 @@ MGRS.Forward = function (zone, northp, x, y, lat, prec) {
     ix /= d;
     iy /= d;
     for (let c = prec; c--; ) {
-      mgrs1[z + c] = this.digits_[ix % this.base_];
+      mgrs1[z + c] = this.digits_[Math.floor(ix % this.base_)];
       ix /= this.base_;
-      mgrs1[z + c + prec] = this.digits_[iy % this.base_];
+      mgrs1[z + c + prec] = this.digits_[Math.floor(iy % this.base_)];
       iy /= this.base_;
     }
   }
   return mgrs1.join("").substring(0, mlen);
 };
-/*
+
 MGRS.Forward = function (zone, northp, x, y, prec) {
-  let lat, lon;
+  let lat;
   if (zone > 0) {
     let ys = northp ? y : y - this.utmNshift_;
     ys /= this.tile_;
@@ -196,10 +275,60 @@ MGRS.Forward = function (zone, northp, x, y, prec) {
   } else {
     lat = 0;
   }
-  return this.Forward(zone, northp, x, y, lat, prec);
+  return this.ForwardKnowLattitude(zone, northp, x, y, lat, prec);
 };
-*/
-MGRS.Reverse = function (mgrs, zone, northp, easting, northing, prec, centerp) {
+//*/
+/**
+ * Convert a MGRS coordinate to UTM or UPS coordinates.
+ *
+ * @param[in] mgrs MGRS string.
+ * @param[in] centerp if true (default), return center of the MGRS square,
+ *   else return SW (lower left) corner.
+ * @exception GeographicErr if \e mgrs is illegal.
+ *
+ * @param[out] zone UTM zone (zero means UPS).
+ * @param[out] northp hemisphere (true means north, false means south).
+ * @param[out] x easting of point (meters).
+ * @param[out] y northing of point (meters).
+ * @param[out] prec precision relative to 100 km.
+ *
+ * All conversions from MGRS to UTM/UPS are permitted provided the MGRS
+ * coordinate is a possible result of a conversion in the other direction.
+ * (The leading 0 may be dropped from an input MGRS coordinate for UTM
+ * zones 1--9.)  In addition, MGRS coordinates with a neighboring
+ * latitude band letter are permitted provided that some portion of the
+ * 100 km block is within the given latitude band.  Thus
+ * - 38VLS and 38WLS are allowed (latitude 64N intersects the square
+ *   38[VW]LS); but 38VMS is not permitted (all of 38WMS is north of 64N)
+ * - 38MPE and 38NPF are permitted (they straddle the equator); but 38NPE
+ *   and 38MPF are not permitted (the equator does not intersect either
+ *   block).
+ * - Similarly ZAB and YZB are permitted (they straddle the prime
+ *   meridian); but YAB and ZZB are not (the prime meridian does not
+ *   intersect either block).
+ *
+ * The UTM/UPS selection and the UTM zone is preserved in the conversion
+ * from MGRS coordinate.  The conversion is exact for prec in [0, 5].  With
+ * \e centerp = true, the conversion from MGRS to geographic and back is
+ * stable.  This is not assured if \e centerp = false.
+ *
+ * If a "grid zone designation" (for example, 18T or A) is given, then some
+ * suitable (but essentially arbitrary) point within that grid zone is
+ * returned.  The main utility of the conversion is to allow \e zone and \e
+ * northp to be determined.  In this case, the \e centerp parameter is
+ * ignored and \e prec is set to &minus;1.
+ *
+ * If the first 3 characters of \e mgrs are "INV", then \e x and \e y are
+ * set to NaN, \e zone is set to UTMUPS::INVALID, and \e prec is set to
+ * &minus;2.
+ *
+ * If an exception is thrown, then the arguments are unchanged.
+ **********************************************************************/
+MGRS.Reverse = function (
+  mgrs,
+  /*, zone, northp, easting, northing, prec, */ centerp,
+) {
+  let zone, northp, prec;
   let p = 0;
   const len = mgrs.length;
   if (len >= 3 && mgrs.substring(0, 3).toUpperCase() === "INV") {
@@ -237,8 +366,8 @@ MGRS.Reverse = function (mgrs, zone, northp, easting, northing, prec, centerp) {
   const northp1 = iband >= (utmp ? 10 : 2);
   if (p === len) {
     const deg = this.utmNshift_ / (MATH.qd * this.tile_);
-    const zone = zone1;
-    const northp = northp1;
+    zone = zone1;
+    northp = northp1;
     let x, y;
     if (utmp) {
       x = (zone === 31 && iband === 17 ? 4 : 5) * this.tile_;
@@ -340,7 +469,16 @@ MGRS.Reverse = function (mgrs, zone, northp, easting, northing, prec, centerp) {
 };
 
 MGRS.CheckCoords = function (utmp, northp, x, y) {
-  const eps = Math.pow(2, -(Math.digits() - 25));
+  // Limits are all multiples of 100km and are all closed on the lower end
+  // and open on the upper end -- and this is reflected in the error
+  // messages.  However if a coordinate lies on the excluded upper end (e.g.,
+  // after rounding), it is shifted down by eps.  This also folds UTM
+  // northings to the correct N/S hemisphere.
+
+  // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
+  // 25 = ceil(log_2(2e7)) -- use half circumference here because
+  // northing 195e5 is a legal in the "southern" hemisphere.
+  const eps = Math.pow(2, -(MATH.digits() - 25));
   const ix = Math.floor(x / this.tile_);
   const iy = Math.floor(y / this.tile_);
   const ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
@@ -446,6 +584,31 @@ MGRS.UTMRow = function (iband, icol, irow) {
   return irow;
 };
 
+/**
+ * Split a MGRS grid reference into its components.
+ *
+ * @param[in] mgrs MGRS string, e.g., 38SMB4488.
+ * @exception GeographicErr if \e mgrs is illegal.
+ * 
+ * @param[out] gridzone the grid zone, e.g., 38S.
+ * @param[out] block the 100km block id, e.g., MB.
+ * @param[out] easting the leading digits of the block easting, e.g., 44.
+ * @param[out] northing the leading digits of the block easting, e.g., 88.
+
+ *
+ * Only the most rudimentary checking of MGRS grid ref is done: it is
+ * expected to consist of 0-2 digits followed by 1 or 3 letters, followed
+ * (in the case of 3 letters) by an even number (possibly 0) of digits.  In
+ * reporting errors, the letters I and O (illegal in MSRS) are regarded as
+ * non-alphabetic.  The returned \e gridzone will always be non-empty.  The
+ * other output arguments may be empty strings.
+ *
+ * If the first 3 characters of \e mgrs are "INV", then \e gridzone is set
+ * to those 3 characters and the other return arguments are set to empty
+ * strings..
+ *
+ * If an exception is thrown, then the arguments are unchanged.
+ **********************************************************************/
 MGRS.Decode = function (mgrs) {
   const len = mgrs.length;
   if (len >= 3 && mgrs.substring(0, 3).toUpperCase() === "INV") {
@@ -462,31 +625,33 @@ MGRS.Decode = function (mgrs) {
 
   let p0 = mgrs.search(/[^0-9]/);
   if (p0 === -1) {
-    throw new Error("MGRS::Decode: ref does not contain alpha chars");
+    throw new Error("MGRS.Decode: ref does not contain alpha chars");
   }
   if (!(p0 <= 2)) {
-    throw new Error("MGRS::Decode: ref does not start with 0-2 digits");
+    throw new Error("MGRS.Decode: ref does not start with 0-2 digits");
   }
 
-  let p1 = mgrs.search(/[^a-zA-Z]/, p0);
+  let p1 = mgrs.substring(p0).search(/[a-zA-Z]/) + p0;
   if (p1 !== p0) {
-    throw new Error("MGRS::Decode: ref contains non alphanumeric chars");
+    throw new Error("MGRS.Decode: ref contains non alphanumeric chars");
   }
-  p1 = Math.min(mgrs.search(/[^a-zA-Z]/, p0), len);
+
+  p1 = Math.min(mgrs.substring(p0).search(/[^a-zA-Z]/) + p0, len);
   if (!(p1 === p0 + 1 || p1 === p0 + 3)) {
-    throw new Error("MGRS::Decode: ref must contain 1 or 3 alpha chars");
+    throw new Error("MGRS.Decode: ref must contain 1 or 3 alpha chars");
   }
   if (p1 === p0 + 1 && p1 < len) {
-    throw new Error("MGRS::Decode: ref contains junk after 1 alpha char");
+    throw new Error("MGRS.Decode: ref contains junk after 1 alpha char");
   }
   if (
     p1 < len &&
-    (mgrs.search(/[^0-9]/, p1) !== p1 || mgrs.search(/[^0-9]/, p1) !== -1)
+    (mgrs.substring(p1).search(/[0-9]/) + p1 !== p1 ||
+      mgrs.substring(p1).search(/[^0-9]/) !== -1)
   ) {
-    throw new Error("MGRS::Decode: ref contains junk at end");
+    throw new Error("MGRS.Decode: ref contains junk at end");
   }
   if ((len - p1) % 2 !== 0) {
-    throw new Error("MGRS::Decode: ref must end with even no of digits");
+    throw new Error("MGRS.Decode: ref must end with even no of digits");
   }
 
   return {
@@ -497,6 +662,12 @@ MGRS.Decode = function (mgrs) {
   };
 };
 
+/**
+ * Perform some checks on the UTMUPS coordinates on this ellipsoid.  Throw
+ * an error if any of the assumptions made in the MGRS class is not true.
+ * This check needs to be carried out if the ellipsoid parameters (or the
+ * UTM/UPS scales) are ever changed.
+ **********************************************************************/
 MGRS.Check = function () {
   let lat, lon, x, y;
   const t = this.tile_;

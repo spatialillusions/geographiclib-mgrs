@@ -1,5 +1,5 @@
 import CONSTANTS from "../includes/constants.mjs";
-import MATH from "../includes/math.mjs";
+import MATH from "./math.mjs";
 
 const TransverseMercatorExact = {
   init(a, f, k0, extendp = false) {

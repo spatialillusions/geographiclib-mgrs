@@ -1,7 +1,7 @@
-import DMS from "./DMS.mjs";
-import UTMUPS from "./UTMUPS.mjs";
-import Utility from "./Utility.mjs";
-import MGRS from "./MGRS.mjs";
+import DMS from "./dms.mjs";
+import UTMUPS from "./utmups.mjs";
+import Utility from "./utility.mjs";
+import MGRS from "./mgrs.mjs";
 
 export default class GeoCoords {
   constructor() {
@@ -34,22 +34,11 @@ export default class GeoCoords {
 
     if (sa.length === 1) {
       let prec;
-      const mgrsReverse = MGRS.Reverse(
-        sa[0],
-        (this._zone = {}),
-        (this._northp = {}),
-        (this._easting = {}),
-        (this._northing = {}),
-        (prec = {}),
-        centerp,
-      );
+      const mgrsReverse = MGRS.Reverse(sa[0], centerp);
       this._zone = mgrsReverse.zone;
       this._northp = mgrsReverse.northp;
       this._easting = mgrsReverse.x;
       this._northing = mgrsReverse.y;
-      console.log("values");
-      console.log(this);
-      console.log("reverse");
       const utmupsReverse = UTMUPS.Reverse(
         this._zone,
         this._northp,
@@ -60,13 +49,12 @@ export default class GeoCoords {
         this._gamma,
         this._k,
       );
-      console.log(utmupsReverse);
+
       /*
       this._lat = utmupsReverse.lat;
       this._long = utmupsReverse.lon;
       this._gamma = utmupsReverse.gamma;
       this._k = utmupsReverse.k;*/
-      console.log(this);
     } else if (sa.length === 2) {
       DMS.DecodeLatLon(
         sa[0],

@@ -96,6 +96,8 @@ const MATH = {
   // Evaluate the sine and cosine function with the argument in degrees.
   sincosd(x) {
     const r = x * this.degree();
+    //slam = math.sin(math.radians(lon))
+    //clam = math.cos(math.radians(lon))
     return [Math.sin(r), Math.cos(r)];
   },
 

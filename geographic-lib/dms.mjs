@@ -1,4 +1,4 @@
-import MATH from "../includes/math.mjs";
+import MATH from "./math.mjs";
 
 class DMS {
   /**
