@@ -1,4 +1,4 @@
-import UTMUPS from "../geographic-lib/utmups-old.mjs";
+import UTMUPS from "../geographic-lib/utmups.mjs";
 import UTILITY from "../geographic-lib/utility.mjs";
 
 const utmupsForward = {

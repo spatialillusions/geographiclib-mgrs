@@ -1,5 +1,5 @@
 import MGRS_lib from "./geographic-lib/mgrs.mjs";
-import UTMUPS_lib from "./geographic-lib/utmups-old.mjs";
+import UTMUPS_lib from "./geographic-lib/utmups.mjs";
 
 const MGRS = {};
 

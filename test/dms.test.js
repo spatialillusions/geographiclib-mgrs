@@ -1,5 +1,5 @@
-import DMS from "../geographic-lib/dms-old.mjs";
-import UTMUPS from "../geographic-lib/utmups-old.mjs";
+import DMS from "../geographic-lib/dms.mjs";
+import UTMUPS from "../geographic-lib/utmups.mjs";
 import MGRS from "../geographic-lib/mgrs.mjs";
 
 const BUGGY_ROUNDING = false;
