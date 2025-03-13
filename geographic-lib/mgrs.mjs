@@ -236,7 +236,7 @@ MGRS.ForwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
             : this.minupsSind_)
       ];
     mgrs1[z++] =
-      this.upsrows_[northp][
+      this.upsrows_[northp ? 0 : 1][
         yh - (northp ? this.minupsNind_ : this.minupsSind_)
       ];
   }
@@ -385,7 +385,7 @@ MGRS.Reverse = function (
     throw new Error(`Missing row letter in ${mgrs}`);
   }
   const col = utmp ? this.utmcols_[zonem1 % 3] : this.upscols_[iband];
-  const row = utmp ? this.utmrow_ : this.upsrows_[northp1];
+  const row = utmp ? this.utmrow_ : this.upsrows_[northp1 ? 0 : 1];
   let icol = col.indexOf(mgrs[p++]);
   if (icol < 0) {
     throw new Error(
@@ -394,6 +394,12 @@ MGRS.Reverse = function (
       } set ${col}`,
     );
   }
+  console.log("\n\nNEW TEST");
+  console.log(mgrs);
+  console.log(p);
+  console.log(mgrs[p + 1]);
+  console.log(row);
+  console.log(northp1);
   let irow = row.indexOf(mgrs[p++]);
   if (irow < 0) {
     throw new Error(

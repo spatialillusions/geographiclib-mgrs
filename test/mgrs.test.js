@@ -19,6 +19,10 @@ const mgrsForward = {
     MGRS.Forward(33, true, 472202, 6487839, 3),
     "33VVE722878",
   ],
+  "MGRS Forward UPS": [
+    MGRS.Forward(0, true, 2052065.5, 1946829.5, 5),
+    "ZAG5206546829",
+  ],
 };
 
 const centerPoint = true;
@@ -38,13 +42,11 @@ const mgrsReverse = {
     // 24n 578350 9290850
     { zone: 24, northp: true, x: 578350, y: 9290850, prec: 3 },
   ],
-  /*
-  "MGRS Reverse compare UPS": [
+  "MGRS Reverse UPS": [
     MGRS.Reverse("ZAG5206546829", centerPoint),
-    // n 2052066 1946829
-    { zone: 24, northp: true, x: 2052066, y: 1946829, prec: 5 },
+    // n 2052065.5 1946829.5
+    { zone: 0, northp: true, x: 2052065.5, y: 1946829.5, prec: 5 },
   ],
-  */
 };
 
 export default {
