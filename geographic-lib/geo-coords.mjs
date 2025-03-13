@@ -1,4 +1,4 @@
-import DMS from "./dms.mjs";
+import DMS from "./dms-old.mjs";
 import UTMUPS from "./utmups.mjs";
 import Utility from "./utility.mjs";
 import MGRS from "./mgrs.mjs";
