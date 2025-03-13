@@ -1,0 +1,23 @@
+TEST CASE ID	INPUT DATUM(Code)	INPUT PROJECTION	OUTPUT DATUM(Code)	OUTPUT PROJECTION	INPUT ZONE	OUTPUT ZONE	INPUT_COORDS			OUTPUT_COORDS			CALCULATED_OUTPUT_COORDS				INPUT_SYSTEM_PARAMETERS										OUTPUT_SYSTEM_PARAMETERS										RESULTS
+					OR HEMISPHERE	OR HEMISPHERE	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	Calculated Zone or Hemisphere	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	
+
+1	AUA	Geodetic	AUG	Geodetic			-25.000000	140.000000		-25.000011	139.999994		-24.999995	139.999992																							Successful-Equivalent
+2	AUA	Geodetic	AUG	Geodetic			-20.000000	125.000000		-20.000010	124.999992		-19.999987	124.999975																							Successful-Equivalent
+3	AUA	Geodetic	AUG	Geodetic			-30.000000	130.000000		-30.000011	129.999993		-30.000000	129.999979																							Successful-Equivalent
+4	AUA	Geodetic	AUG	Geodetic			-35.000000	150.000000		-35.000012	149.999995		-35.000008	150.000005																							Successful-Equivalent
+5	AUA	Geodetic	AUG	Geodetic			-15.000000	130.000000		-15.000011	129.999993		-14.999981	129.999981																							Successful-Equivalent
+6	EUR-G	Geodetic	OGB-A	Geodetic			51.274414	-0.772528		51.273016	-0.772387		51.273016	-0.772387																							Successful-Equivalent
+7	EUR-G	Geodetic	OGB-A	Geodetic			50.000000	-5.000000		49.998442	-5.000333		49.998441	-5.000333																							Successful-Equivalent
+8	EUR-K	Geodetic	OGB-A	Geodetic			53.000000	0.000000		52.998817	0.000238		52.998818	0.000238																							Successful-Equivalent
+9	EUR-K	Geodetic	OGB-A	Geodetic			53.000000	0.034920		52.998818	0.035163		52.998817	0.035162																							Successful-Equivalent
+10	EUR-K	Geodetic	OGB-A	Geodetic			53.000000	-0.034920		52.998818	-0.034686		52.998818	-0.034686																							Successful-Equivalent
+11	HIT	Geodetic	SAN-D	Geodetic			-55.000000	-70.000000		-54.999661	-69.997611		-54.999660	-69.997611																							Successful-Equivalent
+12	HIT	Geodetic	SAN-D	Geodetic			-50.000000	-75.000000		-49.999553	-74.998063		-49.999552	-74.998063																							Successful-Equivalent
+13	HIT	Geodetic	SAN-D	Geodetic			-53.000000	-73.000000		-52.999636	-72.997847		-52.999635	-72.997846																							Successful-Equivalent
+14	HIT	Geodetic	SAN-D	Geodetic			-52.000000	-70.000000		-51.999541	-69.997774		-51.999540	-69.997774																							Successful-Equivalent
+15	NAR-H	Geodetic	OHA-M	Geodetic			21.500000	-158.000000		21.503145	-158.002776		21.503145	-158.002776																							Successful-Equivalent
+16	NAR-H	Geodetic	OHA-M	Geodetic			19.000000	-155.500000		19.003045	-155.502708		19.003046	-155.502708																							Successful-Equivalent
+17	NAR-H	Geodetic	OHA-M	Geodetic			20.000000	-156.000000		20.003096	-156.002730		20.003096	-156.002730																							Successful-Equivalent
+18	NAR-H	Geodetic	OHA-M	Geodetic			20.700000	-156.300000		20.703130	-156.302745		20.703130	-156.302745																							Successful-Equivalent
+19	NAR-H	Geodetic	OHA-M	Geodetic			22.000000	-159.500000		22.003145	-159.502798		22.003145	-159.502798																							Successful-Equivalent
+20	OHA-D	Geodetic	NAR-H	Geodetic			21.500000	-158.000000		21.496840	-157.997253		21.496840	-157.997253																							Successful-Equivalent

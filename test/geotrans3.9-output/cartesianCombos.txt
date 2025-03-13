@@ -1,0 +1,23 @@
+TEST CASE ID	INPUT DATUM(Code)	INPUT PROJECTION	OUTPUT DATUM(Code)	OUTPUT PROJECTION	INPUT ZONE	OUTPUT ZONE	INPUT_COORDS			OUTPUT_COORDS			CALCULATED_OUTPUT_COORDS				INPUT_SYSTEM_PARAMETERS										OUTPUT_SYSTEM_PARAMETERS										RESULTS
+					OR HEMISPHERE	OR HEMISPHERE	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	Calculated Zone or Hemisphere	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	
+
+1	ADI-M	Geocentric	ADI-M	Lambert Conformal Conic			6378249.000000	0.000000	0.000000	0.000000	1105889.446000		0.000000	1105889.445937													-5.500000	10.500000	0.000000	-10.000000	0.000000	0.000000					Warning-Equivalent
+2	WGE	Geocentric	WGE	Mercator			0.000000	167521.000000	6354559.000000	-473081.010600	19557317.000000		-473081.010564	19557317.037257															96.000000	45.000000	0.000000	0.000000					Successful-Equivalent
+3	NAR-A	Geocentric	NAR-A	Polar Stereographic			-557747.000000	0.000000	-6332401.000000	82849.623590	469863.564000		82849.613053	469863.504273															170.000000	-45.000000	0.000000	0.000000					Warning-Equivalent
+4	ADI-M	Geocentric	ADI-M	MGRS			6378249.000000	0.000000	0.000000	31NAL6601600000			31NAL6601500000																								Warning-Equivalent
+5	WGE	Geocentric	WGE	UPS		N	0.000000	167521.000000	6354559.000000	2166544.000000	2000000.000000		2166544.418263	2000000.000000		N																					Successful-Equivalent
+6	NAR-A	Geocentric	NAR-A	MGRS			-557747.000000	0.000000	-6332401.000000	BAG0000044543			BAG0000044542																								Warning-Equivalent
+7	WGE	Geocentric	WGE	UTM		-16	0.000000	-4517591.000000	-4487348.000000	263554.000000	5012670.000000		263553.960467	5012670.869947		-16																					Successful-Equivalent
+8	ADI-F	Geocentric	MIN-A	Lambert Conformal Conic			6378249.000000	0.000000	0.000000	81.330000	1105983.590000		81.286350	1105983.647506													-5.500000	10.500000	0.000000	-10.000000	0.000000	0.000000					Warning-Equivalent
+9	WGE	Geocentric	WGC	Mercator			0.000000	167521.000000	6354559.000000	-473093.000000	19557308.000000		-473092.988485	19557307.412464															96.000000	45.000000	0.000000	0.000000					Successful-Equivalent
+10	CAZ	Geocentric	DID	Polar Stereographic			-557747.000000	0.000000	-6332401.000000	83024.590000	470161.170000		83024.603341	470161.164519															170.000000	-45.000000	0.000000	0.000000					Warning-Equivalent
+11	ADI-F	Geocentric	PTN	MGRS			6378249.000000	0.000000	0.000000	30NZR3393100501			30NZR3393100501																								Warning-Equivalent
+12	WGE	Geocentric	WGC	UPS		N	0.000000	167521.000000	6354559.000000	2166544.000000	2000000.000000		2166544.488722	1999999.552684		N																					Successful-Equivalent
+13	WGC	Geocentric	CAZ	MGRS			-557747.000000	0.000000	-6332401.000000	BAG0012744652			BAG0012644652																								Warning-Equivalent
+14	HIT	Geocentric	SAN-D	UTM		-16	0.000000	-4517591.000000	-4487348.000000	263646.000000	5012614.000000		263645.658536	5012613.843941		-16																					Warning-Equivalent
+15	WGE	Geocentric	WGC	Geodetic			6378137.000000	0.000000	0.000000	-0.000041	-0.000154		-0.000040	-0.000154																							Successful-Equivalent
+16	WGE	Geocentric	WGC	Geodetic			0.000000	6378137.000000	0.000000	-0.000041	89.999846		-0.000040	89.999846																							Successful-Equivalent
+17	WGE	Geocentric	WGC	Geodetic			0.000000	0.000000	6356752.000000	90.000000	-0.000154		90.000000	-0.000154																							Successful-Equivalent
+18	WGE	Geocentric	WGC	Geocentric			6378137.000000	0.000000	0.000000	6378136.000000	-17.000000	-4.000000	6378135.599975	-17.130829	-4.469875																						Successful-Equivalent
+19	WGE	Geocentric	WGC	Geocentric			0.000000	6378137.000000	0.000000	17.000000	6378136.000000	-4.000000	17.130829	6378135.599975	-4.469875																						Successful-Equivalent
+20	WGE	Geocentric	WGC	Geocentric			0.000000	0.000000	6356752.000000	0.000000	0.000000	6356746.000000	0.000000	-0.000000	6356746.106706																						Successful-Equivalent

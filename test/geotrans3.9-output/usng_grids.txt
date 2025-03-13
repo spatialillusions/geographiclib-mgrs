@@ -1,0 +1,265 @@
+TEST CASE ID	INPUT DATUM(Code)	INPUT PROJECTION	OUTPUT DATUM(Code)	OUTPUT PROJECTION	INPUT ZONE	OUTPUT ZONE	INPUT_COORDS			OUTPUT_COORDS			CALCULATED_OUTPUT_COORDS				INPUT_SYSTEM_PARAMETERS										OUTPUT_SYSTEM_PARAMETERS										RESULTS
+					OR HEMISPHERE	OR HEMISPHERE	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	Calculated Zone or Hemisphere	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	
+
+1	WGE	Geodetic	WGE	USNG			40.000000	-90.000000		16TBK4390032069			16TBK4390032069																								Successful-Equivalent
+2	WGE	USNG	WGE	Geodetic			16TBK4390032069			40.000000	-90.000010		39.999999	-90.000004																							Successful-Equivalent
+3	WGE	Geodetic	WGE	USNG			40.000000	-180.000000		01TBE4390032069			01TBE4390032069																								Successful-Equivalent
+4	WGE	USNG	WGE	Geodetic			01TBE4390032069			40.000000	-180.000000		39.999999	179.999996																							Successful-Equivalent
+5	WGE	Geodetic	WGE	USNG			40.000000	179.999990		60TYK5609932068			60TYK5609832069																								Successful-Equivalent
+6	WGE	USNG	WGE	Geodetic			60TYK5609932068			40.000000	179.999990		39.999991	179.999992																							Successful-Equivalent
+7	WGE	Geodetic	WGE	USNG			0.000000	0.000000		31NAA6602100000			31NAA6602100000																								Successful-Equivalent
+8	WGE	USNG	WGE	Geodetic			31NAA6602100000			0.000000	0.000000		0.000000	-0.000004																							Successful-Equivalent
+9	WGE	Geodetic	WGE	USNG			0.000000	-0.000010		30NZF3397700000			30NZF3397700000																								Successful-Equivalent
+10	WGE	USNG	WGE	Geodetic			30NZF3397700000			0.000000	-0.000010		0.000000	-0.000014																							Successful-Equivalent
+11	WGE	Geodetic	WGE	USNG			0.000000	-3.000000		30NWF0000000000			30NWF0000000000																								Successful-Equivalent
+12	WGE	USNG	WGE	Geodetic			30NWF0000000000			0.000000	-3.000000		0.000000	-3.000000																							Successful-Equivalent
+13	WGE	Geodetic	WGE	USNG			84.200000	0.000000		ZAA0000055534			ZAA0000055533																								Successful-Equivalent
+14	WGE	USNG	WGE	Geodetic			ZAA0000055534			84.200000	0.000000		84.200003	0.000000																							Successful-Equivalent
+15	WGE	Geodetic	WGE	USNG			-40.000000	-180.000000		01HBR4390067931			01HBR4390067930																								Successful-Equivalent
+16	WGE	USNG	WGE	Geodetic			01HBR4390067931			-40.000000	-180.000000		-39.999999	179.999996																							Successful-Equivalent
+17	WGE	Geodetic	WGE	USNG			-80.200000	-180.000000		BAB0000009413			AZB9999909413																								Successful-Different
+18	WGE	USNG	WGE	Geodetic			BAB0000009413			-80.200000	-180.000000		-80.199996	180.000000																							Successful-Equivalent
+19	WGE	Geodetic	WGE	USNG			-79.999900	90.000000		46CDS4186716926			46CDS4186716926																								Successful-Equivalent
+20	WGE	USNG	WGE	Geodetic			46CDS4186716926			-79.999900	90.000000		-79.999902	89.999989																							Successful-Equivalent
+21	WGE	Geodetic	WGE	USNG			83.999900	-90.000000		16XDU6500528994			16XDU6500428994																								Successful-Equivalent
+22	WGE	USNG	WGE	Geodetic			16XDU6500528994			83.999900	-90.000000		83.999900	-89.999980																							Successful-Equivalent
+23	WGE	Geodetic	WGE	USNG			0.000010	0.000010		31NAA6602300001			31NAA6602200001																								Successful-Equivalent
+24	WGE	USNG	WGE	Geodetic			31NAA6602300001			0.000010	0.000010		0.000009	0.000014																							Successful-Equivalent
+25	WGE	Geodetic	WGE	USNG			-0.000010	0.000010		31MAV6602399999			31MAV6602299998																								Successful-Equivalent
+26	WGE	USNG	WGE	Geodetic			31MAV6602399999			-0.000010	0.000010		-0.000009	0.000014																							Successful-Equivalent
+27	WGE	Geodetic	WGE	USNG			-0.000010	-0.000010		30MZE3397799999			30MZE3397799998																								Successful-Equivalent
+28	WGE	USNG	WGE	Geodetic			30MZE3397799999			-0.000010	-0.000010		-0.000009	-0.000014																							Successful-Equivalent
+29	WGE	Geodetic	WGE	USNG			45.000000	-179.999990		01TBK6355587329			01TBK6355487329																								Successful-Equivalent
+30	WGE	USNG	WGE	Geodetic			01TBK6355587329			45.000000	-179.999990		44.999996	-179.999987																							Successful-Equivalent
+31	WGE	Geodetic	WGE	USNG			-45.000000	179.999990		60GYR3644512671			60GYR3644512670																								Successful-Equivalent
+32	WGE	USNG	WGE	Geodetic			60GYR3644512671			-45.000000	179.999990		-44.999996	179.999987																							Successful-Equivalent
+33	WGE	Geodetic	WGE	USNG			89.999990	-90.000000		YZH9999900000			YZH9999800000																								Successful-Equivalent
+34	WGE	USNG	WGE	Geodetic			YZH9999900000			89.999990	-90.000000		89.999991	-90.000000																							Successful-Equivalent
+35	WGE	Geodetic	WGE	USNG			-89.999990	90.000000		BAN0000100000			BAN0000100000																								Successful-Equivalent
+36	WGE	USNG	WGE	Geodetic			BAN0000100000			-89.999990	90.000000		-89.999991	90.000000																							Successful-Equivalent
+37	WGE	Geodetic	WGE	USNG			90.000000	-180.000000		ZAH0000000000			ZAH0000000000																								Successful-Equivalent
+38	WGE	USNG	WGE	Geodetic			ZAH0000000000			90.000000	180.000000		90.000000	0.000000																							Successful-Equivalent
+39	WGE	Geodetic	WGE	USNG			-90.000000	180.000000		BAN0000000000			BAN0000000000																								Successful-Equivalent
+40	WGE	USNG	WGE	Geodetic			BAN0000000000			-90.000000	0.000000		-90.000000	0.000000																							Successful-Equivalent
+41	BAT	Geodetic	BAT	USNG			40.000000	-90.000000		16TBK4393131624			16TBK4393131624																								Warning-Equivalent
+42	BAT	Geodetic	BAT	USNG			40.000000	-180.000000		01TBE4393131624			01TBE4393131624																								Warning-Equivalent
+43	BAT	Geodetic	BAT	USNG			40.000000	180.000000		01TBE4393131624			01TBE4393131624																								Warning-Equivalent
+44	BAT	Geodetic	BAT	USNG			0.000000	0.000000		31NAA6606000000			31NAA6606000000																								Warning-Equivalent
+45	BAT	Geodetic	BAT	USNG			0.000000	-0.000010		30NZF3393800000			30NZF3393800000																								Warning-Equivalent
+46	BAT	Geodetic	BAT	USNG			0.000000	-3.000000		30NWF0000000000			30NWF0000000000																								Warning-Equivalent
+47	BAT	Geodetic	BAT	USNG			84.200000	0.000000		ZAA0000055615			ZAA0000055614																								Warning-Equivalent
+48	BAT	Geodetic	BAT	USNG			-40.000000	-180.000000		01HBR4393168375			01HBR4393168375																								Warning-Equivalent
+49	BAT	Geodetic	BAT	USNG			-80.200000	-180.000000		BAB0000009551			AZB9999909550																								Warning-Different
+50	BAT	Geodetic	BAT	USNG			-79.999900	90.000000		46CDS4187417895			46CDS4187417895																								Warning-Equivalent
+51	BAT	Geodetic	BAT	USNG			83.999900	-90.000000		16XDU6500927968			16XDU6500927968																								Warning-Equivalent
+52	BAT	Geodetic	BAT	USNG			0.000010	0.000010		31NAA6606100001			31NAA6606100001																								Warning-Equivalent
+53	BAT	Geodetic	BAT	USNG			-0.000010	0.000010		31MAV6606199998			31MAV6606199998																								Warning-Equivalent
+54	BAT	Geodetic	BAT	USNG			-0.000010	-0.000010		30MZE3393899998			30MZE3393899998																								Warning-Equivalent
+55	BAT	Geodetic	BAT	USNG			45.000000	-179.999990		01TBK6358386824			01TBK6358386824																								Warning-Equivalent
+56	BAT	Geodetic	BAT	USNG			-45.000000	179.999990		60GYR3641613175			60GYR3641613175																								Warning-Equivalent
+57	BAT	Geodetic	BAT	USNG			89.999990	-90.000000		YZH9999900000			YZH9999800000																								Warning-Equivalent
+58	BAT	Geodetic	BAT	USNG			-89.999990	90.000000		BAN0000100000			BAN0000100000																								Warning-Equivalent
+59	BAT	Geodetic	BAT	USNG			90.000000	-180.000000		ZAH0000000000			ZAH0000000000																								Warning-Equivalent
+60	BAT	Geodetic	BAT	USNG			-90.000000	180.000000		BAN0000000000			BAN0000000000																								Warning-Equivalent
+61	CAC	Geodetic	CAC	USNG			40.000000	-90.000000		16TBK4389331859			16TBK4389331859																								Warning-Equivalent
+62	CAC	Geodetic	CAC	USNG			40.000000	-180.000000		01TBE4389331859			01TBE4389331859																								Warning-Equivalent
+63	CAC	Geodetic	CAC	USNG			40.000000	180.000000		01TBE4389331859			01TBE4389331859																								Warning-Equivalent
+64	CAC	Geodetic	CAC	USNG			0.000000	0.000000		31NAA6601700000			31NAA6601700000																								Warning-Equivalent
+65	CAC	Geodetic	CAC	USNG			0.000000	-0.000010		30NZF3398100000			30NZF3398100000																								Warning-Equivalent
+66	CAC	Geodetic	CAC	USNG			0.000000	-3.000000		30NWF0000000000			30NWF0000000000																								Warning-Equivalent
+67	CAC	Geodetic	CAC	USNG			84.200000	0.000000		ZAA0000055503			ZAA0000055502																								Warning-Equivalent
+68	CAC	Geodetic	CAC	USNG			-40.000000	-180.000000		01HBR4389368140			01HBR4389368140																								Warning-Equivalent
+69	CAC	Geodetic	CAC	USNG			-80.200000	-180.000000		BAB0000009362			AZB9999909362																								Warning-Different
+70	CAC	Geodetic	CAC	USNG			-79.999900	90.000000		46CDS4186417056			46CDS4186417056																								Warning-Equivalent
+71	CAC	Geodetic	CAC	USNG			83.999900	-90.000000		16XDU6500328884			16XDU6500328884																								Warning-Equivalent
+72	CAC	Geodetic	CAC	USNG			0.000010	0.000010		31NAA6601800001			31NAA6601800001																								Warning-Equivalent
+73	CAC	Geodetic	CAC	USNG			-0.000010	0.000010		31MAV6601899998			31MAV6601899998																								Warning-Equivalent
+74	CAC	Geodetic	CAC	USNG			-0.000010	-0.000010		30MZE3398199998			30MZE3398199998																								Warning-Equivalent
+75	CAC	Geodetic	CAC	USNG			45.000000	-179.999990		01TBK6354787112			01TBK6354787112																								Warning-Equivalent
+76	CAC	Geodetic	CAC	USNG			-45.000000	179.999990		60GYR3645212887			60GYR3645212887																								Warning-Equivalent
+77	CAC	Geodetic	CAC	USNG			89.999990	-90.000000		YZH9999900000			YZH9999800000																								Warning-Equivalent
+78	CAC	Geodetic	CAC	USNG			-89.999990	90.000000		BAN0000100000			BAN0000100000																								Warning-Equivalent
+79	CAC	Geodetic	CAC	USNG			90.000000	-180.000000		ZAH0000000000			ZAH0000000000																								Warning-Equivalent
+80	CAC	Geodetic	CAC	USNG			-90.000000	180.000000		BAN0000000000			BAN0000000000																								Warning-Equivalent
+81	ADI-M	Geodetic	ADI-M	USNG			40.000000	-90.000000		16TBK4389031767			16TBK4389031767																								Warning-Equivalent
+82	ADI-M	Geodetic	ADI-M	USNG			40.000000	-180.000000		01TBE4389031767			01TBE4389031767																								Warning-Equivalent
+83	ADI-M	Geodetic	ADI-M	USNG			40.000000	180.000000		01TBE4389031767			01TBE4389031767																								Warning-Equivalent
+84	ADI-M	Geodetic	ADI-M	USNG			0.000000	0.000000		31NAA6601500000			31NAA6601500000																								Warning-Equivalent
+85	ADI-M	Geodetic	ADI-M	USNG			0.000000	-0.000010		30NZF3398300000			30NZF3398300000																								Warning-Equivalent
+86	ADI-M	Geodetic	ADI-M	USNG			0.000000	-3.000000		30NWF0000000000			30NWF0000000000																								Warning-Equivalent
+87	ADI-M	Geodetic	ADI-M	USNG			84.200000	0.000000		ZAA0000055487			ZAA0000055487																								Warning-Equivalent
+88	ADI-M	Geodetic	ADI-M	USNG			-40.000000	-180.000000		01HBR4389068232			01HBR4389068232																								Warning-Equivalent
+89	ADI-M	Geodetic	ADI-M	USNG			-80.200000	-180.000000		BAB0000009336			AZB9999909336																								Warning-Different
+90	ADI-M	Geodetic	ADI-M	USNG			-79.999900	90.000000		46CDS4186317103			46CDS4186317103																								Warning-Equivalent
+91	ADI-M	Geodetic	ADI-M	USNG			83.999900	-90.000000		16XDU6500228847			16XDU6500228847																								Warning-Equivalent
+92	ADI-M	Geodetic	ADI-M	USNG			0.000010	0.000010		31NAA6601600001			31NAA6601600001																								Warning-Equivalent
+93	ADI-M	Geodetic	ADI-M	USNG			-0.000010	0.000010		31MAV6601699998			31MAV6601699998																								Warning-Equivalent
+94	ADI-M	Geodetic	ADI-M	USNG			-0.000010	-0.000010		30MZE3398399998			30MZE3398399998																								Warning-Equivalent
+95	ADI-M	Geodetic	ADI-M	USNG			45.000000	-179.999990		01TBK6354487018			01TBK6354487018																								Warning-Equivalent
+96	ADI-M	Geodetic	ADI-M	USNG			-45.000000	179.999990		60GYR3645512981			60GYR3645512981																								Warning-Equivalent
+97	ADI-M	Geodetic	ADI-M	USNG			89.999990	-90.000000		YZH9999900000			YZH9999800000																								Warning-Equivalent
+98	ADI-M	Geodetic	ADI-M	USNG			-89.999990	90.000000		BAN0000100000			BAN0000100000																								Warning-Equivalent
+99	ADI-M	Geodetic	ADI-M	USNG			90.000000	-180.000000		ZAH0000000000			ZAH0000000000																								Warning-Equivalent
+100	ADI-M	Geodetic	ADI-M	USNG			-90.000000	180.000000		BAN0000000000			BAN0000000000																								Warning-Equivalent
+101	EUR-7	Geodetic	EUR-7	USNG			40.000000	-90.000000		16TBK4388932145			16TBK4388832145																								Successful-Equivalent
+102	EUR-7	Geodetic	EUR-7	USNG			40.000000	-180.000000		01TBE4388932145			01TBE4388832145																								Successful-Equivalent
+103	EUR-7	Geodetic	EUR-7	USNG			40.000000	180.000000		01TBE4388932145			01TBE4388832145																								Successful-Equivalent
+104	EUR-7	Geodetic	EUR-7	USNG			0.000000	0.000000		31NAA6600800000			31NAA6600800000																								Successful-Equivalent
+105	EUR-7	Geodetic	EUR-7	USNG			0.000000	-0.000010		30NZF3399100000			30NZF3399000000																								Successful-Equivalent
+106	EUR-7	Geodetic	EUR-7	USNG			0.000000	-3.000000		30NWF0000000000			30NWF0000000000																								Successful-Equivalent
+107	EUR-7	Geodetic	EUR-7	USNG			84.200000	0.000000		ZAA0000055499			ZAA0000055499																								Successful-Equivalent
+108	EUR-7	Geodetic	EUR-7	USNG			-40.000000	-180.000000		01HBR4388967855			01HBR4388867854																								Successful-Equivalent
+109	EUR-7	Geodetic	EUR-7	USNG			-80.200000	-180.000000		BAB0000009356			AZB9999909355																								Successful-Different
+110	EUR-7	Geodetic	EUR-7	USNG			-79.999900	90.000000		46CDS4186416664			46CDS4186416663																								Successful-Equivalent
+111	EUR-7	Geodetic	EUR-7	USNG			83.999900	-90.000000		16XDU6500329280			16XDU6500229280																								Successful-Equivalent
+112	EUR-7	Geodetic	EUR-7	USNG			0.000010	0.000010		31NAA6600900001			31NAA6600900001																								Successful-Equivalent
+113	EUR-7	Geodetic	EUR-7	USNG			-0.000010	0.000010		31MAV6600999999			31MAV6600999998																								Successful-Equivalent
+114	EUR-7	Geodetic	EUR-7	USNG			-0.000010	-0.000010		30MZE3399199999			30MZE3399099998																								Successful-Equivalent
+115	EUR-7	Geodetic	EUR-7	USNG			45.000000	-179.999990		01TBK6354487422			01TBK6354387422																								Successful-Equivalent
+116	EUR-7	Geodetic	EUR-7	USNG			-45.000000	179.999990		60GYR3645612578			60GYR3645612577																								Successful-Equivalent
+117	EUR-7	Geodetic	EUR-7	USNG			89.999990	-90.000000		YZH9999900000			YZH9999800000																								Successful-Equivalent
+118	EUR-7	Geodetic	EUR-7	USNG			-89.999990	90.000000		BAN0000100000			BAN0000100000																								Successful-Equivalent
+119	EUR-7	Geodetic	EUR-7	USNG			90.000000	-180.000000		ZAH0000000000			ZAH0000000000																								Successful-Equivalent
+120	EUR-7	Geodetic	EUR-7	USNG			-90.000000	180.000000		BAN0000000000			BAN0000000000																								Successful-Equivalent
+121	WGE	Geodetic	WGE	UPS		N	84.200000	0.000000		2000000.000000	1355534.000000		2000000.000000	1355533.652401		N																					Successful-Equivalent
+122	WGE	UPS	WGE	Geodetic	N		2000000.000000	1355534.000000		84.200000	0.000000		84.200003	0.000000																							Successful-Equivalent
+123	WGE	Geodetic	WGE	UPS		S	-80.200000	-180.000000		2000000.000000	909413.000000		2000000.000000	909413.493650		S																					Successful-Equivalent
+124	WGE	UPS	WGE	Geodetic	S		2000000.000000	909413.000000		-80.200000	-180.000000		-80.199996	180.000000																							Successful-Equivalent
+125	WGE	Geodetic	WGE	UPS		N	89.999990	-90.000000		1999999.000000	2000000.000000		1999998.889762	2000000.000000		N																					Successful-Equivalent
+126	WGE	UPS	WGE	Geodetic	N		1999999.000000	2000000.000000		89.999990	-90.000000		89.999991	-90.000000																							Successful-Equivalent
+127	WGE	Geodetic	WGE	UPS		S	-89.999990	90.000000		2000001.000000	2000000.000000		2000001.110238	2000000.000000		S																					Successful-Equivalent
+128	WGE	UPS	WGE	Geodetic	S		2000001.000000	2000000.000000		-89.999990	90.000000		-89.999991	90.000000																							Successful-Equivalent
+129	WGE	Geodetic	WGE	UPS		N	90.000000	-180.000000		2000000.000000	2000000.000000		2000000.000000	2000000.000000		N																					Successful-Equivalent
+130	WGE	UPS	WGE	Geodetic	N		2000000.000000	2000000.000000		90.000000	180.000000		90.000000	0.000000																							Successful-Equivalent
+131	WGE	Geodetic	WGE	UPS		S	-90.000000	180.000000		2000000.000000	2000000.000000		2000000.000000	2000000.000000		S																					Successful-Equivalent
+132	WGE	UPS	WGE	Geodetic	S		2000000.000000	2000000.000000		-90.000000	0.000000		-90.000000	0.000000																							Successful-Equivalent
+133	WGE	Geodetic	WGE	UPS		N	84.600000	-0.000010		2000000.000000	1400045.000000		1999999.895288	1400045.161962		N																					Successful-Equivalent
+134	WGE	UPS	WGE	Geodetic	N		2000000.000000	1400045.000000		84.600000	-0.000010		84.599999	0.000000																							Successful-Equivalent
+135	WGE	Geodetic	WGE	UPS		S	-80.600000	0.000010		2000000.000000	3045876.000000		2000000.182540	3045876.388861		S																					Successful-Equivalent
+136	WGE	UPS	WGE	Geodetic	S		2000000.000000	3045876.000000		-80.600000	0.000010		-80.600003	0.000000																							Successful-Equivalent
+137	WGE	Geodetic	WGE	GEOREF			0.000000	0.000000		NGAA0000000000			NGAA0000000000																								Successful-Equivalent
+138	WGE	GEOREF	WGE	Geodetic			NGAA0000000000			0.000000	0.000000		0.000000	0.000000																							Successful-Equivalent
+139	WGE	Geodetic	WGE	GEOREF			-0.000010	0.000010		NFAQ0000159999			NFAQ0000159999																								Successful-Equivalent
+140	WGE	GEOREF	WGE	Geodetic			NFAQ0000159999			-0.000017	0.000017		-0.000017	0.000017																							Successful-Equivalent
+141	WGE	Geodetic	WGE	GEOREF			-0.000010	-0.000010		MFQQ5999959999			MFQQ5999959999																								Successful-Equivalent
+142	WGE	GEOREF	WGE	Geodetic			MFQQ5999959999			-0.000017	-0.000017		-0.000017	-0.000017																							Successful-Equivalent
+143	WGE	Geodetic	WGE	GEOREF			0.000010	-0.000010		MGQA5999900001			MGQA5999900001																								Successful-Equivalent
+144	WGE	GEOREF	WGE	Geodetic			MGQA5999900001			0.000017	-0.000017		0.000017	-0.000017																							Successful-Equivalent
+145	WGE	Geodetic	WGE	GEOREF			90.000000	-180.000000		AMAQ0000060000			AMAQ0000059999																								Successful-Equivalent
+146	WGE	GEOREF	WGE	Geodetic			AMAQ0000060000			90.000000	-180.000000		90.000000	-180.000000																							Successful-Equivalent
+147	WGE	Geodetic	WGE	GEOREF			90.000000	180.000000		ZMQQ6000060000			ZMQQ5999959999																								Successful-Equivalent
+148	WGE	GEOREF	WGE	Geodetic			ZMQQ6000060000			90.000000	180.000000		90.000000	180.000000																							Successful-Equivalent
+149	WGE	Geodetic	WGE	GEOREF			-90.000000	180.000000		ZAQA6000000000			ZAQA5999900000																								Successful-Equivalent
+150	WGE	GEOREF	WGE	Geodetic			ZAQA6000000000			-90.000000	180.000000		-90.000000	180.000000																							Successful-Equivalent
+151	WGE	Geodetic	WGE	GEOREF			89.999990	-90.000000		GMAQ0000059999			GMAQ0000059999																								Successful-Equivalent
+152	WGE	GEOREF	WGE	Geodetic			GMAQ0000059999			89.999983	-90.000000		89.999983	-90.000000																							Successful-Equivalent
+153	WGE	Geodetic	WGE	GEOREF			-89.999990	90.000000		UAAA0000000001			UAAA0000000001																								Successful-Equivalent
+154	WGE	GEOREF	WGE	Geodetic			UAAA0000000001			-89.999983	90.000000		-89.999983	90.000000																							Successful-Equivalent
+155	WGE	Geodetic	WGE	GEOREF			45.000000	-179.999990		AKAA0000100000			AKAA0000100000																								Successful-Equivalent
+156	WGE	GEOREF	WGE	Geodetic			AKAA0000100000			45.000000	-179.999983		45.000000	-179.999983																							Successful-Equivalent
+157	WGE	Geodetic	WGE	GEOREF			-45.000000	179.999990		ZDQA5999900000			ZDQA5999900000																								Successful-Equivalent
+158	WGE	GEOREF	WGE	Geodetic			ZDQA5999900000			-45.000000	179.999983		-45.000000	179.999983																							Successful-Equivalent
+159	WGE	Geodetic	WGE	UTM		16	40.000000	-90.000000		243900.352000	4432069.057000		243900.352518	4432069.056882		16																					Successful-Equivalent
+160	WGE	UTM	WGE	Geodetic	16		243900.400000	4432069.100000		40.000000	-90.000000		40.000000	-89.999999																							Successful-Equivalent
+161	WGE	Geodetic	WGE	UTM		1	40.000000	-180.000000		243900.352000	4432069.057000		243900.352518	4432069.056882		1																					Successful-Equivalent
+162	WGE	UTM	WGE	Geodetic	1		243900.400000	4432069.100000		40.000000	-180.000000		40.000000	-179.999999																							Successful-Equivalent
+163	WGE	Geodetic	WGE	UTM		60	40.000000	-180.000000		756099.648000	4432069.057000		756099.648460	4432069.056915		60																					Successful-Equivalent
+164	WGE	UTM	WGE	Geodetic	60		756099.600000	4432069.100000		40.000000	180.000000		40.000000	179.999999																							Successful-Equivalent
+165	WGE	Geodetic	WGE	UTM		30	0.000000	0.000000		833978.556800	0.000000		833978.556916	0.000000		30																					Successful-Equivalent
+166	WGE	UTM	WGE	Geodetic	30		833978.600000	0.000000		0.000000	0.000000		0.000000	0.000000																							Successful-Equivalent
+167	WGE	Geodetic	WGE	UTM		31	0.000000	0.000000		166021.000000	0.000000		166021.443084	0.000000		31																					Successful-Equivalent
+168	WGE	UTM	WGE	Geodetic	31		166021.000000	0.000000		0.000000	0.000000		0.000000	-0.000004																							Successful-Equivalent
+169	WGE	Geodetic	WGE	UTM		30	0.000000	-3.000000		500000.000000	0.000000		500000.000000	0.000000		30																					Successful-Equivalent
+170	WGE	UTM	WGE	Geodetic	30		500000.000000	0.000000		0.000000	-3.000000		0.000000	-3.000000																							Successful-Equivalent
+171	WGE	Geodetic	WGE	UTM		31	0.000000	0.000000		166021.443200	0.000000		166021.443084	0.000000		31																					Successful-Equivalent
+172	WGE	UTM	WGE	Geodetic	31		166021.400000	0.000000		0.000000	-0.000000		0.000000	-0.000000																							Successful-Equivalent
+173	WGE	Geodetic	WGE	UTM		31	84.200000	0.000000		466167.717800	9351302.705000		466167.717844	9351302.703994		31																					Successful-Equivalent
+174	WGE	UTM	WGE	Geodetic	31		466167.700000	9351302.700000		84.200000	-0.000002		84.200000	-0.000002																							Successful-Equivalent
+175	WGE	Geodetic	WGE	UTM		-1	-40.000000	-180.000000		243900.352000	5567930.943000		243900.352518	5567930.943118		-1																					Successful-Equivalent
+176	WGE	UTM	WGE	Geodetic	-1		243900.400000	5567931.000000		-40.000000	-179.999999		-40.000000	-179.999999																							Successful-Equivalent
+177	WGE	Geodetic	WGE	UTM		-60	-80.200000	-180.000000		556981.213900	1094620.642000		556981.214010	1094620.642781		-60																					Successful-Equivalent
+178	WGE	UTM	WGE	Geodetic	-60		556981.200000	1094620.600000		-80.200000	179.999999		-80.200000	179.999999																							Successful-Equivalent
+179	ANO	Geodetic	ANO	UTM		16	40.000000	-90.000000		243899.000000	4432084.000000		243899.420411	4432084.476687		16																					Warning-Equivalent
+180	ANO	Geodetic	ANO	UTM		1	40.000000	-180.000000		243899.000000	4432084.000000		243899.420411	4432084.476687		1																					Warning-Equivalent
+181	ANO	Geodetic	ANO	UTM		1	40.000000	180.000000		243899.000000	4432084.000000		243899.419922	4432084.476704		1																					Warning-Equivalent
+182	ANO	Geodetic	ANO	UTM		31	0.000000	0.000000		166020.000000	0.000000		166020.238709	0.000000		31																					Warning-Equivalent
+183	ANO	Geodetic	ANO	UTM		30	0.000000	-0.000010		833979.000000	0.000000		833978.647638	0.000000		30																					Warning-Equivalent
+184	ANO	Geodetic	ANO	UTM		30	0.000000	-3.000000		500000.000000	0.000000		500000.000000	0.000000		30																					Warning-Equivalent
+185	ANO	Geodetic	ANO	UTM		31	84.200000	0.000000		466168.000000	9351335.000000		466167.593114	9351335.967006		31																					Warning-Equivalent
+186	ANO	Geodetic	ANO	UTM		-1	-40.000000	-180.000000		243899.000000	5567916.000000		243899.420411	5567915.523313		-1																					Warning-Equivalent
+187	ANO	Geodetic	ANO	UTM		-1	-80.200000	-180.000000		443019.000000	1094590.000000		443018.576222	1094589.022079		-1																					Warning-Equivalent
+188	ANO	Geodetic	ANO	UTM		-46	-79.999900	90.000000		441867.000000	1116896.000000		441866.995321	1116894.652581		-46																					Warning-Different
+189	ANO	Geodetic	ANO	UTM		16	83.999900	-90.000000		465005.000000	9329026.000000		465004.634911	9329027.214519		16																					Warning-Different
+190	ANO	Geodetic	ANO	UTM		31	0.000010	0.000010		166021.000000	1.000000		166021.353000	1.106831		31																					Warning-Equivalent
+191	ANO	Geodetic	ANO	UTM		-31	-0.000010	0.000010		166021.000000	9999999.000000		166021.353000	9999998.893169		-31																					Warning-Equivalent
+192	ANO	Geodetic	ANO	UTM		-30	-0.000010	-0.000010		833979.000000	9999999.000000		833978.647638	9999998.893169		-30																					Warning-Equivalent
+193	ANO	Geodetic	ANO	UTM		1	45.000000	-179.999990		263554.000000	4987347.000000		263553.900262	4987346.868871		1																					Warning-Equivalent
+194	ANO	Geodetic	ANO	UTM		-60	-45.000000	179.999990		736446.000000	5012653.000000		736446.100190	5012653.131112		-60																					Warning-Equivalent
+195	CAC	Geodetic	CAC	UTM		16	40.000000	-90.000000		243894.000000	4431858.000000		243893.622023	4431859.132015		16																					Warning-Different
+196	CAC	Geodetic	CAC	UTM		1	40.000000	-180.000000		243894.000000	4431858.000000		243893.622023	4431859.132015		1																					Warning-Different
+197	CAC	Geodetic	CAC	UTM		1	40.000000	180.000000		243894.000000	4431858.000000		243893.621534	4431859.132032		1																					Warning-Different
+198	CAC	Geodetic	CAC	UTM		31	0.000000	0.000000		166018.000000	0.000000		166017.797583	0.000000		31																					Warning-Equivalent
+199	CAC	Geodetic	CAC	UTM		30	0.000000	-0.000010		833981.000000	0.000000		833981.088756	0.000000		30																					Warning-Equivalent
+200	CAC	Geodetic	CAC	UTM		30	0.000000	-3.000000		500000.000000	0.000000		500000.000000	0.000000		30																					Warning-Equivalent
+201	CAC	Geodetic	CAC	UTM		31	84.200000	0.000000		466166.000000	9351193.000000		466166.097674	9351194.081525		31																					Warning-Different
+202	CAC	Geodetic	CAC	UTM		-1	-40.000000	-180.000000		243894.000000	5568142.000000		243893.622023	5568140.867985		-1																					Warning-Different
+203	CAC	Geodetic	CAC	UTM		-1	-80.200000	-180.000000		443016.000000	1094751.000000		443016.097701	1094749.844065		-1																					Warning-Different
+204	CAC	Geodetic	CAC	UTM		-46	-79.999900	90.000000		441864.000000	1117057.000000		441864.469293	1117056.394775		-46																					Warning-Equivalent
+205	CAC	Geodetic	CAC	UTM		16	83.999900	-90.000000		465003.000000	9328884.000000		465003.089004	9328884.360966		16																					Warning-Equivalent
+206	CAC	Geodetic	CAC	UTM		31	0.000010	0.000010		166019.000000	1.000000		166018.911883	1.106757		31																					Warning-Equivalent
+207	CAC	Geodetic	CAC	UTM		-31	-0.000010	0.000010		166019.000000	9999999.000000		166018.911883	9999998.893243		-31																					Warning-Equivalent
+208	CAC	Geodetic	CAC	UTM		-30	-0.000010	-0.000010		833981.000000	9999999.000000		833981.088756	9999998.893243		-30																					Warning-Equivalent
+209	CAC	Geodetic	CAC	UTM		1	45.000000	-179.999990		263548.000000	4987112.000000		263547.782148	4987112.413882		1																					Warning-Equivalent
+210	CAC	Geodetic	CAC	UTM		-60	-45.000000	179.999990		736452.000000	5012888.000000		736452.218304	5012887.586101		-60																					Warning-Equivalent
+211	NAR-A	Geodetic	NAR-A	UTM		16	40.000000	-90.000000		243900.000000	4432068.000000		243900.352516	4432069.056768		16																					Warning-Different
+212	NAR-A	Geodetic	NAR-A	UTM		1	40.000000	-180.000000		243900.000000	4432068.000000		243900.352516	4432069.056768		1																					Warning-Different
+213	NAR-A	Geodetic	NAR-A	UTM		1	40.000000	180.000000		243900.000000	4432068.000000		243900.352027	4432069.056785		1																					Warning-Different
+214	NAR-A	Geodetic	NAR-A	UTM		31	0.000000	0.000000		166021.000000	0.000000		166021.443084	0.000000		31																					Warning-Equivalent
+215	NAR-A	Geodetic	NAR-A	UTM		30	0.000000	-0.000010		833977.000000	0.000000		833977.443268	0.000000		30																					Warning-Equivalent
+216	NAR-A	Geodetic	NAR-A	UTM		30	0.000000	-3.000000		500000.000000	0.000000		500000.000000	0.000000		30																					Warning-Equivalent
+217	NAR-A	Geodetic	NAR-A	UTM		31	84.200000	0.000000		466168.000000	9351302.000000		466167.717843	9351302.703901		31																					Warning-Equivalent
+218	NAR-A	Geodetic	NAR-A	UTM		-1	-40.000000	-180.000000		243900.000000	5567932.000000		243900.352516	5567930.943232		-1																					Warning-Different
+219	NAR-A	Geodetic	NAR-A	UTM		-1	-80.200000	-180.000000		443019.000000	1094622.000000		443018.786206	1094620.642892		-1																					Warning-Different
+220	NAR-A	Geodetic	NAR-A	UTM		-46	-79.999900	90.000000		441867.000000	1116927.000000		441867.209544	1116926.191304		-46																					Warning-Equivalent
+221	NAR-A	Geodetic	NAR-A	UTM		16	83.999900	-90.000000		465005.000000	9328993.000000		465004.763926	9328994.033620		16																					Warning-Different
+222	NAR-A	Geodetic	NAR-A	UTM		31	0.000010	0.000010		166023.000000	1.000000		166022.557371	1.106828		31																					Warning-Equivalent
+223	NAR-A	Geodetic	NAR-A	UTM		-31	-0.000010	0.000010		166023.000000	9999999.000000		166022.557371	9999998.893172		-31																					Warning-Equivalent
+224	NAR-A	Geodetic	NAR-A	UTM		-30	-0.000010	-0.000010		833977.000000	9999999.000000		833977.443268	9999998.893172		-30																					Warning-Equivalent
+225	NAR-A	Geodetic	NAR-A	UTM		1	45.000000	-179.999990		263555.000000	4987329.000000		263554.762502	4987329.475355		1																					Warning-Equivalent
+226	NAR-A	Geodetic	NAR-A	UTM		-60	-45.000000	179.999990		736445.000000	5012671.000000		736445.237950	5012670.524628		-60																					Warning-Equivalent
+227	SAN-M	Geodetic	SAN-M	UTM		16	40.000000	-90.000000		243899.000000	4432084.000000		243899.420411	4432084.476687		16																					Warning-Equivalent
+228	SAN-M	Geodetic	SAN-M	UTM		1	40.000000	-180.000000		243899.000000	4432084.000000		243899.420411	4432084.476687		1																					Warning-Equivalent
+229	SAN-M	Geodetic	SAN-M	UTM		1	40.000000	180.000000		243899.000000	4432084.000000		243899.419922	4432084.476704		1																					Warning-Equivalent
+230	SAN-M	Geodetic	SAN-M	UTM		31	0.000000	0.000000		166020.000000	0.000000		166020.238709	0.000000		31																					Warning-Equivalent
+231	SAN-M	Geodetic	SAN-M	UTM		30	0.000000	-0.000010		833979.000000	0.000000		833978.647638	0.000000		30																					Warning-Equivalent
+232	SAN-M	Geodetic	SAN-M	UTM		30	0.000000	-3.000000		500000.000000	0.000000		500000.000000	0.000000		30																					Warning-Equivalent
+233	SAN-M	Geodetic	SAN-M	UTM		31	84.200000	0.000000		466168.000000	9351335.000000		466167.593114	9351335.967006		31																					Warning-Equivalent
+234	SAN-M	Geodetic	SAN-M	UTM		-1	-40.000000	-180.000000		243899.000000	5567916.000000		243899.420411	5567915.523313		-1																					Warning-Equivalent
+235	SAN-M	Geodetic	SAN-M	UTM		-1	-80.200000	-180.000000		443019.000000	1094590.000000		443018.576222	1094589.022079		-1																					Warning-Equivalent
+236	SAN-M	Geodetic	SAN-M	UTM		-46	-79.999900	90.000000		441867.000000	1116896.000000		441866.995321	1116894.652581		-46																					Warning-Different
+237	SAN-M	Geodetic	SAN-M	UTM		16	83.999900	-90.000000		465005.000000	9329026.000000		465004.634911	9329027.214519		16																					Warning-Different
+238	SAN-M	Geodetic	SAN-M	UTM		31	0.000010	0.000010		166021.000000	1.000000		166021.353000	1.106831		31																					Warning-Equivalent
+239	SAN-M	Geodetic	SAN-M	UTM		-31	-0.000010	0.000010		166021.000000	9999999.000000		166021.353000	9999998.893169		-31																					Warning-Equivalent
+240	SAN-M	Geodetic	SAN-M	UTM		-30	-0.000010	-0.000010		833979.000000	9999999.000000		833978.647638	9999998.893169		-30																					Warning-Equivalent
+241	SAN-M	Geodetic	SAN-M	UTM		1	45.000000	-179.999990		263554.000000	4987347.000000		263553.900262	4987346.868871		1																					Warning-Equivalent
+242	SAN-M	Geodetic	SAN-M	UTM		-60	-45.000000	179.999990		736446.000000	5012653.000000		736446.100190	5012653.131112		-60																					Warning-Equivalent
+243	WGE	Geodetic	WGE	UTM		32	60.000000	4.000000		221289.000000	6661953.000000		221288.770252	6661953.040545		32																					Successful-Equivalent
+244	WGE	UTM	WGE	Geodetic	32		221289.000000	6661953.000000		60.000000	4.000000		60.000000	4.000004																							Successful-Equivalent
+245	WGE	Geodetic	WGE	UTM		31	80.000000	2.000000		480615.000000	8881752.000000		480615.196704	8881752.414807		31																					Successful-Equivalent
+246	WGE	UTM	WGE	Geodetic	31		480615.000000	8881752.000000		80.000000	2.000000		79.999996	1.999990																							Successful-Equivalent
+247	WGE	Geodetic	WGE	UTM		31	80.000000	8.000000		596813.000000	8885748.000000		596813.054774	8885748.707734		31																					Successful-Equivalent
+248	WGE	UTM	WGE	Geodetic	31		596813.000000	8885748.000000		80.000000	8.000000		79.999994	7.999994																							Successful-Equivalent
+249	WGE	Geodetic	WGE	UTM		33	80.000000	10.000000		403186.000000	8885748.000000		403186.945226	8885748.707734		33																					Successful-Equivalent
+250	WGE	UTM	WGE	Geodetic	33		403186.000000	8885748.000000		80.000000	10.000000		79.999993	9.999955																							Successful-Equivalent
+251	WGE	Geodetic	WGE	UTM		33	80.000000	14.000000		480615.000000	8881752.000000		480615.196704	8881752.414807		33																					Successful-Equivalent
+252	WGE	UTM	WGE	Geodetic	33		480615.000000	8881752.000000		80.000000	14.000000		79.999996	13.999990																							Successful-Equivalent
+253	WGE	Geodetic	WGE	UTM		33	80.000000	20.000000		596813.000000	8885748.000000		596813.054774	8885748.707734		33																					Successful-Equivalent
+254	WGE	UTM	WGE	Geodetic	33		596813.000000	8885748.000000		80.000000	20.000000		79.999994	19.999994																							Successful-Equivalent
+255	WGE	Geodetic	WGE	UTM		35	80.000000	22.000000		403186.000000	8885748.000000		403186.945226	8885748.707734		35																					Successful-Equivalent
+256	WGE	UTM	WGE	Geodetic	35		403186.000000	8885748.000000		80.000000	22.000000		79.999993	21.999955																							Successful-Equivalent
+257	WGE	Geodetic	WGE	UTM		35	80.000000	26.000000		480615.000000	8881752.000000		480615.196704	8881752.414807		35																					Successful-Equivalent
+258	WGE	UTM	WGE	Geodetic	35		480615.000000	8881752.000000		80.000000	26.000000		79.999996	25.999990																							Successful-Equivalent
+259	WGE	Geodetic	WGE	UTM		35	80.000000	32.000000		596813.000000	8885748.000000		596813.054774	8885748.707734		35																					Successful-Equivalent
+260	WGE	UTM	WGE	Geodetic	35		596813.000000	8885748.000000		80.000000	32.000000		79.999994	31.999994																							Successful-Equivalent
+261	WGE	Geodetic	WGE	UTM		37	80.000000	34.000000		403187.000000	8885749.000000		403186.945226	8885748.707734		37																					Successful-Equivalent
+262	WGE	UTM	WGE	Geodetic	37		403187.000000	8885749.000000		80.000000	34.000000		80.000003	34.000002																							Successful-Equivalent

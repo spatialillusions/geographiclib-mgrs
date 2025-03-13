@@ -1,0 +1,23 @@
+TEST CASE ID	INPUT DATUM(Code)	INPUT PROJECTION	OUTPUT DATUM(Code)	OUTPUT PROJECTION	INPUT ZONE	OUTPUT ZONE	INPUT_COORDS			OUTPUT_COORDS			CALCULATED_OUTPUT_COORDS				INPUT_SYSTEM_PARAMETERS										OUTPUT_SYSTEM_PARAMETERS										RESULTS
+					OR HEMISPHERE	OR HEMISPHERE	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	Calculated Zone or Hemisphere	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	
+
+1	ADI-B	Geodetic	WGE	Geodetic			0.000361	22.000000		0.002215	22.000425		0.002215	22.000425																							Successful-Equivalent
+2	ADI-B	Geodetic	WGE	Geodetic			-0.000361	22.000000		0.001493	22.000425		0.001493	22.000425																							Successful-Equivalent
+3	ADI-E	Geodetic	WGE	Geodetic			12.280764	0.962281		12.281607	0.962170		12.281607	0.962171																							Successful-Equivalent
+4	ADI-M	Geodetic	WGE	Geodetic			0.000000	5.500000		0.001845	5.500009		0.001845	5.500009																							Warning-Equivalent
+5	BUR	Geodetic	WGE	Geodetic			-1.000337	101.002249		-1.000677	101.004497		-1.000678	101.004497																							Warning-Equivalent
+6	EUR-K	Geodetic	WGE	Geodetic			53.000000	0.000000		52.999178	359.998570		52.999178	-0.001430																							Successful-Equivalent
+7	EUR-M	Geodetic	WGE	Geodetic			48.104178	11.439206		48.103334	11.438147		48.103335	11.438148																							Successful-Equivalent
+8	KEA	Geodetic	WGE	Geodetic			1.203200	104.100200		1.203157	104.098430		1.203157	104.098433																							Successful-Equivalent
+9	LEH	Geodetic	WGE	Geodetic			9.394789	358.470764		9.397214	358.470990		9.397214	-1.529004																							Warning-Equivalent
+10	NAR-E	Geodetic	WGE	Geodetic			52.000000	180.000000		52.000008	180.000000		52.000008	180.000000																							Successful-Equivalent
+11	NAS-B	Geodetic	WGE	Geodetic			48.061398	261.234066		48.061364	261.233630		48.061365	-98.766365																							Warning-Equivalent
+12	OGB-C	Geodetic	WGE	Geodetic			60.620253	359.135159		60.619709	359.133230		60.619709	-0.866762																							Warning-Equivalent
+13	PTB	Geodetic	WGE	Geodetic			13.764750	1.971633		13.764979	1.970475		13.764980	1.970475																							Warning-Equivalent
+14	SAN-J	Geodetic	WGE	Geodetic			-0.001000	270.000000		-0.001380	269.999578		-0.001380	-90.000422																							Warning-Equivalent
+15	SAN-M	Geodetic	WGE	Geodetic			0.000000	300.000000		-0.000371	299.999561		-0.000371	-60.000439																							Warning-Equivalent
+16	WGC	Geodetic	WGE	Geodetic			-38.248400	178.653500		-38.248370	178.653654		-38.248370	178.653654																							Successful-Equivalent
+17	WGC	Geodetic	WGE	Geodetic			89.500000	180.000000		89.500000	180.000154		89.500000	-179.999846																							Successful-Equivalent
+18	WGC	Geodetic	WGE	Geodetic			90.000000	270.000000		90.000000	270.000154		90.000000	-89.999846																							Successful-Equivalent
+19	WGC	Geodetic	WGE	Geodetic			-89.500000	180.000000		-89.500000	180.000154		-89.500000	-179.999846																							Successful-Equivalent
+20	WGC	Geodetic	WGE	Geodetic			-90.000000	90.000000		-90.000000	90.000154		-90.000000	90.000154																							Successful-Equivalent

@@ -1,0 +1,34 @@
+TEST CASE ID	INPUT DATUM(Code)	INPUT PROJECTION	OUTPUT DATUM(Code)	OUTPUT PROJECTION	INPUT ZONE	OUTPUT ZONE	INPUT_COORDS			OUTPUT_COORDS			CALCULATED_OUTPUT_COORDS				INPUT_SYSTEM_PARAMETERS										OUTPUT_SYSTEM_PARAMETERS										RESULTS
+					OR HEMISPHERE	OR HEMISPHERE	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	"Lat, Easting, String or X"	"Lon, Northing or Y"	Height or Z	Calculated Zone or Hemisphere	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	1st Standard Parallel or Scale Factor	2nd Standard Parallel	Central Meridian	Origin Latitude	False Easting or Origin Height	False Northing or Orientation	Longitude 1	Latitude 1	Longitude 2	Latitude 2	
+
+1	WGE	MGRS	WGE	Geodetic			YUC0000100001 			84.237340	-38.659810		84.237336	-38.659794																							Successful-Equivalent
+2	WGE	MGRS	WGE	Geodetic			YXC0000100001 			84.751560	-30.963760		84.751554	-30.963723																							Successful-Equivalent
+3	WGE	MGRS	WGE	Geodetic			YYC0000100001 			85.152330	-21.801410		85.152330	-21.801350																							Successful-Equivalent
+4	WGE	MGRS	WGE	Geodetic			YZC0000000001 			85.409650	-11.309930		85.409641	-11.309955																							Successful-Equivalent
+5	WGE	MGRS	WGE	Geodetic			ZAC0000000001 			85.498700	0.000000		85.498694	0.000000																							Successful-Equivalent
+6	WGE	MGRS	WGE	Geodetic			ZBC0000000001 			85.409650	11.309930		85.409641	11.309955																							Successful-Equivalent
+7	WGE	MGRS	WGE	Geodetic			ZBC9999900001 			85.152330	21.801410		85.152330	21.801350																							Successful-Equivalent
+8	WGE	MGRS	WGE	Geodetic			ZCC9999900001 			84.751560	30.963760		84.751554	30.963723																							Successful-Equivalent
+9	WGE	MGRS	WGE	Geodetic			ZFC9999900001 			84.237340	38.659810		84.237336	38.659794																							Successful-Equivalent
+10	WGE	MGRS	WGE	Geodetic			YSH0000200000 			84.599610	-90.000000		84.599612	-90.000000																							Successful-Equivalent
+11	WGE	MGRS	WGE	Geodetic			YTH0000100000 			85.498700	-90.000000		85.498694	-90.000000																							Successful-Equivalent
+12	WGE	MGRS	WGE	Geodetic			YUH0000100000 			86.398320	-90.000000		86.398317	-90.000000																							Successful-Equivalent
+13	WGE	MGRS	WGE	Geodetic			YXH0000100000 			87.298370	-90.000000		87.298366	-90.000000																							Successful-Equivalent
+14	WGE	MGRS	WGE	Geodetic			YYH0000100000 			88.198730	-90.000000		88.198736	-90.000000																							Successful-Equivalent
+15	WGE	MGRS	WGE	Geodetic			YZH0000000000 			89.099310	-90.000000		89.099310	-90.000000																							Successful-Equivalent
+16	WGE	MGRS	WGE	Geodetic			ZAH0000000000 			90.000000	0.000000		90.000000	0.000000																							Successful-Equivalent
+17	WGE	MGRS	WGE	Geodetic			ZBH0000000000 			89.099310	90.000000		89.099310	90.000000																							Successful-Equivalent
+18	WGE	MGRS	WGE	Geodetic			ZBH9999900000 			88.198730	90.000000		88.198736	90.000000																							Successful-Equivalent
+19	WGE	MGRS	WGE	Geodetic			ZCH9999900000 			87.298370	90.000000		87.298366	90.000000																							Successful-Equivalent
+20	WGE	MGRS	WGE	Geodetic			ZFH9999900000 			86.398320	90.000000		86.398317	90.000000																							Successful-Equivalent
+21	WGE	MGRS	WGE	Geodetic			ZGH9999900000 			85.498700	90.000000		85.498694	90.000000																							Successful-Equivalent
+22	WGE	MGRS	WGE	Geodetic			ZHH9999800000 			84.599610	90.000000		84.599612	90.000000																							Successful-Equivalent
+23	WGE	MGRS	WGE	Geodetic			YUM0000199999 			84.237340	-141.340190		84.237336	-141.340206																							Successful-Equivalent
+24	WGE	MGRS	WGE	Geodetic			YXM0000199999 			84.751560	-149.036240		84.751554	-149.036277																							Successful-Equivalent
+25	WGE	MGRS	WGE	Geodetic			YYM0000199999 			85.152330	-158.198590		85.152330	-158.198650																							Successful-Equivalent
+26	WGE	MGRS	WGE	Geodetic			YZM0000099999 			85.409650	-168.690070		85.409641	-168.690045																							Successful-Equivalent
+27	WGE	MGRS	WGE	Geodetic			ZAM0000099999 			85.498700	180.000000		85.498694	180.000000																							Successful-Equivalent
+28	WGE	MGRS	WGE	Geodetic			ZBM0000099999 			85.409650	168.690070		85.409641	168.690045																							Successful-Equivalent
+29	WGE	MGRS	WGE	Geodetic			ZBM9999999999 			85.152330	158.198590		85.152330	158.198650																							Successful-Equivalent
+30	WGE	MGRS	WGE	Geodetic			ZCM9999999999 			84.751560	149.036240		84.751554	149.036277																							Successful-Equivalent
+31	WGE	MGRS	WGE	Geodetic			ZFM9999999999 			84.237340	141.340190		84.237336	141.340206																							Successful-Equivalent
