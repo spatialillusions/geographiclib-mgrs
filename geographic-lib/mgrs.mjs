@@ -1,4 +1,4 @@
-import UTMUPS from "./utmups-stuff.mjs";
+import UTMUPS from "./utmups.mjs";
 import MATH from "./math.mjs";
 
 const MGRS = {
