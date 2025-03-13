@@ -13,7 +13,7 @@
   "license": "MIT",
   "author": "",
   "type": "module",
-  "main": "index.js",
+  "main": "mgrs.mjs",
   "scripts": {
     "build": "rollup -c",
     "test": "tead --coverage"
