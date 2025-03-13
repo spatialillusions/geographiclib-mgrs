@@ -394,12 +394,6 @@ MGRS.Reverse = function (
       } set ${col}`,
     );
   }
-  console.log("\n\nNEW TEST");
-  console.log(mgrs);
-  console.log(p);
-  console.log(mgrs[p + 1]);
-  console.log(row);
-  console.log(northp1);
   let irow = row.indexOf(mgrs[p++]);
   if (irow < 0) {
     throw new Error(
