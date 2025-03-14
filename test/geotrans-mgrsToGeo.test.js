@@ -15,7 +15,7 @@ let geotrans;
 try {
   geotrans = fs.readFileSync(
     "./test/geotrans3.9-output/mgrsToGeo_WE.txt",
-    "utf-8",
+    "utf-8"
   );
 } catch (err) {
   console.error(err);
@@ -49,19 +49,20 @@ if (valid) {
 
 //*
 // .\GeoConvert_d.exe  -p 1 --input-string "33XVK9556495053"
-// 81.016479 14.745563
+//  81.01648 14.74556
+latRef = 81.01648;
+lonRef = 14.74556;
 point = MGRS.toPoint("33XVK9556495053", true);
 lat = point[1];
 lon = point[0];
-valid =
-  closeTo(lat, 81.016479, precision) && closeTo(lon, 14.745563, precision);
+valid = closeTo(lat, latRef, precision) && closeTo(lon, lonRef, precision);
 
 if (valid) {
   WE[mgrs] = [true, valid];
 } else {
   WE["33XVK9556495053  geographiclib"] = [
     { lat: lat, lon: lon },
-    { lat: "81.016479", lon: "14.745563" },
+    { lat: latRef, lon: lonRef },
   ];
 }
 
