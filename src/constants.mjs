@@ -21,7 +21,11 @@ const CONSTANTS = {
   },
 
   WGS84_f() {
-    return 1 / (298257223563 / 1000000000);
+    // Evaluating this as 1000000000 / T(298257223563LL) reduces the
+    // round-off error by about 10%.  However, expressing the flattening as
+    // 1/298.257223563 is well ingrained.
+    //return 1 / 298.257223563;
+    return 1000000000 / 298257223563;
   },
 
   WGS84_GM() {
