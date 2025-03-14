@@ -60,6 +60,8 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
    * @param[out] prec precision relative to 100 km.
    * */
   const mgrsReverse = MGRS.Reverse(mgrs, centerp);
+  console.log(mgrs);
+  //console.log(mgrsReverse);
   const mgrsLimits = false;
   /*
    * @param[in] zone the UTM zone (zero means UPS).

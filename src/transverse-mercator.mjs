@@ -262,6 +262,8 @@ const TransverseMercator = {
     this._b1 =
       MATH.polyval(m, b1coeff, MATH.sq(this._n)) /
       (b1coeff[m + 1] * (1 + this._n));
+    //this._b1 -= 0.000045;
+    //console.log("js b1", this._b1, "quit sure this is right");
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
     this._a1 = this._b1 * this._a;
@@ -275,9 +277,11 @@ const TransverseMercator = {
         (d * MATH.polyval(m, alpcoeff.slice(o), this._n)) / alpcoeff[o + m + 1];
       this._bet[l] =
         (d * MATH.polyval(m, betcoeff.slice(o), this._n)) / betcoeff[o + m + 1];
+      //this._bet[l] += 0.00000047;
       o += m + 2;
       d *= this._n;
     }
+    //console.log("js bet", this._bet, "WE NEED TO VERIFY THIS CALCULATION");
   },
 
   UTM() {
@@ -463,15 +467,23 @@ const TransverseMercator = {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).
+    //console.log("js y", y);
+    //console.log("js x", x);
+    //console.log("js a1", this._a1);
+    //console.log("js k0", this._k0);
     let xi = y / (this._a1 * this._k0);
     let eta = x / (this._a1 * this._k0);
+    //console.log("js xi", xi);
+    //console.log("js eta", eta);
     // Explicitly enforce the parity
     const xisign = Math.sign(xi);
     const etasign = Math.sign(eta);
     xi *= xisign;
     eta *= etasign;
+    //console.log("js eta", eta);
     const backside = xi > Math.PI / 2;
     if (backside) xi = Math.PI - xi;
+    //console.log("js xi", xi);
     const c0 = Math.cos(2 * xi);
     const ch0 = Math.cosh(2 * eta);
     const s0 = Math.sin(2 * xi);
@@ -511,17 +523,50 @@ const TransverseMercator = {
     //   psi = asinh(tan(phi'))
     const xip = y1.real;
     const etap = y1.imag;
-
+    //console.log("js xip", xip);
+    //console.log("js etap", etap);
     const s = Math.sinh(etap);
     const c = Math.max(0, Math.cos(xip)); // cos(pi/2) might be negative
-    const r = Math.hypot(s, c);
+    let r = Math.hypot(s, c);
     if (r !== 0) {
       lon = MATH.atan2d(s, c); // Krueger p 17 (25)
       // Use Newton's method to solve for tau
-      const sxip = Math.sin(xip);
-      const tau = MATH.tauf(sxip / r, this._es);
+      let sxip = Math.sin(xip);
+      //console.log("js s", s);
+      //console.log("js c", c);
+      //console.log("js sxip", sxip, sxip - 0.9875708920451804);
+      //console.log("js r", r, r - 0.1571757626325274);
+      //console.log("js this._es", this._es, this._es - 0.08181919084262149);
+
+      // TEMP TEMP TEMP
+      /*
+      sxip = 0.9875708920451804;
+      r = 0.1571757626325274;
+      this._es = 0.08181919084262149;
+      //*/
+      // TEMP TEMP TEMP
+
+      let tau = MATH.tauf(sxip / r, this._es);
+
+      // TEMP TEMP TEMP
+      /*
+      tau = 6.325525788740787;
+      //*/
+      // TEMP TEMP TEMP
+
+      //console.log("js tau", tau, tau - 6.325525788740787);
       gamma += MATH.atan2d(sxip * Math.tanh(etap), c);
+      // MBC tau is + 0.000007 too small
+      //tau = 6.325525788740787;
       lat = MATH.atand(tau);
+      /*
+      console.log(
+        "lat",
+        lat,
+        Math.abs(lat - 81.01647905419107),
+        Math.abs(lat - 81.01647905419107) < 0.0000015
+      );*/
+
       // Note cos(phi') * cosh(eta') = r
       k *=
         Math.sqrt(this._e2m + this._e2 / (1 + MATH.sq(tau))) *
@@ -536,10 +581,19 @@ const TransverseMercator = {
     if (backside) lon = MATH.hd - lon;
     lon *= etasign;
     lon = MATH.AngNormalize(lon + lon0);
+    /*
+    console.log(
+      "lon",
+      lon,
+      Math.abs(lon - 14.74556283486876),
+      Math.abs(lon - 14.74556283486876) < 0.0000015
+    );
+*/
     if (backside) gamma = MATH.hd - gamma;
     gamma *= xisign * etasign;
     gamma = MATH.AngNormalize(gamma);
     k *= this._k0;
+    console.log(`js lat: ${lat}, lon: ${lon}, gamma: ${gamma}, k: ${k}`);
     return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 };

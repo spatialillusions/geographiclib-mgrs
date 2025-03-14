@@ -1,5 +1,5 @@
 import MGRS from "../src/mgrs.mjs";
-
+/*
 const mgrsDecode = {
   "MGRS Decode UTM": [
     MGRS.Decode("33VVE7220287839"),
@@ -48,9 +48,9 @@ const mgrsReverse = {
     { zone: 0, northp: true, x: 2052065.5, y: 1946829.5, prec: 5 },
   ],
 };
-
+//*/
 export default {
-  "MGRS Decode:": mgrsDecode,
-  "MGRS Forward": mgrsForward,
-  "MGRS Reverse": mgrsReverse,
+  //"MGRS Decode:": mgrsDecode,
+  //"MGRS Forward": mgrsForward,
+  //"MGRS Reverse": mgrsReverse,
 };

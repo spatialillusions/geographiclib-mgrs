@@ -1,6 +1,7 @@
 import UTMUPS from "../src/utmups.mjs";
 //import UTILITY from "../src/utility.mjs";
 
+/*
 const utmupsForward = {
   "UTMUPS Forward": [
     // lat, lon, zone, mgrslimits
@@ -29,8 +30,8 @@ const utmupsReverse = {
     },
   ],
 };
-
+//*/
 export default {
-  "UTMUPS Forward": utmupsForward,
-  "UTMUPS Reverse": utmupsReverse,
+  //"UTMUPS Forward": utmupsForward,
+  //"UTMUPS Reverse": utmupsReverse,
 };

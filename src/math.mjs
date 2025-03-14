@@ -173,11 +173,44 @@ const MATH = {
 
   // tanφ in terms of tanχ
   tauf(taup, es) {
-    const tau1 = Math.hypot(1, taup);
-    const sig = Math.sinh(this.eatanhe(taup / tau1, es));
-    return Math.hypot(1, sig) * taup + sig * tau1;
-  },
+    const numit = 5;
+    // min iterations = 1, max iterations = 2; mean = 1.95
+    const tol = Math.sqrt(Number.EPSILON) / 10;
+    const taumax = 2 / Math.sqrt(Number.EPSILON);
+    const e2m = 1 - es * es;
 
+    // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
+    // tau = taup/e2m as a starting guess. Only 1 iteration is needed for
+    // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau
+    // = taup is used the mean number of iterations increases to 1.999 (2
+    // iterations are needed except near tau = 0).
+    //
+    // For large tau, taup = exp(-es*atanh(es)) * tau.  Use this as for the
+    // initial guess for |taup| > 70 (approx |phi| > 89deg).  Then for
+    // sufficiently large tau (such that sqrt(1+tau^2) = |tau|), we can exit
+    // with the initial guess and avoid overflow problems.  This also reduces
+    // the mean number of iterations slightly from 1.963 to 1.954.
+    let tau =
+      Math.abs(taup) > 70 ? taup * Math.exp(this.eatanhe(1, es)) : taup / e2m;
+    const stol = tol * Math.max(1, Math.abs(taup));
+
+    if (!(Math.abs(tau) < taumax)) {
+      return tau; // handles +/-Infinity and NaN
+    }
+
+    for (let i = 0; i < numit; ++i) {
+      const taupa = this.taupf(tau, es);
+      const dtau =
+        ((taup - taupa) * (1 + e2m * tau * tau)) /
+        (e2m * Math.hypot(1, tau) * Math.hypot(1, taupa));
+      tau += dtau;
+      if (!(Math.abs(dtau) >= stol)) {
+        break;
+      }
+    }
+
+    return tau;
+  },
   // Implement hypot with 3 parameters
   hypot3(x, y, z) {
     return Math.hypot(x, Math.hypot(y, z));
