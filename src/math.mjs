@@ -121,12 +121,42 @@ const MATH = {
 
   // Evaluate the atan2 function with the result in degrees.
   atan2d(y, x) {
-    return Math.atan2(y, x) / this.degree();
+    // In order to minimize round-off errors, this function rearranges the
+    // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
+    // converting it to degrees and mapping the result to the correct
+    // quadrant.
+    let q = 0;
+    if (Math.abs(y) > Math.abs(x)) {
+      [x, y] = [y, x];
+      q = 2;
+    }
+    if (Math.sign(x) === -1) {
+      x = -x;
+      ++q;
+    }
+    // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
+    let ang = Math.atan2(y, x) / this.degree();
+    switch (q) {
+      case 1:
+        ang = Math.sign(y) * this.hd - ang;
+        break;
+      case 2:
+        ang = this.qd - ang;
+        break;
+      case 3:
+        ang = -this.qd + ang;
+        break;
+      default:
+        break;
+    }
+    return ang;
+    //return Math.atan2(y, x) / this.degree();
   },
 
   // Evaluate the atan function with the result in degrees.
   atand(x) {
-    return Math.atan(x) / this.degree();
+    return this.atan2d(x, 1);
+    //return Math.atan(x) / this.degree();
   },
 
   // Evaluate e atanh(e x)

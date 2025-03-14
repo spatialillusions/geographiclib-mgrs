@@ -5,7 +5,7 @@ let geotrans;
 try {
   geotrans = fs.readFileSync(
     "./test/geotrans3.9-output/mgrsToGeo_WE.txt",
-    "utf-8",
+    "utf-8"
   );
 } catch (err) {
   console.error(err);
@@ -18,18 +18,16 @@ for (let i = 0; i < geotrans.length; i++) {
 
 const WE = {};
 let mgrs, point, lat, lon, latRef, lonRef;
-
+/*
 const i = 400;
 mgrs = geotrans[i][7].replace(" ", "");
 point = MGRS.toPoint(mgrs, true);
 lat = point[1].toFixed(6);
 lon = point[0].toFixed(6);
 
-//console.log(geotrans[0][10 + 3] + " " + geotrans[1][10 + 3]);
-//console.log(geotrans[0][11 + 3] + " " + geotrans[1][11 + 3]);
 latRef = geotrans[i][13];
 lonRef = geotrans[i][14];
-
+//*/
 /*
 WE[mgrs] = [
   { lat: lat, lon: lon },
@@ -54,6 +52,7 @@ WE["33XVK9556495053" + " geographiclib"] = [
 
 // .\GeoConvert_d.exe  -p 1 --input-string "31PGK5976098847"
 // 9.028532 5.362851
+/*
 point = MGRS.toPoint("31PGK5976098847", true);
 lat = point[1].toFixed(6);
 lon = point[0].toFixed(6);
@@ -62,7 +61,7 @@ WE["31PGK5976098847" + " geographiclib"] = [
   { lat: lat, lon: lon },
   { lat: "9.028532", lon: "5.362851" },
 ];
-
+*/
 /*
 // 9.028532 5.362851
 WE[mgrs + " geographiclib"] = [

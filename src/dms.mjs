@@ -337,14 +337,14 @@ class DMS {
         ind1 = ind2;
       } else if (!(ind2 === this.NONE || ind1 === ind2)) {
         throw new Error(
-          "Incompatible hemisphere specifier in " + dmsa.substring(beg, pb),
+          "Incompatible hemisphere specifier in " + dmsa.substring(beg, pb)
         );
       }
     }
 
     if (i === 0)
       throw new Error(
-        "Empty or incomplete DMS string " + dmsa.substring(beg, end),
+        "Empty or incomplete DMS string " + dmsa.substring(beg, end)
       );
     ind = ind1;
     return v;
@@ -465,7 +465,7 @@ class DMS {
           }
           if (digcount > 0) {
             fcurrent = parseFloat(
-              dmsa.substring(p - intcount - digcount - 1, p - 1),
+              dmsa.substring(p - intcount - digcount - 1, p - 1)
             );
             icurrent = 0;
           }
@@ -566,7 +566,7 @@ class DMS {
           " and " +
           strb +
           " interpreted as " +
-          (ia === this.LATITUDE ? "latitudes" : "longitudes"),
+          (ia === this.LATITUDE ? "latitudes" : "longitudes")
       );
     let lat1 = ia === this.LATITUDE ? a : b;
     let lon1 = ia === this.LATITUDE ? b : a;
@@ -581,7 +581,7 @@ class DMS {
     let ang = this.Decode(angstr, ind);
     if (ind !== this.NONE)
       throw new Error(
-        "Arc angle " + angstr + " includes a hemisphere, N/E/W/S",
+        "Arc angle " + angstr + " includes a hemisphere, N/E/W/S"
       );
     return ang;
   }
@@ -729,7 +729,6 @@ class DMS {
       str +=
         this.hemispheres_[(ind === this.LATITUDE ? 0 : 2) + (sign < 0 ? 0 : 1)];
     }
-    //console.log(str);
     return str;
   }
 }
