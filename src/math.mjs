@@ -63,6 +63,9 @@ const MATH = {
 
   // Evaluate a polynomial.
   polyval(N, p, x) {
+    // This used to employ Math::fma; but that's too slow and it seemed not
+    // to improve the accuracy noticeably.  This might change when there's
+    // direct hardware support for fma.
     let y = N < 0 ? 0 : p[0];
     for (let i = 1; i <= N; ++i) {
       y = y * x + p[i];

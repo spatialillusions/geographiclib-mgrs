@@ -44,8 +44,6 @@ const GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER = 6;
 
 const TransverseMercator = {
   init(a, f, k0, exact = false, extendp = false) {
-    console.log("transverse init");
-    console.log(a, ",", f, ",", k0);
     this._a = a;
     this._f = f;
     this._k0 = k0;
@@ -264,6 +262,8 @@ const TransverseMercator = {
     this._b1 =
       MATH.polyval(m, b1coeff, MATH.sq(this._n)) /
       (b1coeff[m + 1] * (1 + this._n));
+    //this._b1 -= 0.000045;
+    console.log("js b1", this._b1, "quit sure this is right");
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
     this._a1 = this._b1 * this._a;
@@ -277,9 +277,11 @@ const TransverseMercator = {
         (d * MATH.polyval(m, alpcoeff.slice(o), this._n)) / alpcoeff[o + m + 1];
       this._bet[l] =
         (d * MATH.polyval(m, betcoeff.slice(o), this._n)) / betcoeff[o + m + 1];
+      //this._bet[l] += 0.00000047;
       o += m + 2;
       d *= this._n;
     }
+    console.log("js bet", this._bet, "WE NEED TO VERIFY THIS CALCULATION");
   },
 
   UTM() {
@@ -303,14 +305,44 @@ const TransverseMercator = {
     }
     const [sphi, cphi] = MATH.sincosd(lat);
     const [slam, clam] = MATH.sincosd(lon);
+    // phi = latitude
+    // phi' = conformal latitude
+    // psi = isometric latitude
+    // tau = tan(phi)
+    // tau' = tan(phi')
+    // [xi', eta'] = Gauss-Schreiber TM coordinates
+    // [xi, eta] = Gauss-Krueger TM coordinates
+    //
+    // We use
+    //   tan(phi') = sinh(psi)
+    //   sin(phi') = tanh(psi)
+    //   cos(phi') = sech(psi)
+    //   denom^2    = 1-cos(phi')^2*sin(lam)^2 = 1-sech(psi)^2*sin(lam)^2
+    //   sin(xip)   = sin(phi')/denom          = tanh(psi)/denom
+    //   cos(xip)   = cos(phi')*cos(lam)/denom = sech(psi)*cos(lam)/denom
+    //   cosh(etap) = 1/denom                  = 1/denom
+    //   sinh(etap) = cos(phi')*sin(lam)/denom = sech(psi)*sin(lam)/denom
     let etap, xip, gamma, k;
     let x, y;
     if (lat !== MATH.qd) {
       const tau = sphi / cphi;
       const taup = MATH.taupf(tau, this._es);
       xip = Math.atan2(taup, clam);
+      // Used to be
+      //   etap = Math::atanh(sin(lam) / cosh(psi));
       etap = Math.asinh(slam / Math.hypot(taup, clam));
+      // convergence and scale for Gauss-Schreiber TM (xip, etap) -- gamma0 =
+      // atan(tan(xip) * tanh(etap)) = atan(tan(lam) * sin(phi'));
+      // sin(phi') = tau'/sqrt(1 + tau'^2)
+      // Krueger p 22 (44)
       gamma = MATH.atan2d(slam * taup, clam * Math.hypot(1, taup));
+      // k0 = sqrt(1 - _e2 * sin(phi)^2) * (cos(phi') / cos(phi)) * cosh(etap)
+      // Note 1/cos(phi) = cosh(psip);
+      // and cos(phi') * cosh(etap) = 1/hypot(sinh(psi), cos(lam))
+      //
+      // This form has cancelling errors.  This property is lost if cosh(psip)
+      // is replaced by 1/cos(phi), even though it's using "primary" data (phi
+      // instead of psip).
       k =
         (Math.sqrt(this._e2m + this._e2 * MATH.sq(cphi)) * Math.hypot(1, tau)) /
         Math.hypot(taup, clam);
@@ -320,6 +352,71 @@ const TransverseMercator = {
       gamma = lon;
       k = this._c;
     }
+    // {xi',eta'} is {northing,easting} for Gauss-Schreiber transverse Mercator
+    // (for eta' = 0, xi' = bet). {xi,eta} is {northing,easting} for transverse
+    // Mercator with constant scale on the central meridian (for eta = 0, xip =
+    // rectifying latitude).  Define
+    //
+    //   zeta = xi + i*eta
+    //   zeta' = xi' + i*eta'
+    //
+    // The conversion from conformal to rectifying latitude can be expressed as
+    // a series in _n:
+    //
+    //   zeta = zeta' + sum(h[j-1]' * sin(2 * j * zeta'), j = 1..maxpow_)
+    //
+    // where h[j]' = O(_n^j).  The reversion of this series gives
+    //
+    //   zeta' = zeta - sum(h[j-1] * sin(2 * j * zeta), j = 1..maxpow_)
+    //
+    // which is used in Reverse.
+    //
+    // Evaluate sums via Clenshaw method.  See
+    //    https://en.wikipedia.org/wiki/Clenshaw_algorithm
+    //
+    // Let
+    //
+    //    S = sum(a[k] * phi[k](x), k = 0..n)
+    //    phi[k+1](x) = alpha[k](x) * phi[k](x) + beta[k](x) * phi[k-1](x)
+    //
+    // Evaluate S with
+    //
+    //    b[n+2] = b[n+1] = 0
+    //    b[k] = alpha[k](x) * b[k+1] + beta[k+1](x) * b[k+2] + a[k]
+    //    S = (a[0] + beta[1](x) * b[2]) * phi[0](x) + b[1] * phi[1](x)
+    //
+    // Here we have
+    //
+    //    x = 2 * zeta'
+    //    phi[k](x) = sin(k * x)
+    //    alpha[k](x) = 2 * cos(x)
+    //    beta[k](x) = -1
+    //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = k*x, B = x ]
+    //    n = maxpow_
+    //    a[k] = _alp[k]
+    //    S = b[1] * sin(x)
+    //
+    // For the derivative we have
+    //
+    //    x = 2 * zeta'
+    //    phi[k](x) = cos(k * x)
+    //    alpha[k](x) = 2 * cos(x)
+    //    beta[k](x) = -1
+    //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = k*x, B = x ]
+    //    a[0] = 1; a[k] = 2*k*_alp[k]
+    //    S = (a[0] - b[2]) + b[1] * cos(x)
+    //
+    // Matrix formulation (not used here):
+    //    phi[k](x) = [sin(k * x); k * cos(k * x)]
+    //    alpha[k](x) = 2 * [cos(x), 0; -sin(x), cos(x)]
+    //    beta[k](x) = -1 * [1, 0; 0, 1]
+    //    a[k] = _alp[k] * [1, 0; 0, 1]
+    //    b[n+2] = b[n+1] = [0, 0; 0, 0]
+    //    b[k] = alpha[k](x) * b[k+1] + beta[k+1](x) * b[k+2] + a[k]
+    //    N.B., for all k: b[k](1,2) = 0; b[k](1,1) = b[k](2,2)
+    //    S = (a[0] + beta[1](x) * b[2]) * phi[0](x) + b[1] * phi[1](x)
+    //    phi[0](x) = [0; 0]
+    //    phi[1](x) = [sin(x); cos(x)]
     const c0 = Math.cos(2 * xip);
     const ch0 = Math.cosh(2 * etap);
     const s0 = Math.sin(2 * xip);
@@ -328,6 +425,8 @@ const TransverseMercator = {
     let n = maxpow;
     let y0 = new Complex(n & 1 ? this._alp[n] : 0, 0);
     let y1 = new Complex(0, 0);
+    // Fold in change in convergence and scale for Gauss-Schreiber TM to
+    // Gauss-Krueger TM.
     let z0 = new Complex(n & 1 ? 2 * n * this._alp[n] : 0, 0);
     let z1 = new Complex(0, 0);
     if (n & 1) --n;
@@ -363,30 +462,36 @@ const TransverseMercator = {
   },
 
   Reverse(lon0, x, y) {
-    console.log("Transverse Mercator Reverse Reverse Reverse");
-    console.log(lon0, ",", x, ",", y);
     let gamma, k, lat, lon;
     if (this._exact) return this._tmexact.Reverse(lon0, x, y);
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).
+    console.log("js y", y);
+    console.log("js x", x);
+    console.log("js a1", this._a1);
+    console.log("js k0", this._k0);
     let xi = y / (this._a1 * this._k0);
     let eta = x / (this._a1 * this._k0);
+    console.log("js xi", xi);
+    console.log("js eta", eta);
     // Explicitly enforce the parity
     const xisign = Math.sign(xi);
     const etasign = Math.sign(eta);
     xi *= xisign;
     eta *= etasign;
+    console.log("js eta", eta);
     const backside = xi > Math.PI / 2;
     if (backside) xi = Math.PI - xi;
+    console.log("js xi", xi);
     const c0 = Math.cos(2 * xi);
     const ch0 = Math.cosh(2 * eta);
     const s0 = Math.sin(2 * xi);
     const sh0 = Math.sinh(2 * eta);
     let a = new Complex(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta)
     let n = maxpow;
-    let y0 = new Complex(n & 1 ? -this._bet[n] : 0, 0); // default initializer is 0+i0
-    let y1 = new Complex(0, 0);
+    let y0 = new Complex(n & 1 ? -this._bet[n] : 0, 0);
+    let y1 = new Complex(0, 0); // default initializer is 0+i0
     let z0 = new Complex(n & 1 ? -2 * n * this._bet[n] : 0, 0);
     let z1 = new Complex(0, 0);
     if (n & 1) --n;
@@ -418,18 +523,26 @@ const TransverseMercator = {
     //   psi = asinh(tan(phi'))
     const xip = y1.real;
     const etap = y1.imag;
+    console.log("js xip", xip);
+    console.log("js etap", etap);
     const s = Math.sinh(etap);
     const c = Math.max(0, Math.cos(xip)); // cos(pi/2) might be negative
     const r = Math.hypot(s, c);
     if (r !== 0) {
-      console.log("r", r);
       lon = MATH.atan2d(s, c); // Krueger p 17 (25)
       // Use Newton's method to solve for tau
       const sxip = Math.sin(xip);
+      console.log("js s", s);
+      console.log("js c", c);
+      console.log("js sxip", sxip);
       const tau = MATH.tauf(sxip / r, this._es);
+      console.log("js tau", tau);
       gamma += MATH.atan2d(sxip * Math.tanh(etap), c);
+      // MBC tau is + 0.000007 too small
+
       lat = MATH.atand(tau);
-      console.log("r !=== 0 " + lat);
+      console.log("result:  " + lat);
+      console.log("correct: 9.042052");
       // Note cos(phi') * cosh(eta') = r
       k *=
         Math.sqrt(this._e2m + this._e2 / (1 + MATH.sq(tau))) *
@@ -437,13 +550,10 @@ const TransverseMercator = {
         r;
     } else {
       lat = MATH.qd;
-      console.log("r == 0 " + lat);
       lon = 0;
       k *= this._c;
     }
-    console.log("xisign ", xisign);
     lat *= xisign;
-    console.log(lat);
     if (backside) lon = MATH.hd - lon;
     lon *= etasign;
     lon = MATH.AngNormalize(lon + lon0);

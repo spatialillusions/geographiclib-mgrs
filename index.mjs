@@ -61,7 +61,6 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
    * */
   const mgrsReverse = MGRS.Reverse(mgrs, centerp);
   console.log(mgrs);
-  console.log("32n 300000.5 1000000.5");
   console.log(mgrsReverse);
   const mgrsLimits = false;
   /*
@@ -82,8 +81,8 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
   const utmupsReverse = UTMUPS.Reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
-    mgrsReverse.x,
-    mgrsReverse.y,
+    mgrsReverse.x, //- 0.25,
+    mgrsReverse.y, //- 1.5,
     mgrsLimits,
   );
   return [utmupsReverse.lon, utmupsReverse.lat];

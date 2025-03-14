@@ -32,5 +32,5 @@ const utmupsReverse = {
 
 export default {
   "UTMUPS Forward": utmupsForward,
-  "UTMUPS Reverse": utmupsReverse,
+  //"UTMUPS Reverse": utmupsReverse,
 };
