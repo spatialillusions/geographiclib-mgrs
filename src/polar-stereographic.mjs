@@ -56,15 +56,15 @@ const PolarStereographic = {
     const taup = (1 / t - t) / 2;
     const tau = MATH.tauf(taup, this._es);
     const secphi = Math.hypot(1, tau);
-    k =
+    let k =
       rho !== 0
         ? (rho / this._a) *
           secphi *
           Math.sqrt(this._e2m + this._e2 / MATH.sq(secphi))
         : this._k0;
-    lat = (northp ? 1 : -1) * MATH.atand(tau);
-    lon = MATH.atan2d(x, northp ? -y : y);
-    gamma = MATH.AngNormalize(northp ? lon : -lon);
+    let lat = (northp ? 1 : -1) * MATH.atand(tau);
+    let lon = MATH.atan2d(x, northp ? -y : y);
+    let gamma = MATH.AngNormalize(northp ? lon : -lon);
     return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 
