@@ -559,13 +559,6 @@ const TransverseMercator = {
       // MBC tau is + 0.000007 too small
       //tau = 6.325525788740787;
       lat = MATH.atand(tau);
-      /*
-      console.log(
-        "lat",
-        lat,
-        Math.abs(lat - 81.01647905419107),
-        Math.abs(lat - 81.01647905419107) < 0.0000015
-      );*/
 
       // Note cos(phi') * cosh(eta') = r
       k *=
@@ -581,19 +574,12 @@ const TransverseMercator = {
     if (backside) lon = MATH.hd - lon;
     lon *= etasign;
     lon = MATH.AngNormalize(lon + lon0);
-    /*
-    console.log(
-      "lon",
-      lon,
-      Math.abs(lon - 14.74556283486876),
-      Math.abs(lon - 14.74556283486876) < 0.0000015
-    );
-*/
+
     if (backside) gamma = MATH.hd - gamma;
     gamma *= xisign * etasign;
     gamma = MATH.AngNormalize(gamma);
     k *= this._k0;
-    console.log(`js lat: ${lat}, lon: ${lon}, gamma: ${gamma}, k: ${k}`);
+    //console.log(`js lat: ${lat}, lon: ${lon}, gamma: ${gamma}, k: ${k}`);
     return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 };
