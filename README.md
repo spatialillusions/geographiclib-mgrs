@@ -4,6 +4,16 @@ This is a JavaScript port of the MGRS functionality in GeographicLib. It is desi
 
 The main difference between this library and proj4js mgrs is the support for translating to and from UPS MGRS.
 
+## Installation
+
+TODO make it into a NPM package so it can be installed.
+
+## Usage
+
+TODO Describe how to use the library
+
+It is basically the same as proj4js mgrs.
+
 ## Verification
 
 The output from this library has been verified against the test data from Geotrans. In the same way as Geotrans we verify that points calculated from MGRS should be within one tenth of a second, and MGRS calculated from points should be within one meter.
