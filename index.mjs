@@ -19,7 +19,7 @@ GeographicLibMGRS.forward = function (lonlat, accuracy) {
     utmupsForward.northp,
     utmupsForward.x,
     utmupsForward.y,
-    accuracy
+    accuracy,
   );
 };
 //inverse, takes an mgrs string and returns a bbox.
@@ -60,7 +60,7 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
    * @param[out] prec precision relative to 100 km.
    * */
   const mgrsReverse = MGRS.Reverse(mgrs, centerp);
-  console.log(mgrs);
+  //console.log(mgrs);
   //console.log(mgrsReverse);
   const mgrsLimits = false;
   /*
@@ -83,7 +83,7 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
     mgrsReverse.northp,
     mgrsReverse.x, //- 0.25,
     mgrsReverse.y, //- 1.5,
-    mgrsLimits
+    mgrsLimits,
   );
   return [utmupsReverse.lon, utmupsReverse.lat];
 };
