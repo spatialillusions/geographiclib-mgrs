@@ -1,7 +1,7 @@
 {
   "name": "geographiclib-mgrs",
   "version": "1.0.0",
-  "description": "Javascript conversion of GeographicLib GeoCoords",
+  "description": "Javascript conversion of GeographicLib GeoCoords MGRS functionallity",
   "homepage": "https://github.com/spatialillusions/geographiclib-mgrs#readme",
   "bugs": {
     "url": "https://github.com/spatialillusions/geographiclib-mgrs/issues"
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/spatialillusions/geographiclib-mgrs.git"
   },
   "license": "MIT",
-  "author": "",
+  "author": "Måns Beckman",
   "type": "module",
   "main": "index.mjs",
   "scripts": {
