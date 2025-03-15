@@ -39,8 +39,12 @@ import Complex from "./complex.mjs";
  * (The series accurate to 12th order is given in \ref tmseries.)
  **********************************************************************/
 
-const maxpow = 6;
+/**
+ * The order of the series approximation used in TransverseMercator.
+ * GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER can be set to any integer in [4, 8].
+ **********************************************************************/
 const GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER = 6;
+const maxpow = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
 
 const TransverseMercator = {
   init(a, f, k0, exact = false, extendp = false) {
@@ -69,17 +73,17 @@ const TransverseMercator = {
 
     // Coefficients for the series expansion
     let b1coeff;
-    if (GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER / 2 == 2) {
+    if (parseInt(GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER / 2) == 2) {
       b1coeff = [
         // b1*(n+1), polynomial in n2 of order 2
         1, 16, 64, 64,
       ];
-    } else if (GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER / 2 == 3) {
+    } else if (parseInt(GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER / 2) == 3) {
       b1coeff = [
         // b1*(n+1), polynomial in n2 of order 3
         1, 4, 64, 256, 256,
       ];
-    } else if (GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER / 2 == 4) {
+    } else if (parseInt(GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER / 2) == 4) {
       b1coeff = [
         // b1*(n+1), polynomial in n2 of order 4
         25, 64, 256, 4096, 16384, 16384,
@@ -257,13 +261,11 @@ const TransverseMercator = {
       throw Error("Bad value for GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER");
     }
 
-    const maxpow = 6;
+    //const maxpow = 6;
     const m = maxpow / 2;
     this._b1 =
       MATH.polyval(m, b1coeff, MATH.sq(this._n)) /
       (b1coeff[m + 1] * (1 + this._n));
-    //this._b1 -= 0.000045;
-    //console.log("js b1", this._b1, "quit sure this is right");
     // _a1 is the equivalent radius for computing the circumference of
     // ellipse.
     this._a1 = this._b1 * this._a;
