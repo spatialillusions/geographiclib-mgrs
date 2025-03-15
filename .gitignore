@@ -5,3 +5,4 @@ node_modules
 *.hpp
 *.py
 test/*.tsv
+test/geotrans3.8-output
