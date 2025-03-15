@@ -25,43 +25,48 @@ geotrans = geotrans.split(/\r?\n/);
 for (let i = 0; i < geotrans.length; i++) {
   geotrans[i] = geotrans[i].split("\t");
 }
-
 const WE = {};
-const logging = [];
+const logging = [
+  [
+    "GeoTrans INPUT_COORDS MGRS",
+    "GeoTrans EXPECTED OUTPUT LAT",
+    "GeoTrans EXPECTED OUTPUT LON",
+    "GeoTrans CALCULATED OUTPUT LAT",
+    "GeoTrans CALCULATED OUTPUT LON",
+    "GeographicLib CALCULATED OUTPUT LAT",
+    "GeographicLib CALCULATED OUTPUT LON",
+  ].join("\t"),
+];
+
 let mgrs, point, lat, lon, latRef, lonRef, valid;
 let pass = 0;
 let fail = 0;
-//*
-geotrans[0].push("GeograpicLib LAT");
-geotrans[0].push("GeograpicLib LON");
-logging.push(geotrans[0].join("\t"));
-logging.push(geotrans[1].join("\t"));
-//*/
 for (let i = 3; i < geotrans.length; i++) {
   if (!geotrans[i][7]) continue;
   // 7 column is the MGRS string
   mgrs = geotrans[i][7].trim();
-  point = MGRS.toPoint(mgrs, true);
-  lat = point[1];
-  lon = point[0];
   // 10th and 11th columns are the "correct" coordinates
   latRef = geotrans[i][10];
   lonRef = geotrans[i][11];
 
+  point = MGRS.toPoint(mgrs, true);
+  lat = point[1];
+  lon = point[0];
+
   valid = closeTo(lat, latRef, precision) && closeTo(lon, lonRef, precision);
   if (!valid) {
     fail++;
-    /*
-    WE[mgrs] = [
-      { lat: lat, lon: lon },
-      { lat: latRef, lon: lonRef },
-    ];
-    //*/
-    //*
-    geotrans[i].push(lat);
-    geotrans[i].push(lon);
-
-    logging.push(geotrans[i].join("\t"));
+    logging.push(
+      [
+        geotrans[i][7].trim(),
+        geotrans[i][10],
+        geotrans[i][11],
+        geotrans[i][13],
+        geotrans[i][14],
+        lat.toFixed(6),
+        lon.toFixed(6),
+      ].join("\t"),
+    );
     //*/
   } else {
     pass++;
@@ -73,7 +78,7 @@ for (let i = 3; i < geotrans.length; i++) {
 const content = "Some content!";
 try {
   fs.writeFileSync(
-    path.join("test", "geotrans-mgrsToGeo.fails.tsv"),
+    path.join("test", "MGRStoPoint.fails.tsv"),
     logging.join("\n"),
   );
 } catch (err) {
@@ -81,7 +86,7 @@ try {
 }
 
 WE[`Passed ${pass}`] = [pass > 0, true];
-WE[`Wrote ${fail} failed coordinates to geotrans-mgrsToGeo.fails.tsv`] = [
+WE[`Wrote ${fail} failed coordinates to MGRStoPoint.fails.tsv`] = [
   fail == 0,
   true,
 ];
@@ -104,6 +109,6 @@ geographiclib["33XVK9556495053"] = valid
     ];
 
 export default {
-  "Comparing to Geotrans": WE,
-  "Comparing to GeographicLib C++": geographiclib,
+  "Comparing GeograpicLib-mgrs.js to Geotrans": WE,
+  "Comparing GeograpicLib-mgrs.js to GeographicLib C++": geographiclib,
 };
