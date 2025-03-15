@@ -200,20 +200,17 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
         "d]",
     );
   let northp1 = !MATH.signbit(lat);
-  setzone = setzone || this.MINPSEUDOZONE;
+  setzone = setzone; //|| this.MINPSEUDOZONE;
   let zone1 = this.StandardZone(lat, lon, setzone);
-  zone1 = 24;
-  // zone1 should be 24
   if (zone1 == this.INVALID) {
-    //zone = zone1;
-    //northp = northp1;
+    zone = zone1;
+    northp = northp1;
     x = y = gamma = k = NaN;
     return { zone, northp, x, y, gamma, k };
   }
   let x1, y1, gamma1, k1;
   let utmp = zone1 != this.UPS;
   if (utmp) {
-    // here is the error
     let lon0 = this.CentralMeridian(zone1);
     let dlon = MATH.AngDiff(lon0, lon);
     if (!(dlon <= 60))
@@ -237,12 +234,12 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
           (northp1 ? "N" : "S") +
           " pole",
       );
-    ({ x1, y1, gamma1, k1 } = PolarStereographic.UPS().Forward(
-      northp1,
-      lat,
-      lon,
-    ));
-    return { zone, northp, x, y, gamma, k };
+    const result = PolarStereographic.UPS().Forward(northp1, lat, lon);
+    x1 = result.x;
+    y1 = result.y;
+    gamma1 = result.gamma;
+    k1 = result.k;
+    //return { zone: zone1, northp: northp1, x: x1, y: y1, gamma: gamma1, k: k1 };
   }
   let ind = (utmp ? 2 : 0) + (northp1 ? 1 : 0);
   x1 += this.falseeasting_[ind];
