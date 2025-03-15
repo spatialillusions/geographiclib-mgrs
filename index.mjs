@@ -13,6 +13,7 @@ const GeographicLibMGRS = {};
 GeographicLibMGRS.forward = function (lonlat, accuracy) {
   // lat, lon, zone, mgrslimits
   const utmupsForward = UTMUPS.Forward(lonlat[1], lonlat[0], false, false);
+
   // zone, northp, x, y, prec
   return MGRS.Forward(
     utmupsForward.zone,
