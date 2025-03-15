@@ -7,12 +7,12 @@ const utmupsForward = {
     // lat, lon, zone, mgrslimits
     UTMUPS.Forward(83.6277742673141, -32.664336398663515, false, false),
     {
-      zone: 24,
+      zone: 25,
       northp: true,
-      x: 578350.0433861618,
-      y: 9290849.606814016,
-      gamma: 6.2968363031608785,
-      k: 0.9996749884047857,
+      x: 504159.22734414256,
+      y: 9286552.074810686,
+      gamma: 0.3335898639946378,
+      k: 0.9996002113179556,
     },
   ],
 };
@@ -20,18 +20,18 @@ const utmupsForward = {
 const utmupsReverse = {
   "UTMUPS Reverse": [
     // zone, northp, x, y, mgrslimits
-    UTMUPS.Reverse(24, true, 578350, 9290850, false),
-    //83.62778 -32.66434
+    UTMUPS.Reverse(25, true, 504159.22734414256, 9286552.074810686, false),
+    //83.6277742673141, -32.664336398663515
     {
       lat: 83.6277742673141,
       lon: -32.664336398663515,
-      gamma: 6.296836346298,
-      k: 0.9996744348092954,
+      gamma: 0.3335898639946357,
+      k: 0.9996002113179558,
     },
   ],
 };
 //*/
 export default {
-  //"UTMUPS Forward": utmupsForward,
-  //"UTMUPS Reverse": utmupsReverse,
+  "UTMUPS Forward": utmupsForward,
+  "UTMUPS Reverse": utmupsReverse,
 };
