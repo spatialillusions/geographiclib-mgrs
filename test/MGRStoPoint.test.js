@@ -49,7 +49,9 @@ for (let i = 3; i < geotrans.length; i++) {
   latRef = geotrans[i][10];
   lonRef = geotrans[i][11];
 
-  point = MGRS.toPoint(mgrs, true);
+  // Geotrans uses the lower left corner for MGRS and not the center
+  const centerpoint = false;
+  point = MGRS.toPoint(mgrs, centerpoint);
   lat = point[1];
   lon = point[0];
 
