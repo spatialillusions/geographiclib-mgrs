@@ -34,16 +34,16 @@ const PolarStereographic = {
     let rho = Math.hypot(1, taup) + Math.abs(taup);
     rho = taup >= 0 ? (lat !== MATH.qd ? 1 / rho : 0) : rho;
     rho *= (2 * this._k0 * this._a) / this._c;
-    k =
+    const k =
       lat !== MATH.qd
         ? (rho / this._a) *
           secphi *
           Math.sqrt(this._e2m + this._e2 / MATH.sq(secphi))
         : this._k0;
-    [x, y] = MATH.sincosd(lon);
+    let [x, y] = MATH.sincosd(lon);
     x *= rho;
     y *= northp ? -rho : rho;
-    gamma = MATH.AngNormalize(northp ? lon : -lon);
+    const gamma = MATH.AngNormalize(northp ? lon : -lon);
     return { x, y, gamma, k };
   },
 
