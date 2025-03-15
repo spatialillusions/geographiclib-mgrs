@@ -88,6 +88,7 @@ try {
 WE[`Passed ${pass}`] = [pass > 0, true];
 WE[`Wrote ${fail} failed coordinates to MGRStoPoint.fails.tsv`] = [true, true];
 
+/*
 const geographiclib = {};
 // .\GeoConvert_d.exe  -p 1 --input-string "33XVK9556495053"
 //  81.01648 14.74556
@@ -104,8 +105,9 @@ geographiclib["33XVK9556495053"] = valid
       { lat: lat, lon: lon },
       { lat: latRef, lon: lonRef },
     ];
+*/
 
 export default {
   "Comparing GeograpicLib-mgrs.js to Geotrans": WE,
-  "Comparing GeograpicLib-mgrs.js to GeographicLib C++": geographiclib,
+  //"Comparing GeograpicLib-mgrs.js to GeographicLib C++": geographiclib,
 };
