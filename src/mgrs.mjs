@@ -167,7 +167,7 @@ MGRS.ForwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
             : this.minupsSind_)
       ];
     mgrs1[z++] =
-      this.upsrows_[northp ? 0 : 1][
+      this.upsrows_[northp ? 1 : 0][
         yh - (northp ? this.minupsNind_ : this.minupsSind_)
       ];
   }
@@ -200,7 +200,8 @@ MGRS.Forward = function (zone, northp, x, y, prec) {
       if (this.LatitudeBand(latp) === this.LatitudeBand(late)) {
         lat = latp;
       } else {
-        [lat, lon] = UTMUPS.Reverse(zone, northp, x, y);
+        const utmupsReverse = UTMUPS.Reverse(zone, northp, x, y);
+        lat = utmupsReverse.lat;
       }
     }
   } else {
@@ -209,6 +210,7 @@ MGRS.Forward = function (zone, northp, x, y, prec) {
   return this.ForwardKnowLattitude(zone, northp, x, y, lat, prec);
 };
 //*/
+
 /**
  * Convert a MGRS coordinate to UTM or UPS coordinates.
  *
