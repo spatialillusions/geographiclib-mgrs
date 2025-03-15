@@ -1,7 +1,7 @@
 import UTMUPS from "../src/utmups.mjs";
 //import UTILITY from "../src/utility.mjs";
 
-/*
+//*
 const utmupsForward = {
   "UTMUPS Forward": [
     // lat, lon, zone, mgrslimits
