@@ -316,7 +316,7 @@ MGRS.Reverse = function (
     throw new Error(`Missing row letter in ${mgrs}`);
   }
   const col = utmp ? this.utmcols_[zonem1 % 3] : this.upscols_[iband];
-  const row = utmp ? this.utmrow_ : this.upsrows_[northp1 ? 0 : 1];
+  const row = utmp ? this.utmrow_ : this.upsrows_[northp1 ? 1 : 0];
   let icol = col.indexOf(mgrs[p++]);
   if (icol < 0) {
     throw new Error(
@@ -328,8 +328,8 @@ MGRS.Reverse = function (
   let irow = row.indexOf(mgrs[p++]);
   if (irow < 0) {
     throw new Error(
-      `Row letter ${mgrs[p - 1]} not in ${
-        utmp ? "UTM" : "UPS " + this.hemispheres_[northp1]
+      `zone ${zone1} ${UTMUPS.UPS} Row letter ${mgrs[p - 1]} not in ${
+        utmp ? "UTM" : "UPS " + this.hemispheres_[northp1 ? 0 : 1]
       } set ${row}`,
     );
   }
