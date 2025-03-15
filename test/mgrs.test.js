@@ -1,5 +1,5 @@
 import MGRS from "../src/mgrs.mjs";
-/*
+//*
 const mgrsDecode = {
   "MGRS Decode UTM": [
     MGRS.Decode("33VVE7220287839"),
@@ -36,7 +36,6 @@ const mgrsReverse = {
     MGRS.Reverse("33VVE7220287839", cornerPoint),
     { zone: 33, northp: true, x: 472202, y: 6487839, prec: 5 },
   ],
-  // https://geographiclib.sourceforge.io/cgi-bin/GeoConvert
   "MGRS Reverse compare GeoConvert": [
     MGRS.Reverse("24XWT783908", centerPoint),
     // 24n 578350 9290850
@@ -50,7 +49,7 @@ const mgrsReverse = {
 };
 //*/
 export default {
-  //"MGRS Decode:": mgrsDecode,
-  //"MGRS Forward": mgrsForward,
-  //"MGRS Reverse": mgrsReverse,
+  "MGRS Decode:": mgrsDecode,
+  "MGRS Forward": mgrsForward,
+  "MGRS Reverse": mgrsReverse,
 };
