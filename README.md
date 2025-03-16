@@ -4,7 +4,7 @@ This is a JavaScript port of the MGRS functionality in GeographicLib. It is desi
 
 Differences between geographiclib-mgrs and proj4js mgrs:
 
-- GeographicLib-MGRS supports
+- GeographicLib MGRS supports
   - UTM zones
   - UPS zones
 - Proj4js MGRS supports
