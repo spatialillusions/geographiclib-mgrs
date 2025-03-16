@@ -28,25 +28,27 @@ GeographicLibMGRS.forward = function (lonlat, accuracy) {
 //inverse, takes an mgrs string and returns a bbox.
 // TODO this is not working as expected
 GeographicLibMGRS.inverse = function (mgrs) {
-  /*
   // MGRS, centerPoint
-  const mgrsReverse = MGRS.Reverse(mgrs, false);
+  const mgrsReverse = MGRS.Reverse(mgrs, true);
+
+  const mgrsPrec = 100000 / Math.pow(10, mgrsReverse.prec);
   //zone, northp, x, y, mgrslimits
-  const utmupsReverse = UTMUPS.Reverse(
+  const lowerLeft = UTMUPS.Reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
-    mgrsReverse.x,
-    mgrsReverse.y,
+    mgrsReverse.x - mgrsPrec / 2,
+    mgrsReverse.y - mgrsPrec / 2,
     false,
   );
-  return {
-    north: utmupsReverse.lat,
-    south: utmupsReverse.lat,
-    east: utmupsReverse.lon,
-    west: utmupsReverse.lon,
-  };
-  */
-  throw new Error("inverse function not implemented");
+  const upperRight = UTMUPS.Reverse(
+    mgrsReverse.zone,
+    mgrsReverse.northp,
+    mgrsReverse.x + mgrsPrec / 2,
+    mgrsReverse.y + mgrsPrec / 2,
+    false,
+  );
+  //throw new Error("inverse function not implemented");
+  return [lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat];
 };
 //toPoint, takes an mgrs string, returns an array of '[lon,lat]'
 GeographicLibMGRS.toPoint = function (mgrs, centerp) {
