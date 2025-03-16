@@ -41,6 +41,7 @@ const logging = [
 let mgrs, point, lat, lon, latRef, lonRef, valid;
 let pass = 0;
 let fail = 0;
+let geotransEqual = 0;
 for (let i = 3; i < geotrans.length; i++) {
   if (!geotrans[i][7]) continue;
   // 7 column is the MGRS string
@@ -52,8 +53,8 @@ for (let i = 3; i < geotrans.length; i++) {
   // Geotrans uses the lower left corner for MGRS and not the center
   const centerpoint = false;
   point = MGRS.toPoint(mgrs, centerpoint);
-  lat = point[1];
-  lon = point[0];
+  lat = point[1].toFixed(6);
+  lon = point[0].toFixed(6);
 
   valid = closeTo(lat, latRef, precision) && closeTo(lon, lonRef, precision);
   if (!valid) {
@@ -65,11 +66,13 @@ for (let i = 3; i < geotrans.length; i++) {
         geotrans[i][11],
         geotrans[i][13],
         geotrans[i][14],
-        lat.toFixed(6),
-        lon.toFixed(6),
+        lat,
+        lon,
       ].join("\t"),
     );
-    //*/
+    // Our result is more than 1/10 second from the expexted result, but
+    // our result is equal to geotrans result
+    if (geotrans[i][13] == lat && geotrans[i][14] == lon) geotransEqual++;
   } else {
     pass++;
   }
@@ -87,8 +90,17 @@ try {
   console.error(err);
 }
 
-WE[`Passed ${pass}`] = [pass > 0, true];
-WE[`Wrote ${fail} failed coordinates to MGRStoPoint.fails.tsv`] = [true, true];
+WE[`${pass} coordinates less than 1/10 second from expected result`] = [
+  pass > 0,
+  true,
+];
+WE[`${fail} coordinates more than 1/10 second from expected result`] = [
+  true,
+  true,
+];
+WE[
+  `${geotransEqual}/${fail} of those coordinates is equal to the Geotrans result`
+] = [geotransEqual, fail];
 
 /*
 const geographiclib = {};
