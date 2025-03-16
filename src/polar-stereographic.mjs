@@ -1,6 +1,26 @@
 import CONSTANTS from "./constants.mjs";
 import MATH from "./math.mjs";
 
+/**
+ * \brief Polar stereographic projection
+ *
+ * Implementation taken from the report,
+ * - J. P. Snyder,
+ *   <a href="https://pubs.usgs.gov/publication/pp1395"> Map Projections: A
+ *   Working Manual</a>, USGS Professional Paper 1395 (1987),
+ *   pp. 160--163.
+ *
+ * This is a straightforward implementation of the equations in Snyder except
+ * that Newton's method is used to invert the projection.
+ *
+ * This class also returns the meridian convergence \e gamma and scale \e k.
+ * The meridian convergence is the bearing of grid north (the \e y axis)
+ * measured clockwise from true north.
+ *
+ * Example of use:
+ * \include example-PolarStereographic.cpp
+ **********************************************************************/
+
 const PolarStereographic = {
   init(a, f, k0) {
     this._a = a;

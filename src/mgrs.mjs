@@ -2,6 +2,54 @@ import UTMUPS from "./utmups.mjs";
 import MATH from "./math.mjs";
 import SHARED_MGRS from "./mgrs-shared.mjs";
 
+/**
+ *
+ * MGRS is defined in Chapter 3 of
+ * - J. W. Hager, L. L. Fry, S. S. Jacks, D. R. Hill,
+ *   <a href="https://web.archive.org/web/20161214054445/http://earth-info.nga.mil/GandG/publications/tm8358.1/pdf/TM8358_1.pdf">
+ *   Datums, Ellipsoids, Grids, and Grid Reference Systems</a>,
+ *   Defense Mapping Agency, Technical Manual TM8358.1 (1990).
+ * .
+ * This document has been updated by the two NGA documents
+ * - <a href="https://earth-info.nga.mil/php/download.php?file=coord-grids">
+ *   Universal Grids and Grid Reference Systems</a>,
+ *   NGA.STND.0037 (2014).
+ * - <a href="https://earth-info.nga.mil/php/download.php?file=coord-utmups">
+ *   The Universal Grids and the Transverse Mercator and Polar Stereographic
+ *   Map Projections</a>, NGA.SIG.0012 (2014).
+ *
+ * This implementation has the following properties:
+ * - The conversions are closed, i.e., output from Forward is legal input for
+ *   Reverse and vice versa.  Conversion in both directions preserve the
+ *   UTM/UPS selection and the UTM zone.
+ * - Forward followed by Reverse and vice versa is approximately the
+ *   identity.  (This is affected in predictable ways by errors in
+ *   determining the latitude band and by loss of precision in the MGRS
+ *   coordinates.)
+ * - The trailing digits produced by Forward are consistent as the precision
+ *   is varied.  Specifically, the digits are obtained by operating on the
+ *   easting with &lfloor;10<sup>6</sup> <i>x</i>&rfloor; and extracting the
+ *   required digits from the resulting number (and similarly for the
+ *   northing).
+ * - All MGRS coordinates truncate to legal 100 km blocks.  All MGRS
+ *   coordinates with a legal 100 km block prefix are legal (even though the
+ *   latitude band letter may now belong to a neighboring band).
+ * - The range of UTM/UPS coordinates allowed for conversion to MGRS
+ *   coordinates is the maximum consistent with staying within the letter
+ *   ranges of the MGRS scheme.
+ * - All the transformations are implemented as static methods in the MGRS
+ *   class.
+ *
+ * The <a href="http://www.nga.mil">NGA</a> software package
+ * <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_geotrans">geotrans</a>
+ * also provides conversions to and from MGRS.  Version 3.0 (and earlier)
+ * suffers from some drawbacks:
+ * - Inconsistent rules are used to determine the whether a particular MGRS
+ *   coordinate is legal.  A more systematic approach is taken here.
+ * - The underlying projections are not very accurately implemented.
+ *
+ **********************************************************************/
+
 const MGRS = SHARED_MGRS;
 
 /**

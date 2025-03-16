@@ -4,12 +4,6 @@ import TransverseMercatorExact from "./transverse-mercator-exact.mjs";
 import Complex from "./complex.mjs";
 
 /**
- * \file TransverseMercator.cpp
- * \brief Implementation for GeographicLib::TransverseMercator class
- *
- * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
- * under the MIT/X11 License.  For more information, see
- * https://geographiclib.sourceforge.io/
  *
  * This implementation follows closely JHS 154, ETRS89 -
  * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,

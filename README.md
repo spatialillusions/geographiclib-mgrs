@@ -6,13 +6,50 @@ The main difference between this library and proj4js mgrs is the support for tra
 
 ## Installation
 
-TODO make it into a NPM package so it can be installed.
+TODO make it into a NPM package so it can be installed!
+
+```
+npm install geographiclib-mgrs --save
+```
 
 ## Usage
 
-TODO Describe how to use the library
+TODO publish as NPM package!
 
-It is basically the same as proj4js mgrs.
+```js
+import MGRS from "geographiclib-mgrs";
+```
+
+to convert a MGRS string to a point
+
+```js
+const mgrs = "42SUF1230045600";
+// optional variable if you want to use the center point or lower left
+// default value is false
+const centerpoint = false;
+const point = MGRS.toPoint(mgrs, centerpoint);
+// return [long, lat]
+```
+
+to convert a latlong to a MGRS string
+
+```js
+const point = [long, lat];
+const accuracy = 5;
+const result = MGRS.forward(point, accuracy);
+// return MGRS string
+```
+
+to convert a MGRS string to a bounding box
+
+```js
+const mgrs = "42SUF123456";
+// optional variable if you want to use the center point or lower left
+// default value is false
+const centerpoint = false;
+const point = MGRS.inverse(mgrs);
+// return [lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat]
+```
 
 ## Verification
 
