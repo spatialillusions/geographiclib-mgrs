@@ -53,17 +53,13 @@ const point = MGRS.inverse(mgrs);
 
 ## Verification
 
-The output from this library has been verified against the test data from Geotrans. In the same way as Geotrans we verify that points calculated from MGRS should be within one tenth of a second, and MGRS calculated from points should be within one meter.
+The output from this library has been verified against the test data from Geotrans. We use the same verification method as Geotrans and any descipances are because of rounding errors in the input data.
 
-This is much stricter testing than proj4js mgrs, that compares that the calculated result is within 0.0000015 from the result that Geotrans has calculated.
-
-So even if you can see in the test results that it logs some coordinates as faild, it is just a fraction of coordinates that fails compared to Geotrans.
-
-The library is also verified aginst output from GeographicLib C++ (TO BE DONE).
+The library is a straight port of GeographicLib from C++ to Javascript and provides the same results as GeographicLib C++.
 
 ## GeographicLib
 
-Original GeographicLib can be found at:
+Original GeographicLib by Charles Karney can be found at:
 
 https://geographiclib.sourceforge.io/
 
