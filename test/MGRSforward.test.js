@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import MGRS from "../index.mjs";
+import glUTMUPS from "../src/utmups.mjs";
+import glMGRS from "../src/mgrs.mjs";
 
 let geotrans;
 
@@ -31,6 +33,7 @@ const logging = [
 let mgrs, result, lat, lon, latRef, lonRef, valid;
 let pass = 0;
 let fail = 0;
+let roundingError = 0;
 for (let i = 3; i < geotrans.length; i++) {
   if (!geotrans[i][10]) continue;
   // 11 column is the MGRS calculated by GeoTrans,
@@ -56,13 +59,29 @@ for (let i = 3; i < geotrans.length; i++) {
         result,
       ].join("\t"),
     );
+
+    // Test if we get the correct MGRS if we round UTM/UPS coordinates
+    // to 1/10mm
+    const utm = glUTMUPS.Forward(
+      parseFloat(latRef),
+      parseFloat(lonRef),
+      false,
+      false,
+    );
+    const rounded = glMGRS.Forward(
+      utm.zone,
+      utm.northp,
+      utm.x.toFixed(3),
+      utm.y.toFixed(3),
+      5,
+    );
+    if (mgrs == rounded) roundingError++;
   } else {
     pass++;
   }
 }
 
-// Write logs of fails
-
+// Write logs
 const content = "Some content!";
 try {
   fs.writeFileSync(
@@ -73,8 +92,11 @@ try {
   console.error(err);
 }
 
-WE[`Passed ${pass}`] = [pass > 0, true];
-WE[`Wrote ${fail} failed coordinates to MGRSforward.fails.tsv`] = [true, true];
+WE[`${pass} MGRS strings were returned as expected`] = [pass > 0, true];
+WE[`${fail} MGRS strings was not the expected result`] = [true, true];
+WE[
+  `${roundingError}/${fail} of those MGRS strings are correct if we round UTM/UPS coordinates to 1/10mm`
+] = [roundingError, fail];
 
 export default {
   "Comparing GeograpicLib-mgrs.js to Geotrans": WE,
