@@ -8,6 +8,8 @@ import MGRS from "./src/mgrs.mjs";
 import UTMUPS from "./src/utmups.mjs";
 
 const GeographicLibMGRS = {};
+GeographicLibMGRS.MGRS = MGRS; // include access to original functions
+GeographicLibMGRS.UTMUPS = UTMUPS; // include access to original functions
 
 //forward, takes an array of [lon,lat] and optional accuracy and returns an GeographicLibMGRS string
 GeographicLibMGRS.forward = function (lonlat, accuracy) {
@@ -60,6 +62,10 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
    * @param[out] y northing of point (meters).
    * @param[out] prec precision relative to 100 km.
    * */
+
+  // The default in proj4js mgrs and GeoTrans is to use lower left coordinate
+  // This makes back and forth coversion return the original MGRS
+  if (centerp === undefined) centerp = false;
   const mgrsReverse = MGRS.Reverse(mgrs, centerp);
   //console.log(mgrs);
   //console.log(mgrsReverse);
@@ -82,8 +88,8 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
   const utmupsReverse = UTMUPS.Reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
-    mgrsReverse.x, //- 0.25,
-    mgrsReverse.y, //- 1.5,
+    mgrsReverse.x,
+    mgrsReverse.y,
     mgrsLimits,
   );
   return [utmupsReverse.lon, utmupsReverse.lat];
