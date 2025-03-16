@@ -63,7 +63,7 @@ The output from this library has been verified against the test data from Geotra
 
 The library is a straight port of GeographicLib from C++ to Javascript and provides the same results as GeographicLib C++.
 
-## GeographicLib
+## Licensing
 
 Original GeographicLib by Charles Karney can be found at:
 
@@ -77,3 +77,16 @@ The MIT License (MIT).
 Copyright (c) 2008-2023, Charles Karney
 
 ```
+
+see full license text in GeographicLib source.
+
+Geographiclib-mgrs is licensed under the following MIT license:
+
+```
+MIT License
+
+Copyright (c) 2025 Måns Beckman
+
+```
+
+see full license text in the LICENSE file
