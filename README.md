@@ -2,7 +2,13 @@
 
 This is a JavaScript port of the MGRS functionality in GeographicLib. It is designed to be a drop in replacement for proj4js mgrs.
 
-The main difference between this library and proj4js mgrs is the support for translating to and from UPS MGRS.
+Differences between geographiclib-mgrs and proj4js mgrs:
+
+- GeographicLib-MGRS supports
+  - UTM zones
+  - UPS zones
+- Proj4js MGRS supports
+  - UTM zones
 
 ## Installation
 
