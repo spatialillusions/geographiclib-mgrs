@@ -236,7 +236,7 @@ const MATH = {
   },
 
   signbit(x) {
-    return Math.sign(x) === -1;
+    return x === 0 ? 1 / x === -Infinity : x < 0;
   },
 };
 
