@@ -1,6 +1,5 @@
 import CONSTANTS from "./constants.mjs";
 import MATH from "./math.mjs";
-import TransverseMercatorExact from "./transverse-mercator-exact.mjs";
 import Complex from "./complex.mjs";
 
 /**
@@ -41,21 +40,16 @@ const GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER = 6;
 const maxpow = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
 
 const TransverseMercator = {
-  init(a, f, k0, exact = false, extendp = false) {
+  init(a, f, k0, extendp = false) {
     this._a = a;
     this._f = f;
     this._k0 = k0;
-    this._exact = exact;
     this._e2 = this._f * (2 - this._f);
     this._es = (this._f < 0 ? -1 : 1) * Math.sqrt(Math.abs(this._e2));
     this._e2m = 1 - this._e2;
     this._c = Math.sqrt(this._e2m) * Math.exp(MATH.eatanhe(1, this._es));
     this._n = this._f / (2 - this._f);
-    this._tmexact = this._exact
-      ? TransverseMercatorExact.init(a, f, k0, extendp)
-      : {}; //if not exact we don't need to initiate this TransverseMercatorExact.init();
 
-    if (this._exact) return;
     if (!(isFinite(this._a) && this._a > 0))
       throw new Error("Equatorial radius is not positive");
     if (!(isFinite(this._f) && this._f < 1))
@@ -273,11 +267,9 @@ const TransverseMercator = {
         (d * MATH.polyval(m, alpcoeff.slice(o), this._n)) / alpcoeff[o + m + 1];
       this._bet[l] =
         (d * MATH.polyval(m, betcoeff.slice(o), this._n)) / betcoeff[o + m + 1];
-      //this._bet[l] += 0.00000047;
       o += m + 2;
       d *= this._n;
     }
-    //console.log("js bet", this._bet, "WE NEED TO VERIFY THIS CALCULATION");
   },
 
   UTM() {
@@ -287,7 +279,6 @@ const TransverseMercator = {
   },
 
   forward(lon0, lat, lon) {
-    if (this._exact) return this._tmexact.forward(lon0, lat, lon);
     lat = MATH.latFix(lat);
     lon = MATH.angDiff(lon0, lon);
     const latsign = Math.sign(lat);
@@ -459,27 +450,18 @@ const TransverseMercator = {
 
   reverse(lon0, x, y) {
     let gamma, k, lat, lon;
-    if (this._exact) return this._tmexact.reverse(lon0, x, y);
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).
-    //console.log("js y", y);
-    //console.log("js x", x);
-    //console.log("js a1", this._a1);
-    //console.log("js k0", this._k0);
     let xi = y / (this._a1 * this._k0);
     let eta = x / (this._a1 * this._k0);
-    //console.log("js xi", xi);
-    //console.log("js eta", eta);
     // Explicitly enforce the parity
     const xisign = Math.sign(xi);
     const etasign = Math.sign(eta);
     xi *= xisign;
     eta *= etasign;
-    //console.log("js eta", eta);
     const backside = xi > Math.PI / 2;
     if (backside) xi = Math.PI - xi;
-    //console.log("js xi", xi);
     const c0 = Math.cos(2 * xi);
     const ch0 = Math.cosh(2 * eta);
     const s0 = Math.sin(2 * xi);
@@ -519,8 +501,6 @@ const TransverseMercator = {
     //   psi = asinh(tan(phi'))
     const xip = y1.real;
     const etap = y1.imag;
-    //console.log("js xip", xip);
-    //console.log("js etap", etap);
     const s = Math.sinh(etap);
     const c = Math.max(0, Math.cos(xip)); // cos(pi/2) might be negative
     let r = Math.hypot(s, c);
@@ -528,32 +508,8 @@ const TransverseMercator = {
       lon = MATH.atan2d(s, c); // Krueger p 17 (25)
       // Use Newton's method to solve for tau
       let sxip = Math.sin(xip);
-      //console.log("js s", s);
-      //console.log("js c", c);
-      //console.log("js sxip", sxip, sxip - 0.9875708920451804);
-      //console.log("js r", r, r - 0.1571757626325274);
-      //console.log("js this._es", this._es, this._es - 0.08181919084262149);
-
-      // TEMP TEMP TEMP
-      /*
-      sxip = 0.9875708920451804;
-      r = 0.1571757626325274;
-      this._es = 0.08181919084262149;
-      //*/
-      // TEMP TEMP TEMP
-
       let tau = MATH.tauf(sxip / r, this._es);
-
-      // TEMP TEMP TEMP
-      /*
-      tau = 6.325525788740787;
-      //*/
-      // TEMP TEMP TEMP
-
-      //console.log("js tau", tau, tau - 6.325525788740787);
       gamma += MATH.atan2d(sxip * Math.tanh(etap), c);
-      // MBC tau is + 0.000007 too small
-      //tau = 6.325525788740787;
       lat = MATH.atand(tau);
 
       // Note cos(phi') * cosh(eta') = r
@@ -575,7 +531,6 @@ const TransverseMercator = {
     gamma *= xisign * etasign;
     gamma = MATH.angNormalize(gamma);
     k *= this._k0;
-    //console.log(`js lat: ${lat}, lon: ${lon}, gamma: ${gamma}, k: ${k}`);
     return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 };
