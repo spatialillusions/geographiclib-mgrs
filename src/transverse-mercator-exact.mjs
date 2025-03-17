@@ -199,7 +199,7 @@ const TransverseMercatorExact = {
     }
   },
 
-  Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k) {
+  scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k) {
     const sec2 = 1 + Math.pow(tau, 2);
     gamma = Math.atan2(this._mv * snu * snv * cnv, cnu * dnu * dnv);
     k =
@@ -211,9 +211,9 @@ const TransverseMercatorExact = {
       );
   },
 
-  Forward(lon0, lat, lon, x, y, gamma, k) {
-    lat = MATH.LatFix(lat);
-    lon = MATH.AngDiff(lon0, lon);
+  forward(lon0, lat, lon, x, y, gamma, k) {
+    lat = MATH.latFix(lat);
+    lon = MATH.angDiff(lon0, lon);
     const latsign = !this._extendp && Math.sign(lat) ? -1 : 1;
     const lonsign = !this._extendp && Math.sign(lon) ? -1 : 1;
     lon *= lonsign;
@@ -249,7 +249,7 @@ const TransverseMercatorExact = {
     } else {
       this.zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
       tau = MATH.tauf(tau, this._e);
-      this.Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+      this.scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= MATH.degree();
     }
     if (backside) gamma = MATH.hd - gamma;
@@ -257,7 +257,7 @@ const TransverseMercatorExact = {
     k *= this._k0;
   },
 
-  Reverse(lon0, x, y, lat, lon, gamma, k) {
+  reverse(lon0, x, y, lat, lon, gamma, k) {
     let xi = y / (this._a * this._k0);
     let eta = x / (this._a * this._k0);
     const xisign = !this._extendp && Math.sign(xi) ? -1 : 1;
@@ -283,7 +283,7 @@ const TransverseMercatorExact = {
       phi = Math.atan(tau);
       lat = phi / MATH.degree();
       lon = lam / MATH.degree();
-      this.Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
+      this.scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= MATH.degree();
     } else {
       lat = MATH.qd;
@@ -292,7 +292,7 @@ const TransverseMercatorExact = {
     }
     if (backside) lon = MATH.hd - lon;
     lon *= etasign;
-    lon = MATH.AngNormalize(lon + MATH.AngNormalize(lon0));
+    lon = MATH.angNormalize(lon + MATH.angNormalize(lon0));
     lat *= xisign;
     if (backside) gamma = MATH.hd - gamma;
     gamma *= xisign * etasign;

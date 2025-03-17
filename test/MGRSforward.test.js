@@ -62,13 +62,13 @@ for (let i = 3; i < geotrans.length; i++) {
 
     // Test if we get the correct MGRS if we round UTM/UPS coordinates
     // to 1/10mm
-    const utm = glUTMUPS.Forward(
+    const utm = glUTMUPS.forward(
       parseFloat(latRef),
       parseFloat(lonRef),
       false,
       false,
     );
-    const rounded = glMGRS.Forward(
+    const rounded = glMGRS.forward(
       utm.zone,
       utm.northp,
       utm.x.toFixed(3),

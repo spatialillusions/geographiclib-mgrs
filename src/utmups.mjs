@@ -73,16 +73,16 @@ const UTMUPS = {
    **********************************************************************/
   MAXZONE: 60,
 };
-UTMUPS.CentralMeridian = function (zone) {
+UTMUPS.centralMeridian = function (zone) {
   return 6 * zone - 183;
 };
 UTMUPS.UTMShift = function () {
   return 10000000;
 };
-UTMUPS.EquatorialRadius = function () {
+UTMUPS.equatorialRadius = function () {
   return CONSTANTS.WGS84_a();
 };
-UTMUPS.Flattening = function () {
+UTMUPS.flattening = function () {
   return CONSTANTS.WGS84_f();
 };
 
@@ -128,14 +128,14 @@ UTMUPS.maxnorthing_ = [
   MGRS.maxutmNrow_ * MGRS.tile_,
 ];
 
-UTMUPS.StandardZone = function (lat, lon, setzone) {
+UTMUPS.standardZone = function (lat, lon, setzone) {
   setzone = setzone || this.STANDARD;
   if (!(setzone >= this.MINPSEUDOZONE && setzone <= this.MAXZONE))
     throw new Error("Illegal zone requested " + Utility.str(setzone));
   if (setzone >= this.MINZONE || setzone == this.INVALID) return setzone;
   if (isNaN(lat) || isNaN(lon)) return this.INVALID;
   if (setzone == this.UTM || (lat >= -80 && lat < 84)) {
-    let ilon = Math.floor(MATH.AngNormalize(lon));
+    let ilon = Math.floor(MATH.angNormalize(lon));
     if (ilon == MATH.hd) ilon = -MATH.hd;
     let zone = Math.floor((ilon + 186) / 6);
     let band = MGRS.latitudeBand(lat);
@@ -175,19 +175,19 @@ UTMUPS.StandardZone = function (lat, lon, setzone) {
  * The northing \e y jumps by UTMUPS::UTMShift() when crossing the equator
  * in the southerly direction.  Sometimes it is useful to remove this
  * discontinuity in \e y by extending the "northern" hemisphere using
- * UTMUPS::Transfer:
+ * UTMUPS.transfer:
  * \code
  double lat = -1, lon = 123;
 int zone;
 bool northp;
 double x, y, gamma, k;
-GeographicLib::UTMUPS::Forward(lat, lon, zone, northp, x, y, gamma, k);
-GeographicLib::UTMUPS::Transfer(zone, northp, x, y,
+GeographicLib.UTMUPS.forward(lat, lon, zone, northp, x, y, gamma, k);
+GeographicLib.TMUPS.transfer(zone, northp, x, y,
                                 zone, true,   x, y, zone);
 northp = true;
 \endcode
 **********************************************************************/
-UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
+UTMUPS.forward = function (lat, lon, setzone, mgrslimits) {
   let zone, northp, x, y, gamma, k;
   if (Math.abs(lat) > Math.qd)
     throw new Error(
@@ -201,7 +201,7 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
     );
   let northp1 = !MATH.signbit(lat);
   setzone = setzone; //|| this.MINPSEUDOZONE;
-  let zone1 = this.StandardZone(lat, lon, setzone);
+  let zone1 = this.standardZone(lat, lon, setzone);
   if (zone1 == this.INVALID) {
     zone = zone1;
     northp = northp1;
@@ -211,8 +211,8 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
   let x1, y1, gamma1, k1;
   let utmp = zone1 != this.UPS;
   if (utmp) {
-    let lon0 = this.CentralMeridian(zone1);
-    let dlon = MATH.AngDiff(lon0, lon);
+    let lon0 = this.centralMeridian(zone1);
+    let dlon = MATH.angDiff(lon0, lon);
     if (!(dlon <= 60))
       throw new Error(
         "Longitude " +
@@ -220,7 +220,7 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
           "d more than 60d from center of UTM zone " +
           Utility.str(zone1),
       );
-    const result = TransverseMercator.UTM().Forward(lon0, lat, lon);
+    const result = TransverseMercator.UTM().forward(lon0, lat, lon);
     x1 = result.x;
     y1 = result.y;
     gamma1 = result.gamma;
@@ -234,7 +234,7 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
           (northp1 ? "N" : "S") +
           " pole",
       );
-    const result = PolarStereographic.UPS().Forward(northp1, lat, lon);
+    const result = PolarStereographic.UPS().forward(northp1, lat, lon);
     x1 = result.x;
     y1 = result.y;
     gamma1 = result.gamma;
@@ -245,7 +245,7 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
   x1 += this.falseeasting_[ind];
 
   y1 += this.falsenorthing_[ind];
-  if (!this.CheckCoords(zone1 != this.UPS, northp1, x1, y1, mgrslimits, false))
+  if (!this.checkCoords(zone1 != this.UPS, northp1, x1, y1, mgrslimits, false))
     throw new Error(
       "Latitude " +
         Utility.str(lat) +
@@ -303,7 +303,7 @@ UTMUPS.Forward = function (lat, lon, setzone, mgrslimits) {
  * performed besides these (e.g., to limit the distance outside the
  * standard zone boundaries).
  **********************************************************************/
-UTMUPS.Reverse = function (zone, northp, x, y, mgrslimits) {
+UTMUPS.reverse = function (zone, northp, x, y, mgrslimits) {
   let lat, lon, gamma, k;
   if (zone == this.INVALID || isNaN(x) || isNaN(y)) {
     lat = lon = gamma = k = NaN;
@@ -312,23 +312,23 @@ UTMUPS.Reverse = function (zone, northp, x, y, mgrslimits) {
   if (!(zone >= this.MINZONE && zone <= this.MAXZONE))
     throw new Error("Zone " + Utility.str(zone) + " not in range [0, 60]");
   let utmp = zone != this.UPS;
-  this.CheckCoords(utmp, northp, x, y, mgrslimits);
+  this.checkCoords(utmp, northp, x, y, mgrslimits);
   let ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
   x -= this.falseeasting_[ind];
   y -= this.falsenorthing_[ind];
   if (utmp) {
-    ({ lat, lon, gamma, k } = TransverseMercator.UTM().Reverse(
-      this.CentralMeridian(zone),
+    ({ lat, lon, gamma, k } = TransverseMercator.UTM().reverse(
+      this.centralMeridian(zone),
       x,
       y,
     ));
   } else {
-    ({ lat, lon, gamma, k } = PolarStereographic.UPS().Reverse(northp, x, y));
+    ({ lat, lon, gamma, k } = PolarStereographic.UPS().reverse(northp, x, y));
   }
   return { lat, lon, gamma, k };
 };
 
-UTMUPS.CheckCoords = function (utmp, northp, x, y, mgrslimits, throwp) {
+UTMUPS.checkCoords = function (utmp, northp, x, y, mgrslimits, throwp) {
   let slop = mgrslimits ? 0 : MGRS.tile_;
   let ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
   if (x < this.mineasting_[ind] - slop || x > this.maxeasting_[ind] + slop) {
@@ -368,7 +368,7 @@ UTMUPS.CheckCoords = function (utmp, northp, x, y, mgrslimits, throwp) {
   return true;
 };
 
-UTMUPS.Transfer = function (
+UTMUPS.transfer = function (
   zonein,
   northpin,
   xin,
@@ -382,9 +382,9 @@ UTMUPS.Transfer = function (
   let northp = northpin;
   if (zonein != zoneout) {
     let lat, lon, gamma, k;
-    ({ lat, lon, gamma, k } = this.Reverse(zonein, northpin, xin, yin));
+    ({ lat, lon, gamma, k } = this.reverse(zonein, northpin, xin, yin));
     let x, y, zone1, northp;
-    ({ zone, northp, x, y, gamma, k } = this.Forward(
+    ({ zone, northp, x, y, gamma, k } = this.forward(
       lat,
       lon,
       zoneout == this.MATCH ? zonein : zoneout,
@@ -408,7 +408,7 @@ UTMUPS.Transfer = function (
   if (northp != northpout) yout.value += (northpout ? -1 : 1) * MGRS.utmNshift_;
 };
 
-UTMUPS.DecodeZone = function (zonestr, zone, northp) {
+UTMUPS.decodeZone = function (zonestr, zone, northp) {
   let zlen = zonestr.length;
   if (zlen == 0) throw new Error("Empty zone specification");
   if (zlen > 7)
@@ -450,7 +450,7 @@ UTMUPS.DecodeZone = function (zonestr, zone, northp) {
   northp.value = northp1;
 };
 
-UTMUPS.EncodeZone = function (zone, northp, abbrev) {
+UTMUPS.encodeZone = function (zone, northp, abbrev) {
   if (zone == this.INVALID) return abbrev ? "inv" : "invalid";
   if (!(zone >= this.MINZONE && zone <= this.MAXZONE))
     throw new Error("Zone " + Utility.str(zone) + " not in range [0, 60]");
@@ -460,7 +460,7 @@ UTMUPS.EncodeZone = function (zone, northp, abbrev) {
   return os.join("");
 };
 
-UTMUPS.DecodeEPSG = function (epsg, zone, northp) {
+UTMUPS.decodeEPSG = function (epsg, zone, northp) {
   northp.value = false;
   if (epsg >= this.epsg01N && epsg <= this.epsg60N) {
     zone.value = epsg - this.epsg01N + this.MINUTMZONE;
@@ -477,7 +477,7 @@ UTMUPS.DecodeEPSG = function (epsg, zone, northp) {
   }
 };
 
-UTMUPS.EncodeEPSG = function (zone, northp) {
+UTMUPS.encodeEPSG = function (zone, northp) {
   let epsg = -1;
   if (zone == this.UPS) epsg = this.epsgS;
   else if (zone >= this.MINUTMZONE && zone <= this.MAXUTMZONE)

@@ -61,7 +61,7 @@ SHARED_MGRS.maxnorthing_ = [
   SHARED_MGRS.maxutmNrow_,
 ];
 
-// UTMUPS::StandardZone calls LatitudeBand
+// UTMUPS.standardZone calls LatitudeBand
 /**
  * Return latitude band number [-10, 10) for the given latitude (degrees).
  * The bands are reckoned to include their southern edges.

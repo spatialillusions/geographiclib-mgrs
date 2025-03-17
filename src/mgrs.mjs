@@ -59,7 +59,7 @@ const MGRS = SHARED_MGRS;
  * @param {number} y - Northing in meters.
  * @returns {number} - Approximate latitude band number.
  */
-MGRS.ApproxLatitudeBand = function (y) {
+MGRS.approxLatitudeBand = function (y) {
   // northing at tile center in units of tile = 100km
   const ya = Math.floor(Math.min(88, Math.abs(y / MGRS.tile_))) + 0.5;
   // convert to lat (mult by 90/100) and then to band (divide by 8)
@@ -159,13 +159,13 @@ MGRS.ApproxLatitudeBand = function (y) {
  * allocating a potentially large number of small strings.  If an error is
  * thrown, then \e mgrs is unchanged.
  **********************************************************************/
-MGRS.ForwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
+MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
   const angeps = Math.pow(2, -(MATH.digits() - 7));
   if (zone === UTMUPS.INVALID || isNaN(x) || isNaN(y) || isNaN(lat)) {
     return "INVALID";
   }
   const utmp = zone !== 0;
-  this.CheckCoords(utmp, northp, x, y);
+  this.checkCoords(utmp, northp, x, y);
   if (!(zone >= UTMUPS.MINZONE && zone <= UTMUPS.MAXZONE)) {
     throw new Error(`Zone ${zone} not in [0,60]`);
   }
@@ -235,7 +235,7 @@ MGRS.ForwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
   return mgrs1.join("").substring(0, mlen);
 };
 
-MGRS.Forward = function (zone, northp, x, y, prec) {
+MGRS.forward = function (zone, northp, x, y, prec) {
   let lat;
   if (zone > 0) {
     let ys = northp ? y : y - this.utmNshift_;
@@ -248,14 +248,14 @@ MGRS.Forward = function (zone, northp, x, y, prec) {
       if (this.latitudeBand(latp) === this.latitudeBand(late)) {
         lat = latp;
       } else {
-        const utmupsReverse = UTMUPS.Reverse(zone, northp, x, y);
+        const utmupsReverse = UTMUPS.reverse(zone, northp, x, y);
         lat = utmupsReverse.lat;
       }
     }
   } else {
     lat = 0;
   }
-  return this.ForwardKnowLattitude(zone, northp, x, y, lat, prec);
+  return this.forwardKnowLattitude(zone, northp, x, y, lat, prec);
 };
 //*/
 
@@ -305,7 +305,7 @@ MGRS.Forward = function (zone, northp, x, y, prec) {
  *
  * If an exception is thrown, then the arguments are unchanged.
  **********************************************************************/
-MGRS.Reverse = function (
+MGRS.reverse = function (
   mgrs,
   /*, zone, northp, easting, northing, prec, */ centerp,
 ) {
@@ -449,7 +449,7 @@ MGRS.Reverse = function (
   return { zone, northp, x, y, prec };
 };
 
-MGRS.CheckCoords = function (utmp, northp, x, y) {
+MGRS.checkCoords = function (utmp, northp, x, y) {
   // Limits are all multiples of 100km and are all closed on the lower end
   // and open on the upper end -- and this is reflected in the error
   // messages.  However if a coordinate lies on the excluded upper end (e.g.,
@@ -590,7 +590,7 @@ MGRS.UTMRow = function (iband, icol, irow) {
  *
  * If an exception is thrown, then the arguments are unchanged.
  **********************************************************************/
-MGRS.Decode = function (mgrs) {
+MGRS.decode = function (mgrs) {
   const len = mgrs.length;
   if (len >= 3 && mgrs.substring(0, 3).toUpperCase() === "INV") {
     return {
@@ -649,61 +649,61 @@ MGRS.Decode = function (mgrs) {
  * This check needs to be carried out if the ellipsoid parameters (or the
  * UTM/UPS scales) are ever changed.
  **********************************************************************/
-MGRS.Check = function () {
+MGRS.check = function () {
   let lat, lon, x, y;
   const t = this.tile_;
   let zone;
   let northp;
 
-  UTMUPS.Reverse(31, true, 1 * t, 0 * t, (lat, lon) => {
+  UTMUPS.reverse(31, true, 1 * t, 0 * t, (lat, lon) => {
     if (!(lon < 0)) {
-      throw new Error("MGRS::Check: equator coverage failure");
+      throw new Error("MGRS.check: equator coverage failure");
     }
   });
 
-  UTMUPS.Reverse(31, true, 1 * t, 95 * t, (lat, lon) => {
+  UTMUPS.reverse(31, true, 1 * t, 95 * t, (lat, lon) => {
     if (!(lat > 84)) {
-      throw new Error("MGRS::Check: UTM doesn't reach latitude = 84");
+      throw new Error("MGRS.check: UTM doesn't reach latitude = 84");
     }
   });
 
-  UTMUPS.Reverse(31, false, 1 * t, 10 * t, (lat, lon) => {
+  UTMUPS.reverse(31, false, 1 * t, 10 * t, (lat, lon) => {
     if (!(lat < -80)) {
-      throw new Error("MGRS::Check: UTM doesn't reach latitude = -80");
+      throw new Error("MGRS.check: UTM doesn't reach latitude = -80");
     }
   });
 
-  UTMUPS.Forward(
+  UTMUPS.forward(
     56,
     3,
     (zone, northp, x, y) => {
       if (!(x > 1 * t)) {
-        throw new Error("MGRS::Check: Norway exception creates a gap");
+        throw new Error("MGRS.check: Norway exception creates a gap");
       }
     },
     32,
   );
 
-  UTMUPS.Forward(
+  UTMUPS.forward(
     72,
     21,
     (zone, northp, x, y) => {
       if (!(x > 1 * t)) {
-        throw new Error("MGRS::Check: Svalbard exception creates a gap");
+        throw new Error("MGRS.check: Svalbard exception creates a gap");
       }
     },
     35,
   );
 
-  UTMUPS.Reverse(0, true, 20 * t, 13 * t, (lat, lon) => {
+  UTMUPS.reverse(0, true, 20 * t, 13 * t, (lat, lon) => {
     if (!(lat < 84)) {
-      throw new Error("MGRS::Check: North UPS doesn't reach latitude = 84");
+      throw new Error("MGRS.check: North UPS doesn't reach latitude = 84");
     }
   });
 
-  UTMUPS.Reverse(0, false, 20 * t, 8 * t, (lat, lon) => {
+  UTMUPS.reverse(0, false, 20 * t, 8 * t, (lat, lon) => {
     if (!(lat > -80)) {
-      throw new Error("MGRS::Check: South UPS doesn't reach latitude = -80");
+      throw new Error("MGRS.check: South UPS doesn't reach latitude = -80");
     }
   });
 
@@ -719,7 +719,7 @@ MGRS.Check = function () {
 
   const bandchecks = tab.length / 3;
   for (let i = 0; i < bandchecks; ++i) {
-    UTMUPS.Reverse(
+    UTMUPS.reverse(
       38,
       true,
       tab[3 * i + 1] * t,
@@ -727,7 +727,7 @@ MGRS.Check = function () {
       (lat, lon) => {
         if (!(this.latitudeBand(lat) === tab[3 * i + 0])) {
           throw new Error(
-            "MGRS::Check: Band error, b = " +
+            "MGRS.check: Band error, b = " +
               tab[3 * i + 0] +
               ", x = " +
               tab[3 * i + 1] +

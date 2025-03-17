@@ -101,16 +101,16 @@ const dmsEncode = {
 };
 const ind = {};
 const dmsDecode = {
-  " +0 ": [DMS.Decode(" +0 ", ind), +0.0],
-  "-0  ": [DMS.Decode("-0  ", ind), -0.0],
-  //" nan": [DMS.Decode(" nan", ind), NaN], // Illegal character n in DMS string
-  //"+inf": [DMS.Decode("+inf", ind), +Infinity], // Illegal character i in DMS string
-  //" inf": [DMS.Decode(" inf", ind), +Infinity], // Illegal character i in DMS string
-  //"-inf": [DMS.Decode("-inf", ind), -Infinity], // Illegal character i in DMS string
-  " +0N": [DMS.Decode(" +0N", ind), +0.0],
-  "-0N ": [DMS.Decode("-0N ", ind), -0.0],
-  "+0S ": [DMS.Decode("+0S ", ind), -0.0],
-  " -0S": [DMS.Decode(" -0S", ind), +0.0],
+  " +0 ": [DMS.decode(" +0 ", ind), +0.0],
+  "-0  ": [DMS.decode("-0  ", ind), -0.0],
+  //" nan": [DMS.decode(" nan", ind), NaN], // Illegal character n in DMS string
+  //"+inf": [DMS.decode("+inf", ind), +Infinity], // Illegal character i in DMS string
+  //" inf": [DMS.decode(" inf", ind), +Infinity], // Illegal character i in DMS string
+  //"-inf": [DMS.decode("-inf", ind), -Infinity], // Illegal character i in DMS string
+  " +0N": [DMS.decode(" +0N", ind), +0.0],
+  "-0N ": [DMS.decode("-0N ", ind), -0.0],
+  "+0S ": [DMS.decode("+0S ", ind), -0.0],
+  " -0S": [DMS.decode(" -0S", ind), +0.0],
 };
 //*/
 /*
@@ -123,7 +123,7 @@ function equiv(x, y) {
 const T = Number;
 let n = 0;
 
-// lat = +/-0 in UTMUPS::Forward
+// lat = +/-0 in UTMUPS.forward
 // lat y northp
 const C = [
   [+T(0), T(0), 1],
@@ -132,13 +132,13 @@ const C = [
 let i = 0;
 let northp, zone, x, y, mgrs;
 for (let k = 0; k < 2; ++k) {
-  ({ zone, northp, x, y } = UTMUPS.Forward(C[k][0], T(3)));
+  ({ zone, northp, x, y } = UTMUPS.forward(C[k][0], T(3)));
   if (equiv(y, C[k][1]) + (northp === C[k][2] > 0 ? 0 : 1)) ++i;
-  mgrs = MGRS.Forward(zone, northp, x, y, 2);
+  mgrs = MGRS.forward(zone, northp, x, y, 2);
   if (!(mgrs === (k === 0 ? "31NEA0000" : "31MEV0099"))) ++i;
-  mgrs = MGRS.Forward(zone, northp, x, y, +T(0), 2);
+  mgrs = MGRS.forward(zone, northp, x, y, +T(0), 2);
   if (!(mgrs === (k === 0 ? "31NEA0000" : "31MEV0099"))) ++i;
-  mgrs = MGRS.Forward(zone, northp, x, y, -T(0), 2);
+  mgrs = MGRS.forward(zone, northp, x, y, -T(0), 2);
   if (!(mgrs === (k === 0 ? "31NEA0000" : "31MEV0099"))) ++i;
 }
 

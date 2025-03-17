@@ -45,8 +45,8 @@ const PolarStereographic = {
     return ups;
   },
 
-  Forward(northp, lat, lon) {
-    lat = MATH.LatFix(lat);
+  forward(northp, lat, lon) {
+    lat = MATH.latFix(lat);
     lat *= northp ? 1 : -1;
     const tau = MATH.tand(lat);
     const secphi = Math.hypot(1, tau);
@@ -63,11 +63,11 @@ const PolarStereographic = {
     let [x, y] = MATH.sincosd(lon);
     x *= rho;
     y *= northp ? -rho : rho;
-    const gamma = MATH.AngNormalize(northp ? lon : -lon);
+    const gamma = MATH.angNormalize(northp ? lon : -lon);
     return { x, y, gamma, k };
   },
 
-  Reverse(northp, x, y) {
+  reverse(northp, x, y) {
     const rho = Math.hypot(x, y);
     const t =
       rho !== 0
@@ -84,17 +84,17 @@ const PolarStereographic = {
         : this._k0;
     let lat = (northp ? 1 : -1) * MATH.atand(tau);
     let lon = MATH.atan2d(x, northp ? -y : y);
-    let gamma = MATH.AngNormalize(northp ? lon : -lon);
+    let gamma = MATH.angNormalize(northp ? lon : -lon);
     return { lat: lat, lon: lon, gamma: gamma, k: k };
   },
 
-  SetScale(lat, k) {
+  setScale(lat, k) {
     if (!(isFinite(k) && k > 0)) throw new Error("Scale is not positive");
     if (!(-MATH.qd < lat && lat <= MATH.qd))
       throw new Error(`Latitude must be in (-${MATH.qd}d, ${MATH.qd}d]`);
     let x, y, gamma, kold;
     this._k0 = 1;
-    this.Forward(true, lat, 0, x, y, gamma, kold);
+    this.forward(true, lat, 0, x, y, gamma, kold);
     this._k0 *= k / kold;
   },
 };

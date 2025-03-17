@@ -14,10 +14,10 @@ GeographicLibMGRS.UTMUPS = UTMUPS; // include access to original functions
 //forward, takes an array of [lon,lat] and optional accuracy and returns an GeographicLibMGRS string
 GeographicLibMGRS.forward = function (lonlat, accuracy) {
   // lat, lon, zone, mgrslimits
-  const utmupsForward = UTMUPS.Forward(lonlat[1], lonlat[0], false, false);
+  const utmupsForward = UTMUPS.forward(lonlat[1], lonlat[0], false, false);
 
   // zone, northp, x, y, prec
-  return MGRS.Forward(
+  return MGRS.forward(
     utmupsForward.zone,
     utmupsForward.northp,
     utmupsForward.x,
@@ -29,18 +29,18 @@ GeographicLibMGRS.forward = function (lonlat, accuracy) {
 // TODO this is not working as expected
 GeographicLibMGRS.inverse = function (mgrs) {
   // MGRS, centerPoint
-  const mgrsReverse = MGRS.Reverse(mgrs, true);
+  const mgrsReverse = MGRS.reverse(mgrs, true);
 
   const mgrsPrec = 100000 / Math.pow(10, mgrsReverse.prec);
   //zone, northp, x, y, mgrslimits
-  const lowerLeft = UTMUPS.Reverse(
+  const lowerLeft = UTMUPS.reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
     mgrsReverse.x - mgrsPrec / 2,
     mgrsReverse.y - mgrsPrec / 2,
     false,
   );
-  const upperRight = UTMUPS.Reverse(
+  const upperRight = UTMUPS.reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
     mgrsReverse.x + mgrsPrec / 2,
@@ -68,7 +68,7 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
   // The default in proj4js mgrs and GeoTrans is to use lower left coordinate
   // This makes back and forth coversion return the original MGRS
   if (centerp === undefined) centerp = false;
-  const mgrsReverse = MGRS.Reverse(mgrs, centerp);
+  const mgrsReverse = MGRS.reverse(mgrs, centerp);
   //console.log(mgrs);
   //console.log(mgrsReverse);
   const mgrsLimits = false;
@@ -87,7 +87,7 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
    * @param[out] gamma meridian convergence at point (degrees).
    * @param[out] k scale of projection at point.
    * */
-  const utmupsReverse = UTMUPS.Reverse(
+  const utmupsReverse = UTMUPS.reverse(
     mgrsReverse.zone,
     mgrsReverse.northp,
     mgrsReverse.x,

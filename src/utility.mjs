@@ -110,7 +110,7 @@ const UTILITY = {
     return p !== -1 ? p : -1;
   },
 
-  ParseLine(line, key, value, equals, comment) {
+  parseLine(line, key, value, equals, comment) {
     key.value = "";
     value.value = "";
     const n = comment ? line.indexOf(comment) : line.length;

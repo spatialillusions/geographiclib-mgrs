@@ -4,7 +4,7 @@ import UTMUPS from "../src/utmups.mjs";
 const utmupsForward = {
   "UTMUPS Forward": [
     // lat, lon, zone, mgrslimits
-    UTMUPS.Forward(83.6277742673141, -32.664336398663515, false, false),
+    UTMUPS.forward(83.6277742673141, -32.664336398663515, false, false),
     {
       zone: 25,
       northp: true,
@@ -19,7 +19,7 @@ const utmupsForward = {
 const utmupsReverse = {
   "UTMUPS Reverse": [
     // zone, northp, x, y, mgrslimits
-    UTMUPS.Reverse(25, true, 504159.22734414256, 9286552.074810686, false),
+    UTMUPS.reverse(25, true, 504159.22734414256, 9286552.074810686, false),
     //83.6277742673141, -32.664336398663515
     {
       lat: 83.6277742673141,

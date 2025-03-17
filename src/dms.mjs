@@ -200,7 +200,7 @@ class DMS {
    * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
    * UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0.
    **********************************************************************/
-  static Decode(dms, ind) {
+  static decode(dms, ind) {
     // Here's a table of the allowed characters
 
     // S unicode   dec  UTF-8      descripton
@@ -332,25 +332,25 @@ class DMS {
       pb = dmsa.slice(pa, end).search(new RegExp(`[${this.signs_}]`));
       pb = pb === -1 ? end : pb + pa;
       let ind2 = this.NONE;
-      v += this.InternalDecode(dmsa.substring(p, pb), ind2);
+      v += this.internalDecode(dmsa.substring(p, pb), ind2);
       if (ind1 === this.NONE) {
         ind1 = ind2;
       } else if (!(ind2 === this.NONE || ind1 === ind2)) {
         throw new Error(
-          "Incompatible hemisphere specifier in " + dmsa.substring(beg, pb)
+          "Incompatible hemisphere specifier in " + dmsa.substring(beg, pb),
         );
       }
     }
 
     if (i === 0)
       throw new Error(
-        "Empty or incomplete DMS string " + dmsa.substring(beg, end)
+        "Empty or incomplete DMS string " + dmsa.substring(beg, end),
       );
     ind = ind1;
     return v;
   }
 
-  static InternalDecode(dmsa, ind) {
+  static internalDecode(dmsa, ind) {
     let errormsg = "";
     do {
       let sign = 1;
@@ -465,7 +465,7 @@ class DMS {
           }
           if (digcount > 0) {
             fcurrent = parseFloat(
-              dmsa.substring(p - intcount - digcount - 1, p - 1)
+              dmsa.substring(p - intcount - digcount - 1, p - 1),
             );
             icurrent = 0;
           }
@@ -547,11 +547,11 @@ class DMS {
     return val;
   }
 
-  static DecodeLatLon(stra, strb, lat, lon, longfirst) {
+  static decodeLatLon(stra, strb, lat, lon, longfirst) {
     let a, b;
     let ia, ib;
-    a = this.Decode(stra, ia);
-    b = this.Decode(strb, ib);
+    a = this.decode(stra, ia);
+    b = this.decode(strb, ib);
     if (ia === this.NONE && ib === this.NONE) {
       ia = longfirst ? this.LONGITUDE : this.LATITUDE;
       ib = longfirst ? this.LATITUDE : this.LONGITUDE;
@@ -566,7 +566,7 @@ class DMS {
           " and " +
           strb +
           " interpreted as " +
-          (ia === this.LATITUDE ? "latitudes" : "longitudes")
+          (ia === this.LATITUDE ? "latitudes" : "longitudes"),
       );
     let lat1 = ia === this.LATITUDE ? a : b;
     let lon1 = ia === this.LATITUDE ? b : a;
@@ -576,22 +576,22 @@ class DMS {
     lon = lon1;
   }
 
-  static DecodeAngle(angstr) {
+  static decodeAngle(angstr) {
     let ind;
-    let ang = this.Decode(angstr, ind);
+    let ang = this.decode(angstr, ind);
     if (ind !== this.NONE)
       throw new Error(
-        "Arc angle " + angstr + " includes a hemisphere, N/E/W/S"
+        "Arc angle " + angstr + " includes a hemisphere, N/E/W/S",
       );
     return ang;
   }
 
-  static DecodeAzimuth(azistr) {
+  static decodeAzimuth(azistr) {
     let ind;
-    let azi = this.Decode(azistr, ind);
+    let azi = this.decode(azistr, ind);
     if (ind === this.LATITUDE)
       throw new Error("Azimuth " + azistr + " has a latitude hemisphere, N/S");
-    return this.AngNormalize(azi);
+    return this.angNormalize(azi);
   }
 
   /**
@@ -622,7 +622,7 @@ class DMS {
    * The integer parts of the minutes and seconds components are always given
    * with 2 digits.
    **********************************************************************/
-  static Encode(angle, trailing, prec, ind, dmssep) {
+  static encode(angle, trailing, prec, ind, dmssep) {
     if (ind === undefined) ind = this.NONE;
     if (dmssep === undefined) dmssep = "";
     // Assume check on range of input angle has been made by calling
@@ -637,7 +637,7 @@ class DMS {
     let scale =
       trailing === this.MINUTE ? 60 : trailing === this.SECOND ? 3600 : 1;
     if (ind === this.AZIMUTH) {
-      angle = MATH.AngNormalize(angle);
+      angle = MATH.angNormalize(angle);
       // Only angles strictly less than 0 can become 360; since +/-180 are
       // folded together, we convert -0 to +0 (instead of 360).
       if (angle < 0) {

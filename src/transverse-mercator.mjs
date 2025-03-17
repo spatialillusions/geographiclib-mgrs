@@ -286,10 +286,10 @@ const TransverseMercator = {
     return utm;
   },
 
-  Forward(lon0, lat, lon) {
-    if (this._exact) return this._tmexact.Forward(lon0, lat, lon);
-    lat = MATH.LatFix(lat);
-    lon = MATH.AngDiff(lon0, lon);
+  forward(lon0, lat, lon) {
+    if (this._exact) return this._tmexact.forward(lon0, lat, lon);
+    lat = MATH.latFix(lat);
+    lon = MATH.angDiff(lon0, lon);
     const latsign = Math.sign(lat);
     const lonsign = Math.sign(lon);
     lon *= lonsign;
@@ -452,14 +452,14 @@ const TransverseMercator = {
     x = this._a1 * this._k0 * eta * lonsign;
     if (backside) gamma = MATH.hd - gamma;
     gamma *= latsign * lonsign;
-    gamma = MATH.AngNormalize(gamma);
+    gamma = MATH.angNormalize(gamma);
     k *= this._k0;
     return { x, y, gamma, k };
   },
 
-  Reverse(lon0, x, y) {
+  reverse(lon0, x, y) {
     let gamma, k, lat, lon;
-    if (this._exact) return this._tmexact.Reverse(lon0, x, y);
+    if (this._exact) return this._tmexact.reverse(lon0, x, y);
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).
@@ -569,11 +569,11 @@ const TransverseMercator = {
     lat *= xisign;
     if (backside) lon = MATH.hd - lon;
     lon *= etasign;
-    lon = MATH.AngNormalize(lon + lon0);
+    lon = MATH.angNormalize(lon + lon0);
 
     if (backside) gamma = MATH.hd - gamma;
     gamma *= xisign * etasign;
-    gamma = MATH.AngNormalize(gamma);
+    gamma = MATH.angNormalize(gamma);
     k *= this._k0;
     //console.log(`js lat: ${lat}, lon: ${lon}, gamma: ${gamma}, k: ${k}`);
     return { lat: lat, lon: lon, gamma: gamma, k: k };

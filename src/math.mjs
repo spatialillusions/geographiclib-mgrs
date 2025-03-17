@@ -74,24 +74,24 @@ const MATH = {
   },
 
   // Normalize an angle.
-  AngNormalize(x) {
+  angNormalize(x) {
     x = x % 360;
     return x <= -180 ? x + 360 : x > 180 ? x - 360 : x;
   },
 
   // Normalize a latitude.
-  LatFix(x) {
+  latFix(x) {
     return Math.abs(x) > 90 ? NaN : x;
   },
 
   // The exact difference of two angles reduced to [-180°, 180°].
-  AngDiff(x, y) {
+  angDiff(x, y) {
     const d = y - x;
-    return this.AngNormalize(d);
+    return this.angNormalize(d);
   },
 
   // Coarsen a value close to zero.
-  AngRound(x) {
+  angRound(x) {
     const z = 1 / 16;
     return Math.abs(x) < z ? 0 : x;
   },
