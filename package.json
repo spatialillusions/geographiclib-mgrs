@@ -1,6 +1,6 @@
 {
   "name": "geographiclib-mgrs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Javascript conversion of GeographicLib GeoCoords MGRS functionallity",
   "homepage": "https://github.com/spatialillusions/geographiclib-mgrs#readme",
   "bugs": {
