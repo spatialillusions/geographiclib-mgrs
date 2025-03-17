@@ -12,15 +12,11 @@ Differences between geographiclib-mgrs and proj4js mgrs:
 
 ## Installation
 
-TODO make it into a NPM package so it can be installed!
-
 ```
 npm install geographiclib-mgrs --save
 ```
 
 ## Usage
-
-TODO publish as NPM package!
 
 ```js
 import MGRS from "geographiclib-mgrs";
