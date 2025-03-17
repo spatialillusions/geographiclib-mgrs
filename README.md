@@ -53,6 +53,21 @@ const point = MGRS.inverse(mgrs);
 // return [lowerLeft.lon, lowerLeft.lat, upperRight.lon, upperRight.lat]
 ```
 
+It is also possible to access the underlaying geograpiclib functions under `MGRS.MGRS` and `MGRS.UTMUPS`, where most methods from geographiclib are aviable.
+
+For example:
+
+```js
+MGRS.MGRS.reverse(mgrs, true);
+/* returns object
+ * zone: UTM zone (zero means UPS).
+ * northp: hemisphere (true means north, false means south).
+ * x: easting of point (meters).
+ * y: northing of point (meters).
+ * prec: precision relative to 100 km.
+ * */
+```
+
 ## Verification
 
 The output from this library has been verified against the test data from Geotrans. We use the same verification method as Geotrans and any descipances are because of rounding errors in the input data.
