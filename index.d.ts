@@ -25,7 +25,7 @@ declare module "mgrs" {
    * Convert MGRS to lat/lon point.
    *
    * @param {string} mgrs MGRS string.
-   * @param {bool} [centerpoint=false] If we should use the center point or lower left corner
+   * @param {bool} [centerpoint=true] If we should use the center point or lower left corner
    * @return {[number,number]} An array with longitude and latitude values in
    *    WGS84, representing the center point of the provided MGRS reference.
    */
