@@ -189,7 +189,7 @@ MGRS.ForwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
   const yh = Math.floor(iy / m);
   if (utmp) {
     const iband =
-      Math.abs(lat) < angeps ? (northp ? 0 : -1) : this.LatitudeBand(lat);
+      Math.abs(lat) < angeps ? (northp ? 0 : -1) : this.latitudeBand(lat);
     let icol = xh - this.minutmcol_;
     let irow = this.UTMRow(iband, icol, yh % this.utmrowperiod_);
     if (irow !== yh - (northp ? this.minutmNrow_ : this.maxutmSrow_)) {
@@ -245,7 +245,7 @@ MGRS.Forward = function (zone, northp, x, y, prec) {
     } else {
       const latp = 0.901 * ys + (ys > 0 ? 1 : -1) * 0.135;
       const late = 0.902 * ys * (1 - 1.85e-6 * ys * ys);
-      if (this.LatitudeBand(latp) === this.LatitudeBand(late)) {
+      if (this.latitudeBand(latp) === this.latitudeBand(late)) {
         lat = latp;
       } else {
         const utmupsReverse = UTMUPS.Reverse(zone, northp, x, y);
@@ -725,7 +725,7 @@ MGRS.Check = function () {
       tab[3 * i + 1] * t,
       tab[3 * i + 2] * t,
       (lat, lon) => {
-        if (!(this.LatitudeBand(lat) === tab[3 * i + 0])) {
+        if (!(this.latitudeBand(lat) === tab[3 * i + 0])) {
           throw new Error(
             "MGRS::Check: Band error, b = " +
               tab[3 * i + 0] +

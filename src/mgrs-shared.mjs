@@ -68,7 +68,7 @@ SHARED_MGRS.maxnorthing_ = [
  * @param {number} lat - Latitude in degrees.
  * @returns {number} - Latitude band number.
  */
-SHARED_MGRS.LatitudeBand = function (lat) {
+SHARED_MGRS.latitudeBand = function (lat) {
   const ilat = Math.floor(lat);
   return Math.max(-10, Math.min(9, Math.floor((ilat + 80) / 8) - 10));
 };

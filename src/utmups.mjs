@@ -138,7 +138,7 @@ UTMUPS.StandardZone = function (lat, lon, setzone) {
     let ilon = Math.floor(MATH.AngNormalize(lon));
     if (ilon == MATH.hd) ilon = -MATH.hd;
     let zone = Math.floor((ilon + 186) / 6);
-    let band = MGRS.LatitudeBand(lat);
+    let band = MGRS.latitudeBand(lat);
     if (band == 7 && zone == 31 && ilon >= 3) zone = 32;
     else if (band == 9 && ilon >= 0 && ilon < 42)
       zone = 2 * Math.floor((ilon + 183) / 12) + 1;
