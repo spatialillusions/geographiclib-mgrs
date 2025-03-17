@@ -65,12 +65,11 @@ GeographicLibMGRS.toPoint = function (mgrs, centerp) {
    * @param[out] prec precision relative to 100 km.
    * */
 
-  // The default in proj4js mgrs and GeoTrans is to use lower left coordinate
-  // This makes back and forth coversion return the original MGRS
-  if (centerp === undefined) centerp = false;
+  // Shoule we use the centerpoint or the lower left corner
+  // Default is centerpoint
+  if (centerp === undefined) centerp = true;
   const mgrsReverse = MGRS.reverse(mgrs, centerp);
-  //console.log(mgrs);
-  //console.log(mgrsReverse);
+
   const mgrsLimits = false;
   /*
    * @param[in] zone the UTM zone (zero means UPS).
