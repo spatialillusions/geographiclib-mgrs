@@ -18,11 +18,12 @@ GeographicLibMGRS.forward = function (lonlat, accuracy) {
   const utmupsForward = UTMUPS.forward(lonlat[1], lonlat[0], false, false);
 
   // zone, northp, x, y, prec
-  return MGRS.forward(
+  return MGRS.forwardKnowLattitude(
     utmupsForward.zone,
     utmupsForward.northp,
     utmupsForward.x,
     utmupsForward.y,
+    lonlat[1],
     accuracy,
   );
 };
