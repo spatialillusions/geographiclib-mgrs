@@ -82,7 +82,6 @@ for (let i = 3; i < geotrans.length; i++) {
 }
 
 // Write logs
-const content = "Some content!";
 try {
   fs.writeFileSync(
     path.join("test", "MGRSforward.fails.tsv"),
