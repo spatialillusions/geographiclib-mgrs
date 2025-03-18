@@ -172,6 +172,8 @@ MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
   if (!(prec >= -1 && prec <= this.maxprec_)) {
     throw new Error(`MGRS precision ${prec} not in [-1, ${this.maxprec_}]`);
   }
+  // Fixed char array for accumulating string.  Allow space for zone, 3 block
+  // letters, easting + northing.  Don't need to allow for terminating null.
   const mgrs1 = new Array(2 + 3 + 2 * this.maxprec_);
   let zone1 = zone - 1;
   let z = utmp ? 2 : 0;
@@ -181,7 +183,9 @@ MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
     mgrs1[1] = this.digits_[zone % this.base_];
   }
   const xx = x * this.mult_;
-  const yy = y * this.mult_;
+  // Forcing it to float by dividing by small number near equator
+  const yy =
+    Math.abs(lat) < angeps ? (y * this.mult_) / (1 + angeps) : y * this.mult_;
   let ix = Math.floor(xx);
   let iy = Math.floor(yy);
   const m = this.mult_ * this.tile_;
@@ -238,21 +242,34 @@ MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
 MGRS.forward = function (zone, northp, x, y, prec) {
   let lat;
   if (zone > 0) {
+    // Does a rough estimate for latitude determine the latitude band?
     let ys = northp ? y : y - this.utmNshift_;
+    // A cheap calculation of the latitude which results in an "allowed"
+    // latitude band would be
+    //   lat = ApproxLatitudeBand(ys) * 8 + 4;
+    //
+    // Here we do a more careful job using the band letter corresponding to
+    // the actual latitude.
     ys /= this.tile_;
     if (Math.abs(ys) < 1) {
-      lat = 0.9 * ys;
+      lat = 0.9 * ys; // accurate enough estimate near equator
     } else {
+      // The poleward bound is a fit from above of lat(x,y)
+      // for x = 500km and y = [0km, 950km]
       const latp = 0.901 * ys + (ys > 0 ? 1 : -1) * 0.135;
+      // The equatorward bound is a fit from below of lat(x,y)
+      // for x = 900km and y = [0km, 950km]
       const late = 0.902 * ys * (1 - 1.85e-6 * ys * ys);
       if (this.latitudeBand(latp) === this.latitudeBand(late)) {
         lat = latp;
       } else {
+        // bounds straddle a band boundary so need to compute lat accurately
         const utmupsReverse = UTMUPS.reverse(zone, northp, x, y);
         lat = utmupsReverse.lat;
       }
     }
   } else {
+    // Latitude isn't needed for UPS specs or for INVALID
     lat = 0;
   }
   return this.forwardKnowLattitude(zone, northp, x, y, lat, prec);
@@ -548,9 +565,21 @@ MGRS.UTMRow = function (iband, icol, irow) {
   const baserow = (minrow + maxrow) / 2 - this.utmrowperiod_ / 2;
   irow = ((irow - baserow + this.maxutmSrow_) % this.utmrowperiod_) + baserow;
   if (!(irow >= minrow && irow <= maxrow)) {
+    // Outside the safe bounds, so need to check...
+    // Northing = 71e5 and 80e5 intersect band boundaries
+    //   y = 71e5 in scol = 2 (x = [3e5,4e5] and x = [6e5,7e5])
+    //   y = 80e5 in scol = 1 (x = [2e5,3e5] and x = [7e5,8e5])
+    // This holds for all the ellipsoids given in NGA.SIG.0012_2.0.0_UTMUPS.
+    // The following deals with these special cases.
+
+    // Fold [-10,-1] -> [9,0]
     const sband = iband >= 0 ? iband : -iband - 1;
+    // Fold [-90,-1] -> [89,0]
     const srow = irow >= 0 ? irow : -irow - 1;
+    // Fold [4,7] -> [3,0]
     const scol = icol < 4 ? icol : -icol + 7;
+    // For example, the safe rows for band 8 are 71 - 79.  However row 70 is
+    // allowed if scol = [2,3] and row 80 is allowed if scol = [0,1].
     if (
       !(
         (srow === 70 && sband === 8 && scol >= 2) ||
