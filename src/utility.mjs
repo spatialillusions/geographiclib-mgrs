@@ -67,7 +67,7 @@ const UTILITY = {
     let y1,
       m1 = 1,
       d1 = 1;
-    const p1 = s.search(/[^0-9]/);
+    let p1 = s.search(/[^0-9]/);
     if (p1 === -1) y1 = parseInt(s);
     else if (s[p1] !== "-")
       throw new Error("Delimiter not hyphen in date " + s);
