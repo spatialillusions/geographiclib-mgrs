@@ -281,7 +281,7 @@ const TransverseMercator = {
   forward(lon0, lat, lon) {
     lat = MATH.latFix(lat);
     lon = MATH.angDiff(lon0, lon);
-    const latsign = Math.sign(lat);
+    let latsign = Math.sign(lat);
     const lonsign = Math.sign(lon);
     lon *= lonsign;
     lat *= latsign;
