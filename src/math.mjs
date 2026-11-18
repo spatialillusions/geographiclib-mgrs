@@ -138,7 +138,7 @@ const MATH = {
     let ang = Math.atan2(y, x) / this.degree();
     switch (q) {
       case 1:
-        ang = Math.sign(y) * this.hd - ang;
+        ang = (this.signbit(y) ? -1 : 1) * this.hd - ang;
         break;
       case 2:
         ang = this.qd - ang;
