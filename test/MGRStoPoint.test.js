@@ -102,26 +102,24 @@ WE[
   `${geotransEqual}/${fail} of those coordinates is equal to the Geotrans result`
 ] = [geotransEqual, fail];
 
-/*
+// Compared to GeographicLib C++ 2.7.
 const geographiclib = {};
-// .\GeoConvert_d.exe  -p 1 --input-string "33XVK9556495053"
-//  81.01648 14.74556
-latRef = 81.016479;
-lonRef = 14.745563;
-point = MGRS.toPoint("33XVK9556495053", true);
-lat = point[1];
-lon = point[0];
-valid = closeTo(lat, latRef, precision) && closeTo(lon, lonRef, precision);
-
-geographiclib["33XVK9556495053"] = valid
-  ? [true, valid]
-  : [
-      { lat: lat, lon: lon },
-      { lat: latRef, lon: lonRef },
-    ];
-*/
+for (const [mgrsRef, centerp, latRef, lonRef] of [
+  // ./GeoConvert -p 9 --input-string 33XVK9556495053
+  ["33XVK9556495053", true, 81.01647905419107, 14.74556283486876],
+  // SW corners on the 180 meridian, at both poles
+  // ./GeoConvert -p 9 -n --input-string ZAJ0000011026
+  ["ZAJ0000011026", false, 89.00000468441212, 180],
+  ["BAL0000088973", false, -88.99999567799381, 180],
+]) {
+  const [lonGot, latGot] = MGRS.toPoint(mgrsRef, centerp);
+  geographiclib[`${mgrsRef} ${centerp ? "center" : "corner"}`] = [
+    closeTo(latGot, latRef, precision) && closeTo(lonGot, lonRef, precision),
+    true,
+  ];
+}
 
 export default {
   "Comparing GeograpicLib-mgrs.js to Geotrans": WE,
-  //"Comparing GeograpicLib-mgrs.js to GeographicLib C++": geographiclib,
+  "Comparing GeograpicLib-mgrs.js to GeographicLib C++": geographiclib,
 };
