@@ -17,7 +17,8 @@
   "scripts": {
     "prebuild": "npm test",
     "build": "rollup -c",
-    "test": "tead --coverage"
+    "test": "node --test test/reference/*.test.mjs && tead --coverage",
+    "test:cpp": "node test/reference/generate.mjs"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.0",

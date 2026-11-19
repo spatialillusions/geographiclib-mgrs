@@ -128,8 +128,7 @@ UTMUPS.maxnorthing_ = [
   MGRS.maxutmNrow_ * MGRS.tile_,
 ];
 
-UTMUPS.standardZone = function (lat, lon, setzone) {
-  setzone = setzone || this.STANDARD;
+UTMUPS.standardZone = function (lat, lon, setzone = UTMUPS.STANDARD) {
   if (!(setzone >= this.MINPSEUDOZONE && setzone <= this.MAXZONE))
     throw new Error("Illegal zone requested " + Utility.str(setzone));
   if (setzone >= this.MINZONE || setzone == this.INVALID) return setzone;
@@ -189,18 +188,17 @@ northp = true;
 **********************************************************************/
 UTMUPS.forward = function (lat, lon, setzone, mgrslimits) {
   let zone, northp, x, y, gamma, k;
-  if (Math.abs(lat) > Math.qd)
+  if (Math.abs(lat) > MATH.qd)
     throw new Error(
       "Latitude " +
         Utility.str(lat) +
         "d not in [-" +
-        Math.qd +
+        MATH.qd +
         "d, " +
-        Math.qd +
+        MATH.qd +
         "d]",
     );
   let northp1 = !MATH.signbit(lat);
-  setzone = setzone; //|| this.MINPSEUDOZONE;
   let zone1 = this.standardZone(lat, lon, setzone);
   if (zone1 == this.INVALID) {
     zone = zone1;
@@ -307,7 +305,7 @@ UTMUPS.reverse = function (zone, northp, x, y, mgrslimits) {
   let lat, lon, gamma, k;
   if (zone == this.INVALID || isNaN(x) || isNaN(y)) {
     lat = lon = gamma = k = NaN;
-    return;
+    return { lat, lon, gamma, k };
   }
   if (!(zone >= this.MINZONE && zone <= this.MAXZONE))
     throw new Error("Zone " + Utility.str(zone) + " not in range [0, 60]");
@@ -328,7 +326,7 @@ UTMUPS.reverse = function (zone, northp, x, y, mgrslimits) {
   return { lat, lon, gamma, k };
 };
 
-UTMUPS.checkCoords = function (utmp, northp, x, y, mgrslimits, throwp) {
+UTMUPS.checkCoords = function (utmp, northp, x, y, mgrslimits = false, throwp = true) {
   let slop = mgrslimits ? 0 : MGRS.tile_;
   let ind = (utmp ? 2 : 0) + (northp ? 1 : 0);
   if (x < this.mineasting_[ind] - slop || x > this.maxeasting_[ind] + slop) {
@@ -380,32 +378,32 @@ UTMUPS.transfer = function (
   zone,
 ) {
   let northp = northpin;
+  let result;
   if (zonein != zoneout) {
-    let lat, lon, gamma, k;
-    ({ lat, lon, gamma, k } = this.reverse(zonein, northpin, xin, yin));
-    let x, y, zone1, northp;
-    ({ zone, northp, x, y, gamma, k } = this.forward(
+    const { lat, lon } = this.reverse(zonein, northpin, xin, yin);
+    const projected = this.forward(
       lat,
       lon,
       zoneout == this.MATCH ? zonein : zoneout,
-    ));
-    if (zone1 == 0 && northp != northpout)
+    );
+    northp = projected.northp;
+    if (projected.zone == 0 && northp != northpout)
       throw new Error(
         "Attempt to transfer UPS coordinates between hemispheres",
       );
-    //zone.value = zone1;
-    //xout.value = x;
-    //yout.value = y;
+    result = { zone: projected.zone, x: projected.x, y: projected.y };
   } else {
     if (zoneout == 0 && northp != northpout)
       throw new Error(
         "Attempt to transfer UPS coordinates between hemispheres",
       );
-    //zone.value = zoneout;
-    //xout.value = xin;
-    //yout.value = yin;
+    result = { zone: zoneout, x: xin, y: yin };
   }
-  if (northp != northpout) yout.value += (northpout ? -1 : 1) * MGRS.utmNshift_;
+  if (northp != northpout) result.y += (northpout ? -1 : 1) * MGRS.utmNshift_;
+  if (xout) xout.value = result.x;
+  if (yout) yout.value = result.y;
+  if (zone) zone.value = result.zone;
+  return result;
 };
 
 UTMUPS.decodeZone = function (zonestr, zone, northp) {
@@ -414,11 +412,11 @@ UTMUPS.decodeZone = function (zonestr, zone, northp) {
   if (zlen > 7)
     throw new Error("More than 7 characters in zone specification " + zonestr);
 
-  let c = zonestr;
-  let q;
-  let zone1 = parseInt(c);
+  const number = zonestr.match(/^\s*[+-]?\d+/);
+  const q = number ? number[0].length : 0;
+  const zone1 = number ? Number(number[0]) : this.UPS;
   if (zone1 == this.UPS) {
-    if (!(q == c))
+    if (q !== 0)
       throw new Error(
         "Illegal zone 0 in " + zonestr + ", use just the hemisphere for UPS",
       );
@@ -426,16 +424,16 @@ UTMUPS.decodeZone = function (zonestr, zone, northp) {
     throw new Error("Zone " + Utility.str(zone1) + " not in range [1, 60]");
   else if (!/\d/.test(zonestr[0]))
     throw new Error("Must use unsigned number for zone " + Utility.str(zone1));
-  else if (q - c > 2)
+  else if (q > 2)
     throw new Error(
       "More than 2 digits use to specify zone " + Utility.str(zone1),
     );
 
-  let hemi = zonestr.substring(q - c).toLowerCase();
-  if (q == c && (hemi == "inv" || hemi == "invalid")) {
-    zone.value = this.INVALID;
-    northp.value = false;
-    return;
+  let hemi = zonestr.substring(q).toLowerCase();
+  if (q === 0 && (hemi == "inv" || hemi == "invalid")) {
+    if (zone) zone.value = this.INVALID;
+    if (northp) northp.value = false;
+    return { zone: this.INVALID, northp: false };
   }
   let northp1 = hemi == "north" || hemi == "n";
   if (!(northp1 || hemi == "south" || hemi == "s"))
@@ -446,11 +444,12 @@ UTMUPS.decodeZone = function (zonestr, zone, northp) {
         zonestr +
         ", specify north or south",
     );
-  zone.value = zone1;
-  northp.value = northp1;
+  if (zone) zone.value = zone1;
+  if (northp) northp.value = northp1;
+  return { zone: zone1, northp: northp1 };
 };
 
-UTMUPS.encodeZone = function (zone, northp, abbrev) {
+UTMUPS.encodeZone = function (zone, northp, abbrev = true) {
   if (zone == this.INVALID) return abbrev ? "inv" : "invalid";
   if (!(zone >= this.MINZONE && zone <= this.MAXZONE))
     throw new Error("Zone " + Utility.str(zone) + " not in range [0, 60]");
@@ -460,7 +459,7 @@ UTMUPS.encodeZone = function (zone, northp, abbrev) {
   return os.join("");
 };
 
-UTMUPS.decodeEPSG = function (epsg, zone, northp) {
+UTMUPS.decodeEPSG = function (epsg, zone = {}, northp = {}) {
   northp.value = false;
   if (epsg >= this.epsg01N && epsg <= this.epsg60N) {
     zone.value = epsg - this.epsg01N + this.MINUTMZONE;
@@ -475,6 +474,7 @@ UTMUPS.decodeEPSG = function (epsg, zone, northp) {
   } else {
     zone.value = this.INVALID;
   }
+  return { zone: zone.value, northp: northp.value };
 };
 
 UTMUPS.encodeEPSG = function (zone, northp) {

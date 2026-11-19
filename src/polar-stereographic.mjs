@@ -92,9 +92,8 @@ const PolarStereographic = {
     if (!(isFinite(k) && k > 0)) throw new Error("Scale is not positive");
     if (!(-MATH.qd < lat && lat <= MATH.qd))
       throw new Error(`Latitude must be in (-${MATH.qd}d, ${MATH.qd}d]`);
-    let x, y, gamma, kold;
     this._k0 = 1;
-    this.forward(true, lat, 0, x, y, gamma, kold);
+    const { k: kold } = this.forward(true, lat, 0);
     this._k0 *= k / kold;
   },
 };

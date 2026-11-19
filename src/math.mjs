@@ -15,7 +15,7 @@ const MATH = {
   // Set the binary precision of a real number.
   set_digits(ndigits) {
     // This only has an effect when using arbitrary precision libraries.
-    return ndigits;
+    return this.digits();
   },
 
   // @return the number of decimal digits of precision in a real number.
@@ -57,7 +57,7 @@ const MATH = {
     const s = u + v;
     const up = s - v;
     const vpp = s - up;
-    const t = u - up + (v - vpp);
+    const t = s !== 0 ? 0 - ((up - u) + (vpp - v)) : s;
     return [s, t];
   },
 
@@ -75,8 +75,8 @@ const MATH = {
 
   // Normalize an angle.
   angNormalize(x) {
-    x = x % 360;
-    return x <= -180 ? x + 360 : x > 180 ? x - 360 : x;
+    const y = this.remainder(x, this.td);
+    return Math.abs(y) === this.hd ? this.copysign(this.hd, x) : y;
   },
 
   // Normalize a latitude.
@@ -86,37 +86,71 @@ const MATH = {
 
   // The exact difference of two angles reduced to [-180°, 180°].
   angDiff(x, y) {
-    const d = y - x;
-    return this.angNormalize(d);
+    return this.angDiffWithError(x, y)[0];
+  },
+
+  angDiffWithError(x, y) {
+    let [d, e] = this.sum(this.remainder(-x, this.td), this.remainder(y, this.td));
+    [d, e] = this.sum(this.remainder(d, this.td), e);
+    if (d === 0 || Math.abs(d) === this.hd)
+      d = this.copysign(d, e === 0 ? y - x : -e);
+    return [d, e];
+  },
+
+  // IEEE remainder, with ties to an even quotient, as in C++ std::remainder.
+  remainder(x, y) {
+    let r = x % y;
+    const h = Math.abs(y) / 2;
+    if (Math.abs(r) > h ||
+        (Math.abs(r) === h && Math.abs(x % (2 * y)) > h))
+      r -= this.copysign(Math.abs(y), r);
+    return r;
   },
 
   // Coarsen a value close to zero.
   angRound(x) {
     const z = 1 / 16;
-    return Math.abs(x) < z ? 0 : x;
+    const y = Math.abs(x);
+    const w = z - y;
+    return this.copysign(w > 0 ? z - w : y, x);
   },
 
   // Evaluate the sine and cosine function with the argument in degrees.
   sincosd(x) {
-    const r = x * this.degree();
-    //slam = math.sin(math.radians(lon))
-    //clam = math.cos(math.radians(lon))
-    return [Math.sin(r), Math.cos(r)];
+    const d = this.remainder(x, this.qd);
+    const q = Math.round(((x % this.td) - d) / this.qd);
+    const r = d * this.degree();
+    let s = Math.sin(r), c = Math.cos(r);
+    if (2 * Math.abs(d) === this.qd) {
+      c = Math.sqrt(1 / 2);
+      s = this.copysign(c, r);
+    } else if (3 * Math.abs(d) === this.qd) {
+      c = Math.sqrt(3) / 2;
+      s = this.copysign(1 / 2, r);
+    }
+    switch (q & 3) {
+      case 1: [s, c] = [c, -s]; break;
+      case 2: [s, c] = [-s, -c]; break;
+      case 3: [s, c] = [-c, s]; break;
+    }
+    return [s === 0 ? this.copysign(s, x) : s, 0 + c];
   },
 
   // Evaluate the sine function with the argument in degrees.
   sind(x) {
-    return Math.sin(x * this.degree());
+    return this.sincosd(x)[0];
   },
 
   // Evaluate the cosine function with the argument in degrees.
   cosd(x) {
-    return Math.cos(x * this.degree());
+    return this.sincosd(x)[1];
   },
 
   // Evaluate the tangent function with the argument in degrees.
   tand(x) {
-    return Math.tan(x * this.degree());
+    const [s, c] = this.sincosd(x);
+    const overflow = 1 / this.sq(Number.EPSILON);
+    return Math.min(overflow, Math.max(-overflow, s / c));
   },
 
   // Evaluate the atan2 function with the result in degrees.
@@ -130,15 +164,15 @@ const MATH = {
       [x, y] = [y, x];
       q = 2;
     }
-    if (Math.sign(x) === -1) {
+    if (this.signbit(x)) {
       x = -x;
       ++q;
     }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
-    let ang = Math.atan2(y, x) / this.degree();
+    let ang = (Math.atan2(y, x) / this.pi()) * this.hd;
     switch (q) {
       case 1:
-        ang = Math.sign(y) * this.hd - ang;
+        ang = this.copysign(this.hd, y) - ang;
         break;
       case 2:
         ang = this.qd - ang;
@@ -161,11 +195,12 @@ const MATH = {
 
   // Evaluate e atanh(e x)
   eatanhe(x, es) {
-    return es > 0 ? es * Math.atanh(es * x) : -es * Math.atan(-es * x);
+    return es > 0 ? es * Math.atanh(es * x) : -es * Math.atan(es * x);
   },
 
   // tanχ in terms of tanφ
   taupf(tau, es) {
+    if (!Number.isFinite(tau)) return tau;
     const tau1 = Math.hypot(1, tau);
     const sig = Math.sinh(this.eatanhe(tau / tau1, es));
     return Math.hypot(1, sig) * tau - sig * tau1;
@@ -237,6 +272,10 @@ const MATH = {
 
   signbit(x) {
     return x === 0 ? 1 / x === -Infinity : x < 0;
+  },
+
+  copysign(x, y) {
+    return Math.abs(x) * (this.signbit(y) ? -1 : 1);
   },
 };
 

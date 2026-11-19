@@ -165,7 +165,7 @@ MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
     return "INVALID";
   }
   const utmp = zone !== 0;
-  this.checkCoords(utmp, northp, x, y);
+  ({ northp, x, y } = this.checkCoords(utmp, northp, x, y));
   if (!(zone >= UTMUPS.MINZONE && zone <= UTMUPS.MAXZONE)) {
     throw new Error(`Zone ${zone} not in [0,60]`);
   }
@@ -183,9 +183,7 @@ MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
     mgrs1[1] = this.digits_[zone % this.base_];
   }
   const xx = x * this.mult_;
-  // Forcing it to float by dividing by small number near equator
-  const yy =
-    Math.abs(lat) < angeps ? (y * this.mult_) / (1 + angeps) : y * this.mult_;
+  const yy = y * this.mult_;
   let ix = Math.floor(xx);
   let iy = Math.floor(yy);
   const m = this.mult_ * this.tile_;
@@ -227,13 +225,13 @@ MGRS.forwardKnowLattitude = function (zone, northp, x, y, lat, prec) {
     ix -= m * xh;
     iy -= m * yh;
     const d = Math.pow(this.base_, this.maxprec_ - prec);
-    ix /= d;
-    iy /= d;
+    ix = Math.trunc(ix / d);
+    iy = Math.trunc(iy / d);
     for (let c = prec; c--; ) {
       mgrs1[z + c] = this.digits_[Math.floor(ix % this.base_)];
-      ix /= this.base_;
+      ix = Math.trunc(ix / this.base_);
       mgrs1[z + c + prec] = this.digits_[Math.floor(iy % this.base_)];
-      iy /= this.base_;
+      iy = Math.trunc(iy / this.base_);
     }
   }
   return mgrs1.join("").substring(0, mlen);
@@ -324,7 +322,7 @@ MGRS.forward = function (zone, northp, x, y, prec) {
  **********************************************************************/
 MGRS.reverse = function (
   mgrs,
-  /*, zone, northp, easting, northing, prec, */ centerp,
+  /*, zone, northp, easting, northing, prec, */ centerp = true,
 ) {
   let zone, northp, prec;
   let p = 0;
@@ -355,7 +353,7 @@ MGRS.reverse = function (
   const utmp = zone1 !== UTMUPS.UPS;
   const zonem1 = zone1 - 1;
   const band = utmp ? this.latband_ : this.upsband_;
-  let iband = band.indexOf(mgrs[p++]);
+  let iband = band.indexOf(mgrs[p++].toUpperCase());
   if (iband < 0) {
     throw new Error(
       `Band letter ${mgrs[p - 1]} not in ${utmp ? "UTM" : "UPS"} set ${band}`,
@@ -384,7 +382,7 @@ MGRS.reverse = function (
   }
   const col = utmp ? this.utmcols_[zonem1 % 3] : this.upscols_[iband];
   const row = utmp ? this.utmrow_ : this.upsrows_[northp1 ? 1 : 0];
-  let icol = col.indexOf(mgrs[p++]);
+  let icol = col.indexOf(mgrs[p++].toUpperCase());
   if (icol < 0) {
     throw new Error(
       `Column letter ${mgrs[p - 1]} not in ${
@@ -392,11 +390,11 @@ MGRS.reverse = function (
       } set ${col}`,
     );
   }
-  let irow = row.indexOf(mgrs[p++]);
+  let irow = row.indexOf(mgrs[p++].toUpperCase());
   if (irow < 0) {
     throw new Error(
-      `zone ${zone1} ${UTMUPS.UPS} Row letter ${mgrs[p - 1]} not in ${
-        utmp ? "UTM" : "UPS " + this.hemispheres_[northp1 ? 0 : 1]
+        `Row letter ${mgrs[p - 1]} not in ${
+        utmp ? "UTM" : "UPS " + this.hemispheres_[northp1 ? 1 : 0]
       } set ${row}`,
     );
   }
@@ -410,7 +408,7 @@ MGRS.reverse = function (
     irow = this.UTMRow(iband, icol, irow);
     if (irow === this.maxutmSrow_) {
       throw new Error(
-        `Block ${mgrs.substring(p - 2, 2)} not in zone/band ${mgrs.substring(
+        `Block ${mgrs.substring(p - 2, p)} not in zone/band ${mgrs.substring(
           0,
           p - 2,
         )}`,
@@ -427,7 +425,7 @@ MGRS.reverse = function (
       : this.minupsSind_;
     irow += northp1 ? this.minupsNind_ : this.minupsSind_;
   }
-  const prec1 = (len - p) / 2;
+  const prec1 = Math.trunc((len - p) / 2);
   let unit = 1;
   let x1 = icol;
   let y1 = irow;
@@ -525,6 +523,7 @@ MGRS.checkCoords = function (utmp, northp, x, y) {
       }
     }
   }
+  return { northp, x, y };
 };
 
 MGRS.UTMRow = function (iband, icol, irow) {
@@ -562,7 +561,7 @@ MGRS.UTMRow = function (iband, icol, irow) {
   //     9     80     94
   const minrow = iband > -10 ? Math.floor(c - 4.3 - 0.1 * northp) : -90;
   const maxrow = iband < 9 ? Math.floor(c + 4.4 - 0.1 * northp) : 94;
-  const baserow = (minrow + maxrow) / 2 - this.utmrowperiod_ / 2;
+  const baserow = Math.trunc((minrow + maxrow) / 2) - this.utmrowperiod_ / 2;
   irow = ((irow - baserow + this.maxutmSrow_) % this.utmrowperiod_) + baserow;
   if (!(irow >= minrow && irow <= maxrow)) {
     // Outside the safe bounds, so need to check...
@@ -630,9 +629,6 @@ MGRS.decode = function (mgrs) {
     };
   }
 
-  const digits = "0123456789";
-  const alpha = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz";
-
   let p0 = mgrs.search(/[^0-9]/);
   if (p0 === -1) {
     throw new Error("MGRS.Decode: ref does not contain alpha chars");
@@ -641,12 +637,12 @@ MGRS.decode = function (mgrs) {
     throw new Error("MGRS.Decode: ref does not start with 0-2 digits");
   }
 
-  let p1 = mgrs.substring(p0).search(/[a-zA-Z]/) + p0;
-  if (p1 !== p0) {
+  let p1 = p0;
+  while (p1 < len && this.alpha_.includes(mgrs[p1])) ++p1;
+  if (p1 === p0) {
     throw new Error("MGRS.Decode: ref contains non alphanumeric chars");
   }
 
-  p1 = Math.min(mgrs.substring(p0).search(/[^a-zA-Z]/) + p0, len);
   if (!(p1 === p0 + 1 || p1 === p0 + 3)) {
     throw new Error("MGRS.Decode: ref must contain 1 or 3 alpha chars");
   }
@@ -679,62 +675,21 @@ MGRS.decode = function (mgrs) {
  * UTM/UPS scales) are ever changed.
  **********************************************************************/
 MGRS.check = function () {
-  let lat, lon, x, y;
   const t = this.tile_;
-  let zone;
-  let northp;
-
-  UTMUPS.reverse(31, true, 1 * t, 0 * t, (lat, lon) => {
-    if (!(lon < 0)) {
-      throw new Error("MGRS.check: equator coverage failure");
-    }
-  });
-
-  UTMUPS.reverse(31, true, 1 * t, 95 * t, (lat, lon) => {
-    if (!(lat > 84)) {
-      throw new Error("MGRS.check: UTM doesn't reach latitude = 84");
-    }
-  });
-
-  UTMUPS.reverse(31, false, 1 * t, 10 * t, (lat, lon) => {
-    if (!(lat < -80)) {
-      throw new Error("MGRS.check: UTM doesn't reach latitude = -80");
-    }
-  });
-
-  UTMUPS.forward(
-    56,
-    3,
-    (zone, northp, x, y) => {
-      if (!(x > 1 * t)) {
-        throw new Error("MGRS.check: Norway exception creates a gap");
-      }
-    },
-    32,
-  );
-
-  UTMUPS.forward(
-    72,
-    21,
-    (zone, northp, x, y) => {
-      if (!(x > 1 * t)) {
-        throw new Error("MGRS.check: Svalbard exception creates a gap");
-      }
-    },
-    35,
-  );
-
-  UTMUPS.reverse(0, true, 20 * t, 13 * t, (lat, lon) => {
-    if (!(lat < 84)) {
-      throw new Error("MGRS.check: North UPS doesn't reach latitude = 84");
-    }
-  });
-
-  UTMUPS.reverse(0, false, 20 * t, 8 * t, (lat, lon) => {
-    if (!(lat > -80)) {
-      throw new Error("MGRS.check: South UPS doesn't reach latitude = -80");
-    }
-  });
+  if (!(UTMUPS.reverse(31, true, t, 0).lon < 0))
+    throw new Error("MGRS.check: equator coverage failure");
+  if (!(UTMUPS.reverse(31, true, t, 95 * t).lat > 84))
+    throw new Error("MGRS.check: UTM doesn't reach latitude = 84");
+  if (!(UTMUPS.reverse(31, false, t, 10 * t).lat < -80))
+    throw new Error("MGRS.check: UTM doesn't reach latitude = -80");
+  if (!(UTMUPS.forward(56, 3, 32).x > t))
+    throw new Error("MGRS.check: Norway exception creates a gap");
+  if (!(UTMUPS.forward(72, 21, 35).x > t))
+    throw new Error("MGRS.check: Svalbard exception creates a gap");
+  if (!(UTMUPS.reverse(0, true, 20 * t, 13 * t).lat < 84))
+    throw new Error("MGRS.check: North UPS doesn't reach latitude = 84");
+  if (!(UTMUPS.reverse(0, false, 20 * t, 8 * t).lat > -80))
+    throw new Error("MGRS.check: South UPS doesn't reach latitude = -80");
 
   const tab = [
     0, 5, 0, 0, 9, 0, 0, 5, 8, 0, 9, 8, 1, 5, 9, 1, 9, 9, 1, 5, 17, 1, 9, 17, 2,
@@ -748,25 +703,10 @@ MGRS.check = function () {
 
   const bandchecks = tab.length / 3;
   for (let i = 0; i < bandchecks; ++i) {
-    UTMUPS.reverse(
-      38,
-      true,
-      tab[3 * i + 1] * t,
-      tab[3 * i + 2] * t,
-      (lat, lon) => {
-        if (!(this.latitudeBand(lat) === tab[3 * i + 0])) {
-          throw new Error(
-            "MGRS.check: Band error, b = " +
-              tab[3 * i + 0] +
-              ", x = " +
-              tab[3 * i + 1] +
-              "00km, y = " +
-              tab[3 * i + 2] +
-              "00km",
-          );
-        }
-      },
-    );
+    const { lat } = UTMUPS.reverse(38, true, tab[3 * i + 1] * t, tab[3 * i + 2] * t);
+    if (this.latitudeBand(lat) !== tab[3 * i])
+      throw new Error("MGRS.check: Band error, b = " + tab[3 * i] +
+        ", x = " + tab[3 * i + 1] + "00km, y = " + tab[3 * i + 2] + "00km");
   }
 };
 

@@ -65,7 +65,7 @@ for (let i = 3; i < geotrans.length; i++) {
     const utm = glUTMUPS.forward(
       parseFloat(latRef),
       parseFloat(lonRef),
-      false,
+      undefined,
       false,
     );
     const rounded = glMGRS.forward(

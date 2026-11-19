@@ -15,7 +15,7 @@ GeographicLibMGRS.UTMUPS = UTMUPS; // include access to original functions
 GeographicLibMGRS.forward = function (lonlat, accuracy) {
   if (accuracy == undefined) accuracy = 5;
   // lat, lon, zone, mgrslimits
-  const utmupsForward = UTMUPS.forward(lonlat[1], lonlat[0], false, false);
+  const utmupsForward = UTMUPS.forward(lonlat[1], lonlat[0]);
 
   // zone, northp, x, y, prec
   return MGRS.forwardKnowLattitude(

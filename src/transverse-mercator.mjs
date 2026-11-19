@@ -281,8 +281,8 @@ const TransverseMercator = {
   forward(lon0, lat, lon) {
     lat = MATH.latFix(lat);
     lon = MATH.angDiff(lon0, lon);
-    let latsign = Math.sign(lat);
-    const lonsign = Math.sign(lon);
+    let latsign = MATH.signbit(lat) ? -1 : 1;
+    const lonsign = MATH.signbit(lon) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     const backside = lon > MATH.qd;
@@ -431,7 +431,7 @@ const TransverseMercator = {
         .add(new Complex(2 * n * this._alp[n], 0));
       --n;
     }
-    a = a.div(new Complex(2, 0));
+    a = new Complex(a.real / 2, a.imag / 2);
     z1 = new Complex(1, 0).sub(z1).add(a.mul(z0));
     a = new Complex(s0 * ch0, c0 * sh0);
     y1 = new Complex(xip, etap).add(a.mul(y0));
@@ -456,8 +456,8 @@ const TransverseMercator = {
     let xi = y / (this._a1 * this._k0);
     let eta = x / (this._a1 * this._k0);
     // Explicitly enforce the parity
-    const xisign = Math.sign(xi);
-    const etasign = Math.sign(eta);
+    const xisign = MATH.signbit(xi) ? -1 : 1;
+    const etasign = MATH.signbit(eta) ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
     const backside = xi > Math.PI / 2;
@@ -487,7 +487,7 @@ const TransverseMercator = {
         .sub(new Complex(2 * n * this._bet[n], 0));
       --n;
     }
-    a = a.div(new Complex(2, 0)); // cos(2*zeta)
+    a = new Complex(a.real / 2, a.imag / 2); // cos(2*zeta)
     z1 = new Complex(1, 0).sub(z1).add(a.mul(z0));
     a = new Complex(s0 * ch0, c0 * sh0); // sin(2*zeta)
     y1 = new Complex(xi, eta).add(a.mul(y0));
